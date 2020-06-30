@@ -23,7 +23,7 @@ var userSchema = new mongoose.Schema(
         },
         bio: {
             type: String,
-            trim: true,
+            trim: true
         },
         encry_password: {
             type: String,

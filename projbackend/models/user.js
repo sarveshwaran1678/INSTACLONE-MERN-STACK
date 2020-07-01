@@ -9,10 +9,12 @@ var userSchema = new mongoose.Schema(
             required: true,
             maxlength: 20,
             trim: true,
+            unique: true,
         },
-        fullname: {
+        name: {
             type: String,
             maxlength: 32,
+            required: true,
             trim: true,
         },
         email: {

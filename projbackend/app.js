@@ -9,9 +9,9 @@ const cookieParser = require('cookie-parser');
 
 //My Routes
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/user');
-const postRoutes = require('./routes/post');
-const notificationRoutes = require('./routes/notification');
+// const userRoutes = require('./routes/user');
+// const postRoutes = require('./routes/post');
+// const notificationRoutes = require('./routes/notification');
 
 //DB Connection
 mongoose
@@ -31,9 +31,9 @@ app.use(cookieParser());
 
 //Routes
 app.use('/api', authRoutes);
-app.use('/api', userRoutes);
-app.use('/api', postRoutes);
-app.use('/api', notificationRoutes);
+// app.use('/api', userRoutes);
+// app.use('/api', postRoutes);
+// app.use('/api', notificationRoutes);
 
 //Port
 const port = process.env.PORT || 8000;

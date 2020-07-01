@@ -1,6 +1,10 @@
 var express = require('express');
 var formidable = require('formidable');
 
+const imagemin = require('imagemin');
+const imageminMozjpeg = require('imagemin-mozjpeg');
+const imageminPngquant = require('imagemin-pngquant');
+
 var app = express();
 
 app.get('/', function (req, res) {
@@ -17,6 +21,18 @@ app.post('/', function (req, res) {
     });
 
     form.on('file', function (name, file) {
+        const files = imagemin(['uploads/*.{jpg,png}'], {
+            destination: 'build/images',
+            plugins: [
+                imageminMozjpeg({
+                    quality: 50,
+                }),
+                imageminPngquant({
+                    quality: [0.5, 0.8],
+                }),
+            ],
+        });
+
         console.log('Uploaded ' + file.name);
     });
 

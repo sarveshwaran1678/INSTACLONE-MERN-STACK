@@ -6,10 +6,9 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
-
 //My Routes
 const authRoutes = require('./routes/auth');
-// const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/user');
 // const postRoutes = require('./routes/post');
 // const notificationRoutes = require('./routes/notification');
 
@@ -28,10 +27,9 @@ mongoose
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-
 //Routes
 app.use('/api', authRoutes);
-// app.use('/api', userRoutes);
+app.use('/api', userRoutes);
 // app.use('/api', postRoutes);
 // app.use('/api', notificationRoutes);
 

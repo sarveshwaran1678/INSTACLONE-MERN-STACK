@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 
-
+//imports
 const { getUserById } = require("../controllers/user")
 const { isSignedIn, isAuthenticated } = require("../controllers/auth")
 
@@ -12,7 +12,6 @@ router.param("userId", getUserById)
 
 router.get("/user/profile_pic/:userId",)
 router.put("/user/profile_pic/:userId",)
-
 
 
 router.get("/user/follow/:userId",)

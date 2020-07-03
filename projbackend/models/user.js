@@ -38,7 +38,7 @@ var userSchema = new mongoose.Schema(
         },
         profilePicPath: {
             type: String,
-            default: '../assets/profile-pic.jpg',
+            default: '../default/assets/profile-pic.jpg',
         },
         followings: {
             type: Array,

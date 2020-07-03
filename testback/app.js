@@ -1,9 +1,7 @@
 var express = require('express');
 var formidable = require('formidable');
-
-const imagemin = require('imagemin');
-const imageminMozjpeg = require('imagemin-mozjpeg');
-const imageminPngquant = require('imagemin-pngquant');
+var Jimp = require('jimp');
+const { v4: uuidv4 } = require('uuid');
 
 var app = express();
 
@@ -16,23 +14,15 @@ app.post('/', function (req, res) {
 
     form.parse(req);
 
-    form.on('fileBegin', function (name, file) {
-        file.path = __dirname + '/uploads/' + file.name;
-    });
-
+    //Editting the uploaded file
     form.on('file', function (name, file) {
-        const files = imagemin(['uploads/*.{jpg,png}'], {
-            destination: 'build/images',
-            plugins: [
-                imageminMozjpeg({
-                    quality: 50,
-                }),
-                imageminPngquant({
-                    quality: [0.5, 0.8],
-                }),
-            ],
+        Jimp.read(file.path, (err, lenna) => {
+            if (err) throw err;
+            lenna
+                .resize(256, 256) // resize
+                .quality(100) // set JPEG quality
+                .write(__dirname + '/uploads/' + uuidv4() + '.png'); // save
         });
-
         console.log('Uploaded ' + file.name);
     });
 

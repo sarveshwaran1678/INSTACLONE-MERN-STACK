@@ -24,23 +24,11 @@ app.post('/', function (req, res) {
                 .quality(100) // set JPEG quality
                 .write(__dirname + '/uploads/' + uuidv4() + '.png'); // save
         });
-        // const files = imagemin(['uploads/*.{jpg,png}'], {
-        //     destination: 'build/images',
-        //     plugins: [
-        //         imageminMozjpeg({
-        //             quality: 50,
-        //         }),
-        //         imageminPngquant({
-        //             quality: [0.5, 0.8],
-        //         }),
-        //     ],
-        // });
 
         console.log('Uploaded ' + file.name);
     });
 
     res.sendFile(__dirname + '/testfront/index.html');
-    //res.sendFile('../testfront/public/index.html');
 });
 
 app.listen(8000);

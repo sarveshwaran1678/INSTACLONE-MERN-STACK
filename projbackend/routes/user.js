@@ -9,7 +9,9 @@ const {
     getUser,
     getAnotherUser,
     updateProfile,
-    updatePassword, followToggle, followRequestHandler
+    updatePassword,
+    followToggle,
+    followRequestHandler,
 } = require('../controllers/user');
 
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
@@ -40,16 +42,18 @@ router.put(
 );
 
 router.put(
-    "/user/follow/:userId/:anotherUserId",
+    '/user/follow/:userId/:anotherUserId',
     isSignedIn,
     isAuthenticated,
     followToggle
 );
 
-//pass req.body.accept
+//pass req.body.accept=yes/no
 router.put(
-    "/user/followRequest/:userId/:anotherUserId", isSignedIn, isAuthenticated, followRequestHandler
-)
-
+    '/user/followRequest/:userId/:anotherUserId',
+    isSignedIn,
+    isAuthenticated,
+    followRequestHandler
+);
 
 module.exports = router;

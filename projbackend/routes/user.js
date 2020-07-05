@@ -15,14 +15,11 @@ const { isSignedIn, isAuthenticated } = require('../controllers/auth');
 //parameter extractor
 router.param('userId', getUserById);
 
-router.get('/user/profile_pic/:userId');
-router.put('/user/profile_pic/:userId');
-
-router.get('/user/follow/:userId');
-
+//read user details
 router.get('/user/:userId', isSignedIn, isAuthenticated, getUser);
-router.get('/anotherUser/:userId', getAnotherUser);
+router.get('/user/:userId', getAnotherUser);
 
+//update user details
 router.put(
     '/user/:userId',
     isSignedIn,
@@ -31,6 +28,7 @@ router.put(
     updateUser
 );
 
+//update Password
 router.put(
     '/user/updatePassword/:userId',
     isSignedIn,

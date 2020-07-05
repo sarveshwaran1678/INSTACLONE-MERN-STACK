@@ -40,40 +40,75 @@ exports.getAnotherUser = (req, res) => {
     return res.json(req.profile);
 };
 
-//USER UPLOAD DETAILS
-let user;
-let photoPath;
-uploading = (file, photoName, res, req) => {
-    user = req.profile;
+exports.updatePassword = (req, res) => {
+    let user = req.profile;
 
-    //Checking File Extension(only jpg/jpeg/png) and Size(upto 5mb)
-    if (file.path.match(/\.(jpg|jpeg|png)$/) && file.size < 5000000) {
-        Jimp.read(file.path, (err, lenna) => {
-            lenna
-                .resize(300, 300) // resize
-                .quality(100) // set JPEG quality
-                .write(__dirname + '/assets/' + photoName + '.png'); // save
+    let { oldPassword, newPassword } = req.body;
 
-            console.log('Uplaoded');
-        });
-        console.log('Uplaoding....');
-        user.profilePicPath = photoPath;
+    if (user.authenticate(oldPassword)) {
+        if (newPassword.length > 5 && newPassword.length < 15) {
+            user.password = newPassword;
+
+            user.save((err, user) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: 'Updation of password failed',
+                    });
+                }
+                return res.status(201).json({
+                    message: 'Password updated succesfully',
+                });
+            });
+        } else {
+            return res.status(400).json({
+                error: 'Length of password should be >5  <15',
+            });
+        }
     } else {
-        user.profilePicPath = null;
+        return res.status(400).json({
+            error: "Old password didn't match",
+        });
     }
 };
 
-//Update Profile Photo
+// exports.getAllUsers=(req,res)=>{
+//     User.find((err,user)=>{
+//         if(err||!user)
+//         {
+//             return res.status(400).json({
+//                 error:"User not found / DB error"
+//             })
+//         }
+//         return res.json(user)
+//     })
+// }
+
+//Middleware Update Profile Photo
 exports.updateProfile = (req, res, next) => {
     let photoName = uuidv4();
-    photoPath = '/assets/' + photoName + '.png';
+    let photoPath = '/assets/' + photoName + '.png';
+    let user = req.profile;
 
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
 
     form.on('file', function (name, file) {
         // console.log(file);
-        uploading(file, photoName, res, req);
+        //Checking File Extension(only jpg/jpeg/png) and Size(upto 5mb)
+        if (file.path.match(/\.(jpg|jpeg|png)$/) && file.size < 5000000) {
+            Jimp.read(file.path, (err, lenna) => {
+                lenna
+                    .resize(300, 300) // resize
+                    .quality(100) // set JPEG quality
+                    .write(__dirname + '/assets/' + photoName + '.png'); // save
+
+                console.log('Uploaded');
+            });
+            console.log('Uploading....');
+            user.profilePicPath = photoPath;
+        } else {
+            user.profilePicPath = null;
+        }
     });
 
     form.parse(req, (err, fields, file) => {
@@ -119,29 +154,4 @@ exports.updateUser = async (req, res) => {
         }
     });
     console.log('Done');
-};
-
-exports.updatePassword = (req, res) => {
-    const user = req.profile;
-    const { newPassword, oldPassword } = req.body;
-    if (newPassword.length < 5) {
-        return res.status(401).json({
-            error: 'Password should contain atleast 5 char',
-        });
-    }
-    if (!user.authenticate(oldPassword)) {
-        return res.status(401).json({
-            error: 'Password do not match',
-        });
-    }
-    user.password = newPassword;
-    console.log(user.password);
-    user.save((err, user) => {
-        if (err) {
-            res.status(400).json({
-                error: 'Updation of password failed',
-            });
-        }
-        res.json(user);
-    });
 };

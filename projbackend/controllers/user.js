@@ -178,9 +178,23 @@ exports.followToggle = (req, res) => {
     let { followings, followRequestSent } = user;
     let { followers, followRequestPending } = anotherUser;
 
-    if (anotherUser.isPrivate) {
+    //checking receiver is private and not not followed by sender
+    //if sender is already follower of receiver ,receiver is no longer private sender
+    if (
+        anotherUser.isPrivate &&
+        followings.includes(anotherUser._id) === false
+    ) {
         let followRequestSentUpdated, followRequestPendingUpdated;
 
+        //To unfollow If already following
+        if (followings.includes(anotherUser._id)) {
+            followingsUpdated = followings.filter(
+                (id) => id === anotherUser._id
+            );
+            followersUpdated = followers.filter((id) => id === user._id);
+        }
+
+        //To delete follow request
         if (followRequestSent.includes(anotherUser._id)) {
             followRequestSentUpdated = followRequestSent.filter(
                 (id) => id === anotherUser._id
@@ -276,7 +290,11 @@ exports.followRequestHandler = (req, res) => {
     let followRequestSentUpdated, followRequestPendingUpdated;
     let followingsUpdated, followersUpdated;
 
-    if (accept === 'yes') {
+    if (followRequestPending.length === 0) {
+        return res.status(400).json({
+            msg: 'No Request',
+        });
+    } else if (accept === 'yes') {
         followersUpdated = [...followers, anotherUser._id];
         followingsUpdated = [...followings, user._id];
         followRequestPendingUpdated = followRequestPending.filter(
@@ -318,7 +336,7 @@ exports.followRequestHandler = (req, res) => {
                 });
             }
         );
-    } else {
+    } else if (accept === 'no') {
         User.bulkWrite(
             [
                 {

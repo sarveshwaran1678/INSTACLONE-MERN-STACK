@@ -17,7 +17,7 @@ router.param('userId', getUserById);
 
 //read user details
 router.get('/user/:userId', isSignedIn, isAuthenticated, getUser);
-router.get('/user/:userId', getAnotherUser);
+router.get('/anotherUser/:userId', getAnotherUser);
 
 //update user details
 router.put(

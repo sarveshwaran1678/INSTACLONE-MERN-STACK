@@ -10,6 +10,7 @@ const {
     updateProfile,
     updatePassword,
 } = require('../controllers/user');
+
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
 
 //parameter extractor

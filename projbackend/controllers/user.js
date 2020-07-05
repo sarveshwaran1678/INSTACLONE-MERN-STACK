@@ -4,6 +4,8 @@ const _ = require('lodash');
 var Jimp = require('jimp');
 const { v4: uuidv4 } = require('uuid');
 
+
+
 exports.getUserById = (req, res, next, id) => {
     User.findById(id, (err, user) => {
         if (err || !user) {
@@ -12,6 +14,18 @@ exports.getUserById = (req, res, next, id) => {
             });
         }
         req.profile = user;
+        next();
+    });
+};
+
+exports.getAnotherUserById = (req, res, next, id) => {
+    User.findById(id, (err, user) => {
+        if (err || !user) {
+            return res.status(400).json({
+                error: 'User Not found in DB',
+            });
+        }
+        req.anotherProfile = user;
         next();
     });
 };
@@ -29,15 +43,19 @@ exports.getUser = (req, res) => {
 
 //for user to get another User details
 exports.getAnotherUser = (req, res) => {
-    req.profile.salt = undefined;
-    req.profile.encry_password = undefined;
-    req.profile.createdAt = undefined;
-    req.profile.updatedAt = undefined;
-    // req.profile.followers = req.profile.followers.length;
-    // req.profile.followings = req.profile.followings.length;
-    req.profile.followRequestPending = undefined;
-    req.profile.followRequestSent = undefined;
-    return res.json(req.profile);
+    req.anotherProfile.salt = undefined;
+    req.anotherProfile.encry_password = undefined;
+    req.anotherProfile.createdAt = undefined;
+    req.anotherProfile.updatedAt = undefined;
+    // req.anotherProfile.followers = req.anotherProfile.followers.length
+    // req.anotherProfile.followings = req.anotherProfile.followings.length
+    req.anotherProfile.followRequestPending = undefined;
+    req.anotherProfile.followRequestSent = undefined;
+
+    //includes logic
+
+
+    return res.json(req.anotherProfile);
 };
 
 exports.updatePassword = (req, res) => {
@@ -155,3 +173,145 @@ exports.updateUser = async (req, res) => {
     });
     console.log('Done');
 };
+
+
+exports.followToggle = (req, res) => {
+    let user = req.profile
+    let anotherUser = req.anotherProfile
+
+    let { followings, followRequestSent } = user
+    let { followers, followRequestPending } = anotherUser
+
+
+    if (anotherUser.isPrivate) {
+        let followRequestSentUpdated, followRequestPendingUpdated;
+
+        if (followRequestSent.includes(anotherUser._id)) {
+            followRequestSentUpdated = followRequestSent.filter(id => id !== anotherUser._id)
+            followRequestPendingUpdated = followRequestPending.filter(id => id !== user._id)
+        } else {
+            followRequestSentUpdated = [...followRequestSent, anotherUser._id]
+            followRequestPendingUpdated = [...followRequestPending, user._id]
+        }
+
+        User.bulkWrite([{
+            updateOne: {
+                filter: { _id: user._id },
+                update: { followRequestSent: followRequestSentUpdated }
+            }
+        }, {
+            updateOne: {
+                filter: { _id: anotherUser._id },
+                update: { followRequestPending: followRequestPendingUpdated }
+            }
+        }], {}, (err, users) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                })
+            }
+            return res.status(201).json({
+                message: "Follow Request Updated"
+            })
+        })
+    } else {
+        let followingsUpdated, followersUpdated;
+
+        if (followings.includes(anotherUser._id)) {
+            followingsUpdated = followings.filter(id => id !== anotherUser._id)
+            followersUpdated = followers.filter(id => id !== user._id)
+        } else {
+            followingsUpdated = [...followings, anotherUser._id]
+            followersUpdated = [...followers, user._id]
+        }
+
+
+        User.bulkWrite([{
+            updateOne: {
+                filter: { _id: user._id },
+                update: { followings: followingsUpdated }
+            }
+        }, {
+            updateOne: {
+                filter: { _id: anotherUser._id },
+                update: { followers: followersUpdated }
+            }
+        }], {}, (err, users) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                })
+            }
+            return res.status(201).json({
+                message: "Follow Request Updated"
+            })
+
+        })
+    }
+}
+
+exports.followRequestHandler = (req, res) => {
+    let user = req.profile
+    let { accept } = req.body
+    let anotherUser = req.anotherProfile
+
+
+    let { followings, followRequestSent } = anotherUser
+    let { followers, followRequestPending } = user
+
+    let followRequestSentUpdated, followRequestPendingUpdated;
+    let followingsUpdated, followersUpdated;
+
+
+    followRequestPendingUpdated = followRequestPending.filter(id => id !== anotherUser._id)
+    followRequestSentUpdated = followRequestSent.filter(id => id !== user._id)
+
+
+    if (accept === "yes") {
+        followersUpdated = [...followers, user._id]
+        followingsUpdated = [...followings, anotherUser._id]
+
+        User.bulkWrite([{
+            updateMany: {
+                filter: { _id: user._id },
+                update: { followRequestSent: followRequestSentUpdated, followings: followingsUpdated }
+            }
+        }, {
+            updateMany: {
+                filter: { _id: anotherUser._id },
+                update: { followRequestPending: followRequestPendingUpdated, followers: followersUpdated }
+            }
+        }], {}, (err, users) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                })
+            }
+            return res.status(201).json({
+                message: "Follow Request Updated"
+            })
+        })
+
+    } else {
+        User.bulkWrite([{
+            updateOne: {
+                filter: { _id: user._id },
+                update: { followRequestSent: followRequestSentUpdated }
+            }
+        }, {
+            updateOne: {
+                filter: { _id: anotherUser._id },
+                update: { followRequestPending: followRequestPendingUpdated }
+            }
+        }], {}, (err, users) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err
+                })
+            }
+            return res.status(201).json({
+                message: "Follow Request Updated"
+            })
+        })
+    }
+}

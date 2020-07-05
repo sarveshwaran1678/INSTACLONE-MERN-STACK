@@ -22,62 +22,47 @@ exports.getUser = (req, res) => {
     req.profile.encry_password = undefined;
     req.profile.createdAt = undefined;
     req.profile.updatedAt = undefined;
-    req.profile.followers = req.profile.followers.length;
-    req.profile.followings = req.profile.followings.length;
+    // req.profile.followers = req.profile.followers.length;
+    // req.profile.followings = req.profile.followings.length;
     return res.json(req.profile);
 };
 
-//for users to update their detail
+exports.updatePassword = (req, res) => {
+    let user = req.profile;
 
-// updatePhoto = (req, res) => {
-//     let user;
-//     let photoName = uuidv4();
-//     let photoPath = '/assets/' + photoName + '.png';
+    let { oldPassword, newPassword } = req.body
 
-//     let form = new formidable.IncomingForm();
-//     form.keepExtensions = true;
+    if (user.authenticate(oldPassword)) {
 
-//     form.on('file', function (name, file) {
-//         // console.log(file);
+        if (newPassword.length > 5 && newPassword.length < 15) {
 
-//         Jimp.read(file.path, (err, lenna) => {
-//             if (err) {
-//                 return res.status(400).json({
-//                     error: 'File Upload Error',
-//                 });
-//             }
+            user.password = newPassword;
 
-//             lenna
-//                 .resize(256, 256) // resize
-//                 .quality(100) // set JPEG quality
-//                 .write(__dirname + '/assets/' + photoName + '.png'); // save
-//         });
-//     });
+            user.save((err, user) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: 'Updation of password failed',
+                    });
+                }
+                return res.status(201).json({
+                    message: "Password updated succesfully"
+                });
+            });
+        }
+        else {
+            return res.status(400).json({
+                error: 'Length of password should be >5  <15',
+            });
+        }
+    } else {
+        return res.status(400).json({
+            error: "Old password didn't match"
+        })
+    }
+}
 
-//     form.parse(req, (err, fields, file) => {
-//         if (err) {
-//             return res.status(400).json({
-//                 error: 'problem with image',
-//             });
-//         }
 
-//         //updation code
-//         user = req.profile;
-//         user.profilePicPath = photoPath;
-//         user = _.extend(user, fields);
-//         user.save((err, user) => {
-//             if (err) {
-//                 res.status(400).json({
-//                     error: 'Updation of user failed',
-//                 });
-//             }
-//             res.json(user);
-//         });
-//     });
-// };
-//product listing
-
-exports.followToggle = (req, res) => {};
+exports.followToggle = (req, res) => { };
 // exports.getAllUsers=(req,res)=>{
 //     User.find((err,user)=>{
 //         if(err||!user)
@@ -90,40 +75,33 @@ exports.followToggle = (req, res) => {};
 //     })
 // }
 
-//USER UPLOAD DETAILS
-let user;
-let photoPath;
-uploading = (file, photoName, res, req) => {
-    user = req.profile;
 
-    //Checking File Extension(only jpg/jpeg/png) and Size(upto 5mb)
-    if (file.path.match(/\.(jpg|jpeg|png)$/) && file.size < 5000000) {
-        Jimp.read(file.path, (err, lenna) => {
-            lenna
-                .resize(300, 300) // resize
-                .quality(100) // set JPEG quality
-                .write(__dirname + '/assets/' + photoName + '.png'); // save
-
-            console.log('Uplaoded');
-        });
-        console.log('Uplaoding....');
-        user.profilePicPath = photoPath;
-    } else {
-        user.profilePicPath = null;
-    }
-};
-
-//Update Profile Photo
+//Middleware Update Profile Photo
 exports.updateProfile = (req, res, next) => {
     let photoName = uuidv4();
-    photoPath = '/assets/' + photoName + '.png';
+    let photoPath = '/assets/' + photoName + '.png';
+    let user = req.profile
 
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
 
     form.on('file', function (name, file) {
         // console.log(file);
-        uploading(file, photoName, res, req);
+        //Checking File Extension(only jpg/jpeg/png) and Size(upto 5mb)
+        if (file.path.match(/\.(jpg|jpeg|png)$/) && file.size < 5000000) {
+            Jimp.read(file.path, (err, lenna) => {
+                lenna
+                    .resize(300, 300) // resize
+                    .quality(100) // set JPEG quality
+                    .write(__dirname + '/assets/' + photoName + '.png'); // save
+
+                console.log('Uploaded');
+            });
+            console.log('Uploading....');
+            user.profilePicPath = photoPath;
+        } else {
+            user.profilePicPath = null;
+        }
     });
 
     form.parse(req, (err, fields, file) => {

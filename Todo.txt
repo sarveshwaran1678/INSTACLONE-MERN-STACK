@@ -4,11 +4,10 @@ get all Followers**
 
 get all Followings**
 
-Followings Toggle
-
-Followers Toggle
+Followings Toggle**
 
 get all your FollowRequest**
 
 get others FollowRequest**
 
+change isPrivate

@@ -4,17 +4,19 @@ const router = express.Router();
 //imports
 const {
     getUserById,
+    getAnotherUserById,
     updateUser,
     getUser,
     getAnotherUser,
     updateProfile,
-    updatePassword,
+    updatePassword, followToggle, followRequestHandler
 } = require('../controllers/user');
 
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
 
 //parameter extractor
 router.param('userId', getUserById);
+router.param('anotherUserId', getAnotherUserById);
 
 //read user details
 router.get('/user/:userId', isSignedIn, isAuthenticated, getUser);
@@ -36,5 +38,18 @@ router.put(
     isAuthenticated,
     updatePassword
 );
+
+router.put(
+    "/user/follow/:userId/:anotherUserId",
+    isSignedIn,
+    isAuthenticated,
+    followToggle
+);
+
+//pass req.body.accept
+router.put(
+    "/user/followRequest/:userId/:anotherUserId", isSignedIn, isAuthenticated, followRequestHandler
+)
+
 
 module.exports = router;

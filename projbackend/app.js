@@ -6,6 +6,8 @@ const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 
+
+
 //My Routes
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
@@ -22,6 +24,8 @@ mongoose
     .then(() => {
         console.log('DB CONNECTED');
     });
+
+
 
 //Middlewares
 app.use(bodyParser.json());

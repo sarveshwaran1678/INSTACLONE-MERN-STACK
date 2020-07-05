@@ -1,14 +1,14 @@
 update password**
 
-get all Followers
+get all Followers**
 
-get all Followings 
+get all Followings**
 
 Followings Toggle
 
 Followers Toggle
 
-get all your FollowRequest 
+get all your FollowRequest**
 
-get others FollowRequest 
+get others FollowRequest**
 

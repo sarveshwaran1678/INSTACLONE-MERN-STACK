@@ -22,73 +22,23 @@ exports.getUser = (req, res) => {
     req.profile.encry_password = undefined;
     req.profile.createdAt = undefined;
     req.profile.updatedAt = undefined;
-    req.profile.followers = req.profile.followers.length;
-    req.profile.followings = req.profile.followings.length;
+    // req.profile.followers = req.profile.followers.length;
+    // req.profile.followings = req.profile.followings.length;
     return res.json(req.profile);
 };
 
-//for users to update their detail
-
-// updatePhoto = (req, res) => {
-//     let user;
-//     let photoName = uuidv4();
-//     let photoPath = '/assets/' + photoName + '.png';
-
-//     let form = new formidable.IncomingForm();
-//     form.keepExtensions = true;
-
-//     form.on('file', function (name, file) {
-//         // console.log(file);
-
-//         Jimp.read(file.path, (err, lenna) => {
-//             if (err) {
-//                 return res.status(400).json({
-//                     error: 'File Upload Error',
-//                 });
-//             }
-
-//             lenna
-//                 .resize(256, 256) // resize
-//                 .quality(100) // set JPEG quality
-//                 .write(__dirname + '/assets/' + photoName + '.png'); // save
-//         });
-//     });
-
-//     form.parse(req, (err, fields, file) => {
-//         if (err) {
-//             return res.status(400).json({
-//                 error: 'problem with image',
-//             });
-//         }
-
-//         //updation code
-//         user = req.profile;
-//         user.profilePicPath = photoPath;
-//         user = _.extend(user, fields);
-//         user.save((err, user) => {
-//             if (err) {
-//                 res.status(400).json({
-//                     error: 'Updation of user failed',
-//                 });
-//             }
-//             res.json(user);
-//         });
-//     });
-// };
-//product listing
-
-exports.followToggle = (req, res) => {};
-// exports.getAllUsers=(req,res)=>{
-//     User.find((err,user)=>{
-//         if(err||!user)
-//         {
-//             return res.status(400).json({
-//                 error:"User not found / DB error"
-//             })
-//         }
-//         return res.json(user)
-//     })
-// }
+//for user to get another User details
+exports.getAnotherUser = (req, res) => {
+    req.profile.salt = undefined;
+    req.profile.encry_password = undefined;
+    req.profile.createdAt = undefined;
+    req.profile.updatedAt = undefined;
+    // req.profile.followers = req.profile.followers.length;
+    // req.profile.followings = req.profile.followings.length;
+    req.profile.followRequestPending = undefined;
+    req.profile.followRequestSent = undefined;
+    return res.json(req.profile);
+};
 
 //USER UPLOAD DETAILS
 let user;
@@ -169,4 +119,29 @@ exports.updateUser = async (req, res) => {
         }
     });
     console.log('Done');
+};
+
+exports.updatePassword = (req, res) => {
+    const user = req.profile;
+    const { newPassword, oldPassword } = req.body;
+    if (newPassword.length < 5) {
+        return res.status(401).json({
+            error: 'Password should contain atleast 5 char',
+        });
+    }
+    if (!user.authenticate(oldPassword)) {
+        return res.status(401).json({
+            error: 'Password do not match',
+        });
+    }
+    user.password = newPassword;
+    console.log(user.password);
+    user.save((err, user) => {
+        if (err) {
+            res.status(400).json({
+                error: 'Updation of password failed',
+            });
+        }
+        res.json(user);
+    });
 };

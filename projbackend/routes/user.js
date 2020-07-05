@@ -6,7 +6,9 @@ const {
     getUserById,
     updateUser,
     getUser,
+    getAnotherUser,
     updateProfile,
+    updatePassword,
 } = require('../controllers/user');
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
 
@@ -18,13 +20,22 @@ router.put('/user/profile_pic/:userId');
 
 router.get('/user/follow/:userId');
 
-router.get('/user/:userId', isSignedIn, isAuthenticated, getUser); //make sure to use userId only as it is a fixed parameter that accepts getUserByID
+router.get('/user/:userId', isSignedIn, isAuthenticated, getUser);
+router.get('/anotherUser/:userId', getAnotherUser);
+
 router.put(
     '/user/:userId',
     isSignedIn,
     isAuthenticated,
     updateProfile,
     updateUser
+);
+
+router.put(
+    '/user/updatePassword/:userId',
+    isSignedIn,
+    isAuthenticated,
+    updatePassword
 );
 
 module.exports = router;

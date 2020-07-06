@@ -30,14 +30,14 @@ exports.getPicture = (req, res) => {
     return res.json(req.picture);
 };
 
-exports.getAnotherUserPost = (req, res) => {
+exports.getAnotherUserPicture = (req, res) => {
     return res.json(req.anotherPicture);
 };
 
 exports.uploadPicture = (req, res, next) => {
     let photoName = uuidv4();
     let photoPath = '/assets/' + photoName + '.png';
-    let post = req.post;
+    let picture = req.picture;
 
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -55,9 +55,9 @@ exports.uploadPicture = (req, res, next) => {
                 console.log('Uploaded');
             });
             console.log('Uploading....');
-            post.PicPath = photoPath;
+            picture.picturePath = photoPath;
         } else {
-            post.PicPath = null;
+            picture.picturePath = null;
         }
     });
 
@@ -105,4 +105,29 @@ exports.createPicture = (req, res) => {
     console.log('Done');
 };
 
-//New
+exports.removePicture = (req, res) => {
+    let picture = req.picture;
+    fs.unlinkSync(__dirname + picture.picturePath);
+    picture.remove((err, deletedpicture) => {
+        if (err) {
+            return res.status(400).json({
+                error: 'Failed to delete picture',
+            });
+        }
+        res.json({
+            message: 'Delete was successful',
+            picture: deletedpicture,
+        });
+    });
+};
+
+exports.likePicture = (req, res) => {
+    let user = req.profile;
+    let picture = req.picture;
+    let { likesFromUserId } = picture;
+    if (likesFromUserId.includes(user._id)) {
+        likesFromUserId = likesFromUserId.filter((id) => id === user._id);
+    } else {
+        likesFromUserId = [...likesFromUserId, user._id];
+    }
+};

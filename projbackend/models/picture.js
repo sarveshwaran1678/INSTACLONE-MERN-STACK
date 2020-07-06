@@ -20,6 +20,10 @@ const pictureSchema = new mongoose.Schema(
             type: Array,
             default: [],
         },
+        caption: {
+            type: String,
+            maxLength: 100,
+        },
     },
     { timestamps: true }
 );

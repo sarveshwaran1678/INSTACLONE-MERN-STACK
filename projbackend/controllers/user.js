@@ -2,6 +2,7 @@ const User = require('../models/user');
 const formidable = require('formidable');
 const _ = require('lodash');
 var Jimp = require('jimp');
+var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 
 exports.getUserById = (req, res, next, id) => {
@@ -100,9 +101,16 @@ exports.updatePassword = (req, res) => {
 
 //Middleware Update Profile Photo
 exports.updateProfile = (req, res, next) => {
-    let photoName = uuidv4();
-    let photoPath = '/assets/' + photoName + '.png';
     let user = req.profile;
+    let photoName = user._id;
+    let photoPath = '/assets/' + photoName + '.png';
+
+    fs.stat(__dirname + '/assets/' + photoName + '.png', function (err, stats) {
+        fs.unlink(__dirname + '/assets/' + photoName + '.png', function (err) {
+            if (err) return console.log(err);
+            console.log('file deleted successfully');
+        });
+    });
 
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -370,19 +378,19 @@ exports.followRequestHandler = (req, res) => {
 };
 
 exports.toggleIsPrivate = (req, res) => {
-    let user = req.profile
+    let user = req.profile;
 
-    user.isPrivate = !user.isPrivate
+    user.isPrivate = !user.isPrivate;
 
     user.save((err, user) => {
         if (err) {
             return res.status(500).json({
-                error: "DB error"
-            })
+                error: 'DB error',
+            });
         }
 
         return res.status(201).json({
-            message: "isPrivate changed"
-        })
-    })
-}
+            message: 'isPrivate changed',
+        });
+    });
+};

@@ -167,3 +167,39 @@ exports.createComment = (req, res) => {
         })
     })
 }
+
+
+exports.getCommentById = (req, res, next, id) => {
+    Comment.findById(id)
+        .populate('user')
+        .exec((err, comment) => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Picture not found',
+                });
+            }
+            req.comment = comment;
+            next();
+        });
+};
+
+exports.updateComment = (req, res) => {
+    let comment = new Comment(req.body)
+    comment.commentBody = req.body.commentBody
+    comment.user = req.profile._id
+    comment.picture = req.picture._id
+
+    comment.save((err, comment) => {
+        if (err) {
+            return res.status(400).json({
+                err: "NOT able to save Comment in DB"
+            })
+        }
+        res.json({
+            _id: comment._id,
+            userId: comment.user,
+            pictureId: comment.picture,
+            commentBody: comment.commentBody
+        })
+    })
+}

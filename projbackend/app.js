@@ -11,7 +11,7 @@ const cookieParser = require('cookie-parser');
 //My Routes
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
-// const postRoutes = require('./routes/post');
+const postRoutes = require('./routes/post');
 // const notificationRoutes = require('./routes/notification');
 
 //DB Connection
@@ -34,7 +34,7 @@ app.use(cookieParser());
 //Routes
 app.use('/api', authRoutes);
 app.use('/api', userRoutes);
-// app.use('/api', postRoutes);
+app.use('/api', postRoutes);
 // app.use('/api', notificationRoutes);
 
 //Port

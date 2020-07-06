@@ -1,37 +1,37 @@
-exports.getPostById = (req, res, next, id) => {
-    Post.findById(id)
+exports.getPictureById = (req, res, next, id) => {
+    Picture.findById(id)
         .populate('user')
-        .exec((err, post) => {
+        .exec((err, picture) => {
             if (err) {
                 return res.status(400).json({
-                    error: 'Post not found',
+                    error: 'Picture not found',
                 });
             }
-            req.post = post;
+            req.picture = picture;
             next();
         });
 };
 
-exports.getAnotherPostById = (req, res, next, id) => {
-    Post.findById(id)
+exports.getAnotherPictureById = (req, res, next, id) => {
+    Picture.findById(id)
         .populate('user')
-        .exec((err, post) => {
+        .exec((err, picture) => {
             if (err) {
                 return res.status(400).json({
-                    error: 'Post not found',
+                    error: 'Picture not found',
                 });
             }
-            req.post = post;
+            req.anotherPicture = picture;
             next();
         });
 };
 
-exports.getPost = (req, res) => {
-    return res.json(req.post);
+exports.getPicture = (req, res) => {
+    return res.json(req.picture);
 };
 
 exports.getAnotherUserPost = (req, res) => {
-    return res.json(req.anotherPost);
+    return res.json(req.anotherPicture);
 };
 
 exports.uploadPicture = (req, res, next) => {
@@ -72,7 +72,7 @@ exports.uploadPicture = (req, res, next) => {
     next();
 };
 
-exports.createPost = (req, res) => {
+exports.createPicture = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
 
@@ -84,23 +84,25 @@ exports.createPost = (req, res) => {
         }
 
         //updation code
-        let post = req.post;
-        post = _.extend(post, fields);
+        let picture = req.picture;
+        picture = _.extend(picture, fields);
 
-        if (post.picturePath === null) {
+        if (picture.picturePath === null) {
             res.status(400).json({
                 error: 'Upload Valid Image',
             });
-        } else if (post.postPath !== null) {
-            post.save((err, post) => {
+        } else if (picture.picturePath !== null) {
+            picture.save((err, picture) => {
                 if (err) {
                     res.status(400).json({
-                        error: 'Updation of post failed',
+                        error: 'Updation of picture failed',
                     });
                 }
-                res.json(post);
+                res.json(picture);
             });
         }
     });
     console.log('Done');
 };
+
+//New

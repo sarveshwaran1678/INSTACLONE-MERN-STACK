@@ -1,3 +1,8 @@
+const User = require("../models/user")
+const Comment = require("../models/comment")
+const Picture = require("../models/picture")
+const Reply = require("../models/comment")
+
 exports.getPictureById = (req, res, next, id) => {
     Picture.findById(id)
         .populate('user')
@@ -30,7 +35,7 @@ exports.getPicture = (req, res) => {
     return res.json(req.picture);
 };
 
-exports.getAnotherUserPost = (req, res) => {
+exports.getAnotherUserPicture = (req, res) => {
     return res.json(req.anotherPicture);
 };
 

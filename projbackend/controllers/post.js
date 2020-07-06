@@ -1,7 +1,7 @@
-const User = require("../models/user")
-const Comment = require("../models/comment")
-const Picture = require("../models/picture")
-const Reply = require("../models/comment")
+const User = require('../models/user');
+const Comment = require('../models/comment');
+const Picture = require('../models/picture');
+const Reply = require('../models/comment');
 
 const formidable = require('formidable');
 const _ = require('lodash');
@@ -133,12 +133,15 @@ exports.removePicture = (req, res) => {
 };
 
 exports.likePicture = (req, res) => {
-    let user = req.profile;
-    let picture = req.picture;
-    let { likesFromUserId } = picture;
-    if (likesFromUserId.includes(user._id)) {
-        likesFromUserId = likesFromUserId.filter((id) => id === user._id);
-    } else {
-        likesFromUserId = [...likesFromUserId, user._id];
+    let { liked } = req.body;
+    if (liked === 'yes') {
+        let user = req.profile;
+        let picture = req.picture;
+        let { likesFromUserId } = picture;
+        if (likesFromUserId.includes(user._id)) {
+            likesFromUserId = likesFromUserId.filter((id) => id === user._id);
+        } else {
+            likesFromUserId = [...likesFromUserId, user._id];
+        }
     }
 };

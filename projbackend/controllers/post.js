@@ -1,3 +1,11 @@
+const User = require('../models/user');
+const Picture = require('../models/picture');
+const formidable = require('formidable');
+const _ = require('lodash');
+var Jimp = require('jimp');
+var fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
+
 exports.getPictureById = (req, res, next, id) => {
     Picture.findById(id)
         .populate('user')

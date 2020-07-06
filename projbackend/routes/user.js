@@ -11,7 +11,7 @@ const {
     updateProfile,
     updatePassword,
     followToggle,
-    followRequestHandler,
+    followRequestHandler, toggleIsPrivate
 } = require('../controllers/user');
 
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
@@ -41,6 +41,7 @@ router.put(
     updatePassword
 );
 
+//toggle the followers 
 router.put(
     '/user/follow/:userId/:anotherUserId',
     isSignedIn,
@@ -55,5 +56,15 @@ router.put(
     isAuthenticated,
     followRequestHandler
 );
+
+
+//toggle IsPrivate
+router.put(
+    "/user/toggleIsPrivate/:userId",
+    isSignedIn,
+    isAuthenticated,
+    toggleIsPrivate
+)
+
 
 module.exports = router;

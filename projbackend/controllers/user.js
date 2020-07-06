@@ -292,7 +292,7 @@ exports.followRequestHandler = (req, res) => {
 
     if (followRequestPending.length === 0) {
         return res.status(400).json({
-            msg: 'No Request',
+            message: 'No Request',
         });
     } else if (accept === 'yes') {
         followersUpdated = [...followers, anotherUser._id];
@@ -368,3 +368,21 @@ exports.followRequestHandler = (req, res) => {
         );
     }
 };
+
+exports.toggleIsPrivate = (req, res) => {
+    let user = req.profile
+
+    user.isPrivate = !user.isPrivate
+
+    user.save((err, user) => {
+        if (err) {
+            return res.status(500).json({
+                error: "DB error"
+            })
+        }
+
+        return res.status(201).json({
+            message: "isPrivate changed"
+        })
+    })
+}

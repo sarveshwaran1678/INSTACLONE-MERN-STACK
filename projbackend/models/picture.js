@@ -16,7 +16,7 @@ const pictureSchema = new mongoose.Schema(
             trim: true,
             maxLength: 100,
         },
-        likesFromOtherUserId: {
+        likesFromUserId: {
             type: Array,
             default: [],
         },

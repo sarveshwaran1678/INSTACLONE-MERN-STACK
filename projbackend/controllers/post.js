@@ -3,6 +3,12 @@ const Comment = require("../models/comment")
 const Picture = require("../models/picture")
 const Reply = require("../models/comment")
 
+const formidable = require('formidable');
+const _ = require('lodash');
+var Jimp = require('jimp');
+var fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
+
 exports.getPictureById = (req, res, next, id) => {
     Picture.findById(id)
         .populate('user')
@@ -42,7 +48,7 @@ exports.getAnotherUserPicture = (req, res) => {
 exports.uploadPicture = (req, res, next) => {
     let photoName = uuidv4();
     let photoPath = '/assets/' + photoName + '.png';
-    let post = req.post;
+    let picture = req.picture;
 
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -60,9 +66,9 @@ exports.uploadPicture = (req, res, next) => {
                 console.log('Uploaded');
             });
             console.log('Uploading....');
-            post.PicPath = photoPath;
+            picture.picturePath = photoPath;
         } else {
-            post.PicPath = null;
+            picture.picturePath = null;
         }
     });
 
@@ -110,4 +116,29 @@ exports.createPicture = (req, res) => {
     console.log('Done');
 };
 
-//New
+exports.removePicture = (req, res) => {
+    let picture = req.picture;
+    fs.unlinkSync(__dirname + picture.picturePath);
+    picture.remove((err, deletedpicture) => {
+        if (err) {
+            return res.status(400).json({
+                error: 'Failed to delete picture',
+            });
+        }
+        res.json({
+            message: 'Delete was successful',
+            picture: deletedpicture,
+        });
+    });
+};
+
+exports.likePicture = (req, res) => {
+    let user = req.profile;
+    let picture = req.picture;
+    let { likesFromUserId } = picture;
+    if (likesFromUserId.includes(user._id)) {
+        likesFromUserId = likesFromUserId.filter((id) => id === user._id);
+    } else {
+        likesFromUserId = [...likesFromUserId, user._id];
+    }
+};

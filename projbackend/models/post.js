@@ -11,11 +11,6 @@ const postSchema = new mongoose.Schema(
             type: ObjectId,
             ref: 'User',
         },
-        description: {
-            type: String,
-            trim: true,
-            maxLength: 100,
-        },
         likesFromUserId: {
             type: Array,
             default: [],
@@ -23,6 +18,7 @@ const postSchema = new mongoose.Schema(
         caption: {
             type: String,
             maxLength: 100,
+            trim: true
         }
     },
     { timestamps: true }

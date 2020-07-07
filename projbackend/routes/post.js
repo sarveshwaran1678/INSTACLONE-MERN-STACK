@@ -6,7 +6,6 @@ const { getUserById } = require('../controllers/user');
 const {
     getPictureById,
     getAnotherPictureById,
-    createComment,
     createPicture,
     uploadPicture,
     removePicture,

@@ -1,9 +1,26 @@
 const express = require('express');
 const router = express.Router();
 
-//parameter extractor
+const { isSignedIn, isAuthenticated } = require('../controllers/auth');
+const { getUserById } = require('../controllers/user');
+const { getPictureById } = require("../controllers/post")
 
-//res.body must pass commentBody with it
-// router.post("/comment/newComment/:userId/:picId", isSignedIn, isAuthenticated, createComment)
+router.param('userId', getUserById);
+router.param('pictureId', getPictureById);
 
-// router.post('/comment/newComment/:userId/:picId', isSignedIn, isAuthenticated);
+//create comment
+//commentBody must come from req.body
+router.post("/post/comments/:userId/:pictureId", isSignedIn, isAuthenticated, createComment)
+
+//get all comments on a post
+
+
+//get all comments by a user
+
+
+//update a comment 
+
+
+//delete a comment
+
+

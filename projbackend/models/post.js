@@ -23,29 +23,7 @@ const postSchema = new mongoose.Schema(
         caption: {
             type: String,
             maxLength: 100,
-        },
-        comments: [{
-            fromUserId: {
-                type: ObjectId,
-                ref: 'User',
-            },
-            commentBody: {
-                type: String,
-                trim: true,
-                maxLength: 100,
-            },
-            reply: [{
-                fromUserId: {
-                    type: ObjectId,
-                    ref: 'User',
-                },
-                replyBody: {
-                    type: String,
-                    trim: true,
-                    maxLength: 100,
-                },
-            }]
-        }]
+        }
     },
     { timestamps: true }
 );

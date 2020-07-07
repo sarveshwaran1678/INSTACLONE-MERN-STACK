@@ -8,10 +8,11 @@ const {
     updateUser,
     getUser,
     getAnotherUser,
-    updateProfile,
+    updateProfilePhoto,
     updatePassword,
     followToggle,
-    followRequestHandler, toggleIsPrivate
+    followRequestHandler,
+    toggleIsPrivate,
 } = require('../controllers/user');
 
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
@@ -26,12 +27,13 @@ router.get('/anotherUser/:userId', getAnotherUser);
 
 //update user details
 router.put(
-    '/user/:userId',
+    '/user/updateProfilePhoto/:userId',
     isSignedIn,
     isAuthenticated,
-    updateProfile,
-    updateUser
+    updateProfilePhoto
 );
+
+router.put('/user/updateUser/:userId', isSignedIn, isAuthenticated, updateUser);
 
 //update Password
 router.put(
@@ -41,7 +43,7 @@ router.put(
     updatePassword
 );
 
-//toggle the followers 
+//toggle the followers
 router.put(
     '/user/follow/:userId/:anotherUserId',
     isSignedIn,
@@ -57,14 +59,12 @@ router.put(
     followRequestHandler
 );
 
-
 //toggle IsPrivate
 router.put(
-    "/user/toggleIsPrivate/:userId",
+    '/user/toggleIsPrivate/:userId',
     isSignedIn,
     isAuthenticated,
     toggleIsPrivate
-)
-
+);
 
 module.exports = router;

@@ -4,6 +4,7 @@ const _ = require('lodash');
 var Jimp = require('jimp');
 var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const cloudinary = require('cloudinary').v2;
 
 exports.getUserById = (req, res, next, id) => {
     User.findById(id, (err, user) => {
@@ -84,49 +85,42 @@ exports.updatePassword = (req, res) => {
 };
 
 //Middleware Update Profile Photo
-exports.updateProfile = (req, res, next) => {
+exports.updateProfilePhoto = (req, res) => {
     let user = req.profile;
-    let photoName = user._id;
-    let photoPath = '/assets/' + photoName + '.png';
-
-    fs.stat(__dirname + '/assets/' + photoName + '.png', function (err, stats) {
-        fs.unlink(__dirname + '/assets/' + photoName + '.png', function (err) {
-            if (err) return console.log(err);
-            console.log('file deleted successfully');
-        });
-    });
-
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
-
-    form.on('file', function (name, file) {
-        // console.log(file);
-        //Checking File Extension(only jpg/jpeg/png) and Size(upto 5mb)
+    form.parse(req).on('file', function (name, file) {
+        const path = file.path;
+        const uniqueFilename = user._id;
         if (file.path.match(/\.(jpg|jpeg|png)$/) && file.size < 5000000) {
-            Jimp.read(file.path, (err, lenna) => {
-                lenna
-                    .resize(300, 300) // resize
-                    .quality(100) // set JPEG quality
-                    .write(__dirname + '/assets/' + photoName + '.png'); // save
+            cloudinary.uploader.upload(
+                path,
+                {
+                    public_id: `InstaClone/${uniqueFilename}`,
+                    tags: `InstaClone`,
+                }, // directory and tags are optional
+                function (err, image) {
+                    if (err) return res.send(err);
+                    console.log('file uploaded to Cloudinary');
 
-                console.log('Uploaded');
-            });
-            console.log('Uploading....');
-            user.profilePicPath = photoPath;
+                    user.profilePicPath = image.url;
+                    // console.log(user);
+                    user.save((err, user) => {
+                        if (err) {
+                            res.status(400).json({
+                                error: err,
+                            });
+                        }
+                        return res.json(user);
+                    });
+                }
+            );
         } else {
-            user.profilePicPath = null;
-        }
-    });
-
-    form.parse(req, (err, fields, file) => {
-        if (err) {
-            return res.status(400).json({
-                error: 'problem with image',
+            return res.json({
+                error: 'Invalid File Type',
             });
         }
     });
-
-    next();
 };
 
 //Update User
@@ -135,32 +129,18 @@ exports.updateUser = async (req, res) => {
     form.keepExtensions = true;
 
     form.parse(req, (err, fields, file) => {
-        if (err) {
-            return res.status(400).json({
-                error: 'problem with image',
-            });
-        }
-
         //updation code
         let user = req.profile;
         user = _.extend(user, fields);
-
-        if (user.profilePicPath === null) {
-            res.status(400).json({
-                error: 'Upload Valid Image',
-            });
-        } else if (user.profilePicPath !== null) {
-            user.save((err, user) => {
-                if (err) {
-                    res.status(400).json({
-                        error: 'Updation of user failed',
-                    });
-                }
-                res.json(user);
-            });
-        }
+        user.save((err, user) => {
+            if (err) {
+                res.status(400).json({
+                    error: 'Updation of user failed',
+                });
+            }
+            res.json(user);
+        });
     });
-    console.log('Done');
 };
 
 exports.followToggle = (req, res) => {

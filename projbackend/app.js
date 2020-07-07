@@ -5,6 +5,13 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+var cloudinary = require('cloudinary').v2;
+
+cloudinary.config({
+    cloud_name: 'gonfreak',
+    api_key: '482975378339268',
+    api_secret: 'RVwU7b9X3h-9ZTy-xEbws7rYc_M',
+});
 
 //My Routes
 const authRoutes = require('./routes/auth');

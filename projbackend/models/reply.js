@@ -7,7 +7,7 @@ const replySchema = new mongoose.Schema({
         type: ObjectId,
         ref: 'User',
     },
-    commentId: {
+    CommentId: {
         type: ObjectId,
         ref: "Comment"
     },

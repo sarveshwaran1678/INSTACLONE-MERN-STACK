@@ -12,11 +12,19 @@ const {
     updateComment,
     removeUserComment,
     removePostComment,
+    createReply,
+    getReplyById,
+    updateReply,
+    getAllReplyByUser,
+    removeUserReply,
+    removeCommentReply,
+    removeReplies
 } = require('../controllers/comment');
 
 router.param('userId', getUserById);
 router.param('pictureId', getPictureById);
 router.param('commentId', getCommentById);
+router.param('replyId', getReplyById);
 
 //create comment
 //commentBody must come from req.body
@@ -29,7 +37,7 @@ router.post(
 
 //get all comments on a post
 router.get(
-    '/post/getAllCommentsByPost/:userId/:pictureId',
+    '/getAllCommentsByPost/:userId/:pictureId',
     isSignedIn,
     isAuthenticated,
     getAllCommentsByPost
@@ -37,7 +45,7 @@ router.get(
 
 //get all comments by a user
 router.get(
-    '/post/getAllCommentsByUser/:userId/:pictureId',
+    '/getAllCommentsByUser/:userId/:pictureId',
     isSignedIn,
     isAuthenticated,
     getAllCommentsByUser
@@ -54,19 +62,64 @@ router.put(
 
 //delete a comment
 //remove your own comment
+//will remove all its reply as well
 router.delete(
-    '/post/removeUserComment/:userId/:commentId',
+    '/removeUserComment/:userId/:commentId',
     isSignedIn,
     isAuthenticated,
-    removeUserComment
+    removeUserComment,
+    removeReplies
 );
 //remove comment from your post
 
 router.delete(
-    '/post/removePostComment/:pictureId/:userId/:commentId',
+    '/removePostComment/:pictureId/:userId/:commentId',
     isSignedIn,
     isAuthenticated,
-    removePostComment
+    removePostComment,
+    removeReplies
 );
+
+//create Reply
+router.post(
+    "/createReply/:userId/:commentId",
+    isSignedIn,
+    isAuthenticated,
+    createReply
+)
+
+//get all reply by a user
+router.get(
+    '/getAllCommentsByUser/:userId/:replyId',
+    isSignedIn,
+    isAuthenticated,
+    getAllReplyByUser
+);
+
+//update a reply
+//req.body.replyBody is must and will update replyBody
+router.put(
+    '/updateComment/:userId/:replyId',
+    isSignedIn,
+    isAuthenticated,
+    updateReply
+);
+
+//delete reply by user
+
+router.delete(
+    '/removeUserReply/:userId/:commentId',
+    isSignedIn,
+    isAuthenticated,
+    removeUserReply
+);
+//delete reply on that comment Id
+router.delete(
+    "/removeCommentReply/:userId/:commentId/:replyId",
+    isSignedIn,
+    isAuthenticated,
+    removeCommentReply
+)
+
 
 module.exports = router;

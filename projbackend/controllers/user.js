@@ -135,7 +135,7 @@ exports.updateUser = async (req, res) => {
         user.save((err, user) => {
             if (err) {
                 res.status(400).json({
-                    error: 'Updation of user failed',
+                    error: err,
                 });
             }
             res.json(user);

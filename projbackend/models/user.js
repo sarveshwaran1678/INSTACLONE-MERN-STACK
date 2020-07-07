@@ -9,6 +9,7 @@ var userSchema = new mongoose.Schema(
             type: String,
             required: true,
             maxlength: 20,
+            minlength: 5,
             trim: true,
             unique: true,
         },
@@ -17,21 +18,18 @@ var userSchema = new mongoose.Schema(
             maxlength: 32,
             required: true,
             trim: true,
+            minlength: 5,
         },
         email: {
             type: String,
             trim: true,
             required: true,
             unique: true,
-            validate(value) {
-                if (!validator.isEmail(value)) {
-                    throw new Error('Email is invalid');
-                }
-            },
         },
         bio: {
             type: String,
             trim: true,
+            maxlength: 100,
         },
         encry_password: {
             type: String,

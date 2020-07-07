@@ -7,6 +7,7 @@ const _ = require('lodash');
 var Jimp = require('jimp');
 var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
+const cloudinary = require('cloudinary').v2;
 
 exports.getPictureById = (req, res, next, id) => {
     Post.findById(id)
@@ -112,41 +113,58 @@ exports.createPicture = (req, res) => {
 };
 
 exports.removePicture = (req, res) => {
+
     let picture = req.picture;
-    fs.unlinkSync(__dirname + picture.picturePath);
-    picture.remove((err, deletedpicture) => {
-        if (err) {
-            return res.status(400).json({
-                error: 'Failed to delete picture',
+
+    if (toString(req.profile._id) == toString(req.picture.userId)) {
+
+        fs.unlinkSync(__dirname + picture.picturePath);
+        picture.remove((err, deletedpicture) => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Failed to delete picture',
+                });
+            }
+            res.json({
+                message: 'Delete was successful',
             });
-        }
-        res.json({
-            message: 'Delete was successful',
         });
-    });
+    } else {
+        return res.status(400).json({
+            err: "Not authorized to remove Picture"
+        })
+    }
+
 };
 
 //Update the Picture Caption
 exports.updateCaption = (req, res) => {
-    Post.findByIdAndUpdate(
-        { _id: req.picture._id },
-        { $set: req.body }, //req.body will have values from frontend to be updated
-        { new: true, runValidators: true },
-        (err, picture) => {
-            if (err) {
-                return res.status(400).json({
-                    error: err,
-                });
+    if (toString(req.profile._id) == toString(req.picture.userId)) {
+        Post.findByIdAndUpdate(
+            { _id: req.picture._id },
+            { $set: req.body }, //req.body will have values from frontend to be updated
+            { new: true, runValidators: true },
+            (err, picture) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: err,
+                    });
+                }
+                res.json(picture);
             }
-            res.json(picture);
-        }
-    );
+        );
+    } else {
+        return res.status(400).json({
+            err: "Not authorized to update Caption"
+        })
+    }
 };
 
 //Like and Unlike
 exports.likePicture = (req, res) => {
     let user = req.profile;
     let picture = req.picture;
+
 
     if (picture.likesFromUserId.includes(user._id)) {
         Post.findByIdAndUpdate(
@@ -177,4 +195,61 @@ exports.likePicture = (req, res) => {
             }
         );
     }
+
 };
+
+
+exports.updateProfilePhoto = (req, res) => {
+    let user = req.profile;
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.parse(req).on('file', function (name, file) {
+        const path = file.path;
+        const uniqueFilename = user._id;
+        if (file.path.match(/\.(jpg|jpeg|png)$/) && file.size < 5000000) {
+            cloudinary.uploader.upload(
+                path,
+                {
+                    public_id: `InstaClone/${uniqueFilename}`,
+                    tags: `InstaClone`,
+                }, // directory and tags are optional
+                function (err, image) {
+                    if (err) return res.send(err);
+                    console.log('file uploaded to Cloudinary');
+                    user.profilePicPath = image.url;
+                    // console.log(user);
+                    user.save((err, user) => {
+                        if (err) {
+                            res.status(400).json({
+                                error: err,
+                            });
+                        }
+                        return res.json(user);
+                    });
+                }
+            );
+        } else {
+            return res.json({
+                error: 'Invalid File Type',
+            });
+        }
+    });
+};
+
+exports.updateUser = async (req, res) => {
+    form.keepExtensions = true;
+
+    form.parse(req, (err, fields, file) => {
+        //updation code
+        let user = req.profile;
+        user = _.extend(user, fields);
+        user.save((err, user) => {
+            if (err) {
+                res.status(400).json({
+                    error: 'Updation of user failed',
+                });
+            }
+            res.json(user);
+        });
+    });
+}

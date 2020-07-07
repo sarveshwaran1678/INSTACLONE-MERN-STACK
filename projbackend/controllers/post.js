@@ -1,6 +1,6 @@
 const User = require("../models/user")
 const Comment = require("../models/comment")
-const Picture = require("../models/picture")
+const Picture = require("../models/post")
 const Reply = require("../models/comment")
 
 const formidable = require('formidable');

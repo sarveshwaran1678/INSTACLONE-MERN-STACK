@@ -92,37 +92,49 @@ exports.createPicture = (req, res) => {
 };
 
 exports.removePicture = (req, res) => {
-    let picture = req.picture;
-    cloudinary.uploader.destroy(picture.picturePath, function (result) {
-        console.log(result);
-    });
-    picture.remove((err, deletedpicture) => {
-        if (err) {
-            return res.status(400).json({
-                error: 'Failed to delete picture',
-            });
-        }
-        res.json({
-            message: 'Delete was successful',
+    if (toString(req.profile._id) == toString(req.picture.UserId)) {
+        let picture = req.picture;
+        cloudinary.uploader.destroy(picture.picturePath, function (result) {
+            console.log(result);
         });
-    });
+        picture.remove((err, deletedpicture) => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Failed to delete picture',
+                });
+            }
+            res.json({
+                message: 'Delete was successful',
+            });
+        });
+    } else {
+        return res.status(400).json({
+            err: 'Not authorized to remove comment',
+        });
+    }
 };
 
 //Update the Picture Caption
 exports.updateCaption = (req, res) => {
-    Post.findByIdAndUpdate(
-        { _id: req.picture._id },
-        { $set: req.body }, //req.body will have values from frontend to be updated
-        { new: true, runValidators: true },
-        (err, picture) => {
-            if (err) {
-                return res.status(400).json({
-                    error: err,
-                });
+    if (toString(req.profile._id) == toString(req.picture.UserId)) {
+        Post.findByIdAndUpdate(
+            { _id: req.picture._id },
+            { $set: req.body }, //req.body will have values from frontend to be updated
+            { new: true, runValidators: true },
+            (err, picture) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: err,
+                    });
+                }
+                res.json(picture);
             }
-            res.json(picture);
-        }
-    );
+        );
+    } else {
+        return res.status(400).json({
+            err: 'Not authorized to remove comment',
+        });
+    }
 };
 
 //Like and Unlike

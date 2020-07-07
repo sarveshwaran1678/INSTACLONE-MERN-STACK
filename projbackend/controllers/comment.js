@@ -57,7 +57,7 @@ exports.getAllCommentsByUser = (req, res) => {
 };
 
 exports.updateComment = (req, res) => {
-    if (req.profile._id === req.comment.UserId) {
+    if (toString(req.profile._id) == toString(req.comment.UserId)) {
         Comment.findByIdAndUpdate(
             req.comment._id,
             { commentBody: req.body.commentBody },
@@ -73,13 +73,13 @@ exports.updateComment = (req, res) => {
         );
     } else {
         return res.status(400).json({
-            err: 'Not authorized to update comment',
+            err: 'Not authorized to remove comment',
         });
     }
 };
 
 exports.removeUserComment = (req, res) => {
-    if (req.profile._id === req.comment.UserId) {
+    if (toString(req.profile._id) == toString(req.comment.UserId)) {
         Comment.findByIdAndDelete(req.comment._id, (err, comment) => {
             if (err) {
                 return res.status(500).json({
@@ -97,8 +97,8 @@ exports.removeUserComment = (req, res) => {
 
 exports.removePostComment = (req, res) => {
     if (
-        req.profile._id === req.picture.userId &&
-        req.picture._id === req.comment.PostId
+        toString(req.profile._id) === toString(req.picture.userId) &&
+        toString(req.picture._id) === toString(req.comment.PostId)
     ) {
         Comment.findByIdAndDelete(req.comment._id, (err, comment) => {
             if (err) {

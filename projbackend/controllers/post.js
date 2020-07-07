@@ -1,7 +1,6 @@
 const User = require('../models/user');
-const Comment = require('../models/comment');
-const Picture = require('../models/picture');
-const Reply = require('../models/comment');
+
+const Post = require('../models/post');
 
 const formidable = require('formidable');
 const _ = require('lodash');
@@ -10,7 +9,7 @@ var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 
 exports.getPictureById = (req, res, next, id) => {
-    Picture.findById(id)
+    Post.findById(id)
         .populate('user')
         .exec((err, picture) => {
             if (err) {
@@ -24,7 +23,7 @@ exports.getPictureById = (req, res, next, id) => {
 };
 
 exports.getAnotherPictureById = (req, res, next, id) => {
-    Picture.findById(id)
+    Post.findById(id)
         .populate('user')
         .exec((err, picture) => {
             if (err) {
@@ -129,7 +128,7 @@ exports.removePicture = (req, res) => {
 
 //Update the Picture Caption
 exports.updateCaption = (req, res) => {
-    Picture.findByIdAndUpdate(
+    Post.findByIdAndUpdate(
         { _id: req.picture._id },
         { $set: req.body }, //req.body will have values from frontend to be updated
         { new: true, runValidators: true },
@@ -150,7 +149,7 @@ exports.likePicture = (req, res) => {
     let picture = req.picture;
 
     if (picture.likesFromUserId.includes(user._id)) {
-        Picture.findByIdAndUpdate(
+        Post.findByIdAndUpdate(
             { _id: req.picture._id },
             { $pull: { likesFromUserId: req.profile._id } },
             { new: true, useFindAndModify: false },
@@ -164,7 +163,7 @@ exports.likePicture = (req, res) => {
             }
         );
     } else {
-        Picture.findByIdAndUpdate(
+        Post.findByIdAndUpdate(
             { _id: req.picture._id },
             { $push: { likesFromUserId: req.profile._id } },
             { new: true, useFindAndModify: false },

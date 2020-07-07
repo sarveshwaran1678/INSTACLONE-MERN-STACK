@@ -35,8 +35,7 @@ exports.getUser = (req, res) => {
     req.profile.encry_password = undefined;
     req.profile.createdAt = undefined;
     req.profile.updatedAt = undefined;
-    // req.profile.followers = req.profile.followers.length;
-    // req.profile.followings = req.profile.followings.length;
+
     return res.json(req.profile);
 };
 
@@ -46,11 +45,8 @@ exports.getAnotherUser = (req, res) => {
     req.anotherProfile.encry_password = undefined;
     req.anotherProfile.createdAt = undefined;
     req.anotherProfile.updatedAt = undefined;
-    // req.anotherProfile.followers = req.anotherProfile.followers.length
-    // req.anotherProfile.followings = req.anotherProfile.followings.length
     req.anotherProfile.followRequestPending = undefined;
     req.anotherProfile.followRequestSent = undefined;
-
     //includes logic
 
     return res.json(req.anotherProfile);
@@ -86,18 +82,6 @@ exports.updatePassword = (req, res) => {
         });
     }
 };
-
-// exports.getAllUsers=(req,res)=>{
-//     User.find((err,user)=>{
-//         if(err||!user)
-//         {
-//             return res.status(400).json({
-//                 error:"User not found / DB error"
-//             })
-//         }
-//         return res.json(user)
-//     })
-// }
 
 //Middleware Update Profile Photo
 exports.updateProfile = (req, res, next) => {
@@ -186,199 +170,175 @@ exports.followToggle = (req, res) => {
     let { followings, followRequestSent } = user;
     let { followers, followRequestPending } = anotherUser;
 
-    //checking receiver is private and not not followed by sender
-    //if sender is already follower of receiver ,receiver is no longer private sender
-    if (
-        anotherUser.isPrivate &&
-        followings.includes(anotherUser._id) === false
-    ) {
-        let followRequestSentUpdated, followRequestPendingUpdated;
-
-        //To unfollow If already following
-        if (followings.includes(anotherUser._id)) {
-            followingsUpdated = followings.filter(
-                (id) => id === anotherUser._id
-            );
-            followersUpdated = followers.filter((id) => id === user._id);
-        }
-
-        //To delete follow request
-        if (followRequestSent.includes(anotherUser._id)) {
-            followRequestSentUpdated = followRequestSent.filter(
-                (id) => id === anotherUser._id
-            );
-            followRequestPendingUpdated = followRequestPending.filter(
-                (id) => id === user._id
-            );
-        } else {
-            followRequestSentUpdated = [...followRequestSent, anotherUser._id];
-            followRequestPendingUpdated = [...followRequestPending, user._id];
-        }
-
-        User.bulkWrite(
-            [
-                {
-                    updateOne: {
-                        filter: { _id: user._id },
-                        update: { followRequestSent: followRequestSentUpdated },
-                    },
-                },
-                {
-                    updateOne: {
-                        filter: { _id: anotherUser._id },
-                        update: {
-                            followRequestPending: followRequestPendingUpdated,
+    if (anotherUser.isPrivate) {
+        if (followers.includes(user._id)) {
+            User.bulkWrite(
+                [
+                    {
+                        updateOne: {
+                            filter: { _id: user._id },
+                            update: {
+                                $pull: { followings: anotherUser._id },
+                            },
                         },
                     },
-                },
-            ],
-            {},
-            (err, users) => {
-                if (err) {
-                    return res.status(400).json({
-                        error: err,
+                    {
+                        updateOne: {
+                            filter: { _id: anotherUser._id },
+                            update: { $pull: { followers: user._id } },
+                        },
+                    },
+                ],
+                {},
+                (err, users) => {
+                    if (err) {
+                        return res.status(400).json({
+                            error: err,
+                        });
+                    }
+                    return res.status(201).json({
+                        message: 'Unfollowed',
                     });
                 }
-                return res.status(201).json({
-                    message: 'Follow Request Updated',
-                });
-            }
-        );
-    } else {
-        let followingsUpdated, followersUpdated;
-
-        if (followings.includes(anotherUser._id)) {
-            followingsUpdated = followings.filter(
-                (id) => id === anotherUser._id
             );
-            followersUpdated = followers.filter((id) => id === user._id);
-        } else {
-            followingsUpdated = [...followings, anotherUser._id];
-            followersUpdated = [...followers, user._id];
-        }
-
-        User.bulkWrite(
-            [
-                {
-                    updateOne: {
-                        filter: { _id: user._id },
-                        update: { followings: followingsUpdated },
+        } else if (
+            followRequestSent.includes(anotherUser._id) &&
+            followRequestPending.includes(user._id)
+        ) {
+            User.bulkWrite(
+                [
+                    {
+                        updateOne: {
+                            filter: { _id: user._id },
+                            update: {
+                                $pull: { followRequestSent: anotherUser._id },
+                            },
+                        },
                     },
-                },
-                {
-                    updateOne: {
-                        filter: { _id: anotherUser._id },
-                        update: { followers: followersUpdated },
+                    {
+                        updateOne: {
+                            filter: { _id: anotherUser._id },
+                            update: {
+                                $pull: { followRequestPending: user._id },
+                            },
+                        },
                     },
-                },
-            ],
-            {},
-            (err, users) => {
-                if (err) {
-                    return res.status(400).json({
-                        error: err,
+                ],
+                {},
+                (err, users) => {
+                    if (err) {
+                        return res.status(400).json({
+                            error: err,
+                        });
+                    }
+                    return res.status(201).json({
+                        message: 'Follow Request Cancelled',
                     });
                 }
-                return res.status(201).json({
-                    message: 'Follow Request Updated',
-                });
-            }
-        );
+            );
+        } else {
+            User.bulkWrite(
+                [
+                    {
+                        updateOne: {
+                            filter: { _id: user._id },
+                            update: {
+                                $push: { followRequestSent: anotherUser._id },
+                            },
+                        },
+                    },
+                    {
+                        updateOne: {
+                            filter: { _id: anotherUser._id },
+                            update: {
+                                $push: { followRequestPending: user._id },
+                            },
+                        },
+                    },
+                ],
+                {},
+                (err, users) => {
+                    if (err) {
+                        return res.status(400).json({
+                            error: err,
+                        });
+                    }
+                    return res.status(201).json({
+                        message: 'Follow Request Sent',
+                    });
+                }
+            );
+        }
+    } else {
+        if (followers.includes(user._id)) {
+            User.bulkWrite(
+                [
+                    {
+                        updateOne: {
+                            filter: { _id: user._id },
+                            update: {
+                                $pull: { followings: anotherUser._id },
+                            },
+                        },
+                    },
+                    {
+                        updateOne: {
+                            filter: { _id: anotherUser._id },
+                            update: { $pull: { followers: user._id } },
+                        },
+                    },
+                ],
+                {},
+                (err, users) => {
+                    if (err) {
+                        return res.status(400).json({
+                            error: err,
+                        });
+                    }
+                    return res.status(201).json({
+                        message: 'unfollowed Public',
+                    });
+                }
+            );
+        } else {
+            User.bulkWrite(
+                [
+                    {
+                        updateOne: {
+                            filter: { _id: user._id },
+                            update: {
+                                $push: { followings: anotherUser._id },
+                            },
+                        },
+                    },
+                    {
+                        updateOne: {
+                            filter: { _id: anotherUser._id },
+                            update: { $push: { followers: user._id } },
+                        },
+                    },
+                ],
+                {},
+                (err, users) => {
+                    if (err) {
+                        return res.status(400).json({
+                            error: err,
+                        });
+                    }
+                    return res.status(201).json({
+                        message: 'Followed Public',
+                    });
+                }
+            );
+        }
     }
 };
 
-// exports.followRequestHandler = (req, res) => {
-//     let user = req.profile;
-//     let { accept } = req.body;
-//     let anotherUser = req.anotherProfile;
-
-//     let { followings, followRequestSent } = anotherUser;
-//     let { followers, followRequestPending } = user;
-
-//     let followRequestSentUpdated, followRequestPendingUpdated;
-//     let followingsUpdated, followersUpdated;
-
-//     if (followRequestPending.length === 0) {
-//         return res.status(400).json({
-//             message: 'No Request',
-//         });
-//     } else if (accept === 'yes') {
-//         followersUpdated = [...followers, anotherUser._id];
-//         followingsUpdated = [...followings, user._id];
-//         followRequestPendingUpdated = followRequestPending.filter(
-//             (id) => id === anotherUser._id
-//         );
-//         followRequestSentUpdated = followRequestSent.filter(
-//             (id) => id === user._id
-//         );
-//         User.bulkWrite(
-//             [
-//                 {
-//                     updateMany: {
-//                         filter: { _id: anotherUser._id },
-//                         update: {
-//                             followRequestSent: followRequestSentUpdated,
-//                             followings: followingsUpdated,
-//                         },
-//                     },
-//                 },
-//                 {
-//                     updateMany: {
-//                         filter: { _id: user._id },
-//                         update: {
-//                             followRequestPending: followRequestPendingUpdated,
-//                             followers: followersUpdated,
-//                         },
-//                     },
-//                 },
-//             ],
-//             {},
-//             (err, users) => {
-//                 if (err) {
-//                     return res.status(400).json({
-//                         error: err,
-//                     });
-//                 }
-//                 return res.status(201).json({
-//                     message: 'Follow Request Updated',
-//                 });
-//             }
-//         );
-//     } else if (accept === 'no') {
-//         User.bulkWrite(
-//             [
-//                 {
-//                     updateOne: {
-//                         filter: { _id: user._id },
-//                         update: { followRequestSent: followRequestSentUpdated },
-//                     },
-//                 },
-//                 {
-//                     updateOne: {
-//                         filter: { _id: anotherUser._id },
-//                         update: {
-//                             followRequestPending: followRequestPendingUpdated,
-//                         },
-//                     },
-//                 },
-//             ],
-//             {},
-//             (err, users) => {
-//                 if (err) {
-//                     return res.status(400).json({
-//                         error: err,
-//                     });
-//                 }
-//                 return res.status(201).json({
-//                     message: 'Follow Request Updated',
-//                 });
-//             }
-//         );
-//     }
-// };
-
 exports.followRequestHandler = (req, res) => {
     let { accept } = req.body;
+    let user = req.profile;
+    let anotherUser = req.anotherProfile;
+
     if (accept === 'yes') {
         User.bulkWrite(
             [
@@ -386,14 +346,50 @@ exports.followRequestHandler = (req, res) => {
                     updateMany: {
                         filter: { _id: anotherUser._id },
                         update: {
-                            $push: {},
+                            $pull: { followRequestSent: user._id },
+                            $push: { followings: user._id },
                         },
                     },
                 },
                 {
                     updateMany: {
                         filter: { _id: user._id },
-                        update: {},
+                        update: {
+                            $push: { followers: anotherUser._id },
+                            $pull: { followRequestPending: anotherUser._id },
+                        },
+                    },
+                },
+            ],
+            {},
+            (err, users) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: err,
+                    });
+                }
+                return res.status(201).json({
+                    message: 'Follow Request Accepted',
+                });
+            }
+        );
+    } else {
+        User.bulkWrite(
+            [
+                {
+                    updateMany: {
+                        filter: { _id: anotherUser._id },
+                        update: {
+                            $pull: { followRequestSent: user._id },
+                        },
+                    },
+                },
+                {
+                    updateMany: {
+                        filter: { _id: user._id },
+                        update: {
+                            $pull: { followRequestPending: anotherUser._id },
+                        },
                     },
                 },
             ],

@@ -91,7 +91,7 @@ exports.createPicture = (req, res) => {
         }
 
         //updation code
-        picture = new Picture(fields);
+        picture = new Post(fields);
         picture.picturePath = tempPath;
         picture.userId = req.profile._id;
         if (picture.picturePath === null) {

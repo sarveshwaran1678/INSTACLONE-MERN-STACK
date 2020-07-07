@@ -18,8 +18,12 @@ const postSchema = new mongoose.Schema(
         caption: {
             type: String,
             maxLength: 100,
-            trim: true
-        }
+            trim: true,
+        },
+        pictureUrl: {
+            type: String,
+            required: true,
+        },
     },
     { timestamps: true }
 );

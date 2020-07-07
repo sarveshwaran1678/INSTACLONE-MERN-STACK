@@ -103,7 +103,8 @@ exports.updateProfilePhoto = (req, res) => {
                     if (err) return res.send(err);
                     console.log('file uploaded to Cloudinary');
 
-                    user.profilePicPath = image.url;
+                    user.profilePicPath = image.public_id;
+                    picture.pictureUrl = image.url;
                     // console.log(user);
                     user.save((err, user) => {
                         if (err) {

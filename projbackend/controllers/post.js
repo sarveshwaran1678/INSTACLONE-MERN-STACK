@@ -45,16 +45,15 @@ exports.getAnotherUserPicture = (req, res) => {
     return res.json(req.anotherPicture);
 };
 
+let picture, tempPath;
 exports.uploadPicture = (req, res, next) => {
     let photoName = uuidv4();
     let photoPath = '/assets/' + photoName + '.png';
-    let picture = req.picture;
 
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
 
-    form.on('file', function (name, file) {
-        // console.log(file);
+    form.on('file', function (name, file, fields) {
         //Checking File Extension(only jpg/jpeg/png) and Size(upto 5mb)
         if (file.path.match(/\.(jpg|jpeg|png)$/) && file.size < 5000000) {
             Jimp.read(file.path, (err, lenna) => {
@@ -62,13 +61,11 @@ exports.uploadPicture = (req, res, next) => {
                     .resize(300, 300) // resize
                     .quality(100) // set JPEG quality
                     .write(__dirname + '/assets/' + photoName + '.png'); // save
-
-                console.log('Uploaded');
             });
-            console.log('Uploading....');
-            picture.picturePath = photoPath;
+
+            tempPath = photoPath;
         } else {
-            picture.picturePath = null;
+            tempPath = null;
         }
     });
 
@@ -95,9 +92,9 @@ exports.createPicture = (req, res) => {
         }
 
         //updation code
-        let picture = req.picture;
-        picture = _.extend(picture, fields);
-
+        picture = new Picture(fields);
+        picture.picturePath = tempPath;
+        picture.userId = req.profile._id;
         if (picture.picturePath === null) {
             res.status(400).json({
                 error: 'Upload Valid Image',
@@ -106,14 +103,13 @@ exports.createPicture = (req, res) => {
             picture.save((err, picture) => {
                 if (err) {
                     res.status(400).json({
-                        error: 'Updation of picture failed',
+                        error: err,
                     });
                 }
                 res.json(picture);
             });
         }
     });
-    console.log('Done');
 };
 
 exports.removePicture = (req, res) => {
@@ -127,46 +123,59 @@ exports.removePicture = (req, res) => {
         }
         res.json({
             message: 'Delete was successful',
-            picture: deletedpicture,
         });
     });
 };
 
-exports.likePicture = (req, res) => {
-    let { liked } = req.body;
-    if (liked === 'yes') {
-        let user = req.profile;
-        let picture = req.picture;
-        let { likesFromUserId } = picture;
-        if (likesFromUserId.includes(user._id)) {
-            likesFromUserId = likesFromUserId.filter((id) => id === user._id);
-        } else {
-            likesFromUserId = [...likesFromUserId, user._id];
+//Update the Picture Caption
+exports.updateCaption = (req, res) => {
+    Picture.findByIdAndUpdate(
+        { _id: req.picture._id },
+        { $set: req.body }, //req.body will have values from frontend to be updated
+        { new: true, runValidators: true },
+        (err, picture) => {
+            if (err) {
+                return res.status(400).json({
+                    error: err,
+                });
+            }
+            res.json(picture);
         }
-    }
+    );
 };
 
+//Like and Unlike
+exports.likePicture = (req, res) => {
+    let user = req.profile;
+    let picture = req.picture;
 
-
-
-
-exports.createComment = (req, res) => {
-    let comment = new Comment(req.body)
-    comment.commentBody = req.body.commentBody
-    comment.user = req.profile._id
-    comment.picture = req.picture._id
-
-    comment.save((err, comment) => {
-        if (err) {
-            return res.status(400).json({
-                err: "NOT able to save Comment in DB"
-            })
-        }
-        res.json({
-            _id: comment._id,
-            userId: comment.user,
-            pictureId: comment.picture,
-            commentBody: comment.commentBody
-        })
-    })
-}
+    if (picture.likesFromUserId.includes(user._id)) {
+        Picture.findByIdAndUpdate(
+            { _id: req.picture._id },
+            { $pull: { likesFromUserId: req.profile._id } },
+            { new: true, useFindAndModify: false },
+            (err, picture) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: err,
+                    });
+                }
+                res.json(picture);
+            }
+        );
+    } else {
+        Picture.findByIdAndUpdate(
+            { _id: req.picture._id },
+            { $push: { likesFromUserId: req.profile._id } },
+            { new: true, useFindAndModify: false },
+            (err, picture) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: err,
+                    });
+                }
+                res.json(picture);
+            }
+        );
+    }
+};

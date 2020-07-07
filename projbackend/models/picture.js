@@ -5,16 +5,12 @@ const pictureSchema = new mongoose.Schema(
     {
         picturePath: {
             type: String,
+            default: '',
             required: true,
         },
         userId: {
             type: ObjectId,
             ref: 'User',
-        },
-        description: {
-            type: String,
-            trim: true,
-            maxLength: 100,
         },
         likesFromUserId: {
             type: Array,
@@ -22,7 +18,13 @@ const pictureSchema = new mongoose.Schema(
         },
         caption: {
             type: String,
-            maxLength: 100,
+            minLength: 5,
+            validate(value) {
+                if (value.length < 5) {
+                    throw new Error('SIze Should be more than 5 char');
+                }
+            },
+            trim: true,
         },
     },
     { timestamps: true }

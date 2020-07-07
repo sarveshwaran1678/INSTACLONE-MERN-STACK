@@ -7,7 +7,6 @@ const {
     getPictureById,
     getAnotherPictureById,
     createPicture,
-    uploadPicture,
     removePicture,
     likePicture,
     getPicture,
@@ -23,7 +22,6 @@ router.post(
     '/picture/create/:userId',
     isSignedIn,
     isAuthenticated,
-    uploadPicture,
     createPicture
 );
 

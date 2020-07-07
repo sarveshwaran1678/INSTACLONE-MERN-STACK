@@ -47,7 +47,12 @@ var userSchema = new mongoose.Schema(
         },
         profilePicPath: {
             type: String,
-            default: '../defaultassets/profile-pic.jpg',
+            default: 'InstaClone/8c65398a-3357-4a3a-b7ad-a234e2afabb9',
+        },
+        profilePicUrl: {
+            type: String,
+            default:
+                'http://res.cloudinary.com/gonfreak/image/upload/v1594153662/InstaClone/8c65398a-3357-4a3a-b7ad-a234e2afabb9.jpg',
         },
         followings: {
             type: Array,

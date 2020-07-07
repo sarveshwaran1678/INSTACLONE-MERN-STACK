@@ -1,17 +1,61 @@
 const express = require('express');
 const router = express.Router();
 
+const { isSignedIn, isAuthenticated } = require('../controllers/auth');
+const { getUserById } = require('../controllers/user');
 const {
     getPictureById,
     getAnotherPictureById,
+    createComment,
+    createPicture,
+    uploadPicture,
+    removePicture,
+    likePicture,
+    getPicture,
+    updateCaption,
+    getAnotherUserPicture,
 } = require('../controllers/post');
-const { isSignedIn, isAuthenticated } = require('../controllers/auth');
 
-//parameter extractor
+router.param('userId', getUserById);
+router.param('pictureId', getPictureById);
+router.param('anotherPictureId', getAnotherPictureById);
 
-router.param('picId', getPictureById);
-router.param('anotherPicId', getAnotherPictureById);
+router.post(
+    '/picture/create/:userId',
+    isSignedIn,
+    isAuthenticated,
+    uploadPicture,
+    createPicture
+);
 
-router.post('/comment/newComment/:userId/:picId', isSignedIn, isAuthenticated);
+router.delete(
+    '/picture/remove/:userId/:pictureId',
+    isSignedIn,
+    isAuthenticated,
+    removePicture
+);
+
+router.put(
+    '/picture/like/:userId/:pictureId',
+    isSignedIn,
+    isAuthenticated,
+    likePicture
+);
+
+router.put(
+    '/picture/updateCaption/:userId/:pictureId',
+    isSignedIn,
+    isAuthenticated,
+    updateCaption
+);
+
+router.get(
+    '/picture/:userId/:pictureId',
+    isSignedIn,
+    isAuthenticated,
+    getPicture
+);
+
+router.get('/anotherPicture/:anotherUserId/:pictureId', getAnotherUserPicture);
 
 module.exports = router;

@@ -3,6 +3,7 @@ const Post = require('../models/post');
 const Comment = require('../models/comment');
 const Reply = require('../models/reply');
 const { result } = require('lodash');
+const { check } = require('express-validator');
 
 exports.getCommentById = (req, res, next, id) => {
     Comment.findById(id).exec((err, comment) => {
@@ -231,51 +232,37 @@ exports.removeReplies = (req, res) => {
 };
 
 exports.removeAllCommentWithReply = async (req, res) => {
-    // Comment.deleteMany({ PostId: req.picture._id }, (err) => {
-    //     if (err) {
-    //         return res.status(500).json({
-    //             error: err,
-    //         });
-    //     }
-    //     next();
-    // });
     let resValue;
-
-    let comments = await Comment.find({ PostId: req.picture._id })
-    await Comment.find({ PostId: req.picture._id }, { projection: { _id: 1 } }).toArray(function (err, result) {
-        if (err) {
-            return res.status(500).json({
-                error: err,
-            });
-        }
-        comments = [result]
-    })
-
+    let comments = [];
+    await Comment.find({ PostId: req.picture._id })
+        .then((result) => {
+            comments = [...result];
+            // console.log(result);
+        })
+        .catch((e) => console.log(e));
+    // console.log(comments);
     await comments.map((commentObj) => {
         Comment.findByIdAndDelete(commentObj._id, (err, comment) => {
             if (err) {
-                resValue = "error"
-                return
+                resValue = 'error';
+                return;
             }
-        })
+        });
 
         Reply.deleteMany({ CommentId: commentObj._id }, (err) => {
             if (err) {
-                resValue = "error"
-                return
+                resValue = 'error';
+                return;
             }
-        })
-    })
+        });
+    });
 
-    const respond = () => {
-        if (resValue == "error")
-            return res.status(500).json({
-                error: "Something went wrong"
-            })
-        else
-            return res.status(200).json({
-                message: "Succesfully deleted all comments and reply"
-            })
-    }
-
+    if (resValue == 'error')
+        return res.status(500).json({
+            error: 'Something went wrong',
+        });
+    else
+        return res.status(200).json({
+            message: 'Succesfully deleted all comments and reply',
+        });
 };

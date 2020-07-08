@@ -94,20 +94,15 @@ exports.uploadPost = (req, res) => {
 exports.removePicture = (req, res, next) => {
     if (toString(req.profile._id) == toString(req.picture.UserId)) {
         let picture = req.picture;
-        cloudinary.uploader.destroy(picture.picturePath, function (result) {
-            console.log(result);
-        });
+        cloudinary.uploader.destroy(picture.picturePath, function (result) {});
         picture.remove((err, deletedpicture) => {
             if (err) {
                 return res.status(400).json({
                     error: 'Failed to delete picture',
                 });
             }
-            res.json({
-                message: 'Delete was successful',
-            });
+            next();
         });
-        next();
     } else {
         return res.status(400).json({
             err: 'Not authorized to remove comment',

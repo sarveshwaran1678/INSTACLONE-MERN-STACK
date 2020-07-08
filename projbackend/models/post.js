@@ -24,6 +24,10 @@ const postSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        isStory: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true }
 );

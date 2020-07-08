@@ -6,30 +6,35 @@ const { getUserById } = require('../controllers/user');
 const {
     getPictureById,
     getAnotherPictureById,
-    createPicture,
+    uploadPost,
     removePicture,
     likePicture,
     getPicture,
     updateCaption,
     getAnotherUserPicture,
+    uploadStory,
 } = require('../controllers/post');
+
+const { removeReplies, removeAllComment } = require('../controllers/comment');
 
 router.param('userId', getUserById);
 router.param('pictureId', getPictureById);
 router.param('anotherPictureId', getAnotherPictureById);
 
+router.post('/picture/upload/:userId', isSignedIn, isAuthenticated, uploadPost);
 router.post(
-    '/picture/create/:userId',
+    '/picture/uploadStory/:userId',
     isSignedIn,
     isAuthenticated,
-    createPicture
+    uploadStory
 );
-
 router.delete(
     '/picture/remove/:userId/:pictureId',
     isSignedIn,
     isAuthenticated,
-    removePicture
+    removePicture,
+    removeAllComment,
+    removeReplies
 );
 
 router.put(

@@ -104,7 +104,7 @@ exports.updateProfilePhoto = (req, res) => {
                     console.log('file uploaded to Cloudinary');
 
                     user.profilePicPath = image.public_id;
-                    picture.pictureUrl = image.url;
+                    user.pictureUrl = image.url;
                     // console.log(user);
                     user.save((err, user) => {
                         if (err) {
@@ -147,7 +147,8 @@ exports.updateUser = async (req, res) => {
 exports.followToggle = (req, res) => {
     let user = req.profile;
     let anotherUser = req.anotherProfile;
-
+    let userName = user.username;
+    let anotherUserName = anotherUser.username;
     let { followings, followRequestSent } = user;
     let { followers, followRequestPending } = anotherUser;
 
@@ -178,7 +179,7 @@ exports.followToggle = (req, res) => {
                         });
                     }
                     return res.status(201).json({
-                        message: 'Unfollowed',
+                        message: userName + ' unfollowed ' + anotherUserName,
                     });
                 }
             );
@@ -213,7 +214,10 @@ exports.followToggle = (req, res) => {
                         });
                     }
                     return res.status(201).json({
-                        message: 'Follow Request Cancelled',
+                        message:
+                            userName +
+                            ' cancelled follow request sent to ' +
+                            anotherUserName,
                     });
                 }
             );
@@ -245,7 +249,10 @@ exports.followToggle = (req, res) => {
                         });
                     }
                     return res.status(201).json({
-                        message: 'Follow Request Sent',
+                        message:
+                            userName +
+                            ' have sent follow request to ' +
+                            anotherUserName,
                     });
                 }
             );
@@ -277,7 +284,7 @@ exports.followToggle = (req, res) => {
                         });
                     }
                     return res.status(201).json({
-                        message: 'unfollowed Public',
+                        message: userName + ' unfollowed ' + anotherUserName,
                     });
                 }
             );
@@ -307,7 +314,8 @@ exports.followToggle = (req, res) => {
                         });
                     }
                     return res.status(201).json({
-                        message: 'Followed Public',
+                        message:
+                            userName + ' started Following ' + anotherUserName,
                     });
                 }
             );
@@ -319,7 +327,11 @@ exports.followRequestHandler = (req, res) => {
     let { accept } = req.body;
     let user = req.profile;
     let anotherUser = req.anotherProfile;
-
+    let userName = user.username;
+    let anotherUserName = anotherUser.username;
+    if (user.followRequestPending.includes(anotherUser._id) === false) {
+        return res.json({ msg: 'No request received' });
+    }
     if (accept === 'yes') {
         User.bulkWrite(
             [
@@ -350,7 +362,10 @@ exports.followRequestHandler = (req, res) => {
                     });
                 }
                 return res.status(201).json({
-                    message: 'Follow Request Accepted',
+                    message:
+                        userName +
+                        ' accepted follow request of ' +
+                        anotherUserName,
                 });
             }
         );
@@ -382,7 +397,10 @@ exports.followRequestHandler = (req, res) => {
                     });
                 }
                 return res.status(201).json({
-                    message: 'Follow Request Updated',
+                    message:
+                        userName +
+                        ' denied follow request of ' +
+                        anotherUserName,
                 });
             }
         );

@@ -45,7 +45,8 @@ exports.getAnotherUserPicture = (req, res) => {
     return res.json(req.anotherPicture);
 };
 
-exports.createPicture = (req, res) => {
+//Uploading Post
+exports.uploadPost = (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
 
@@ -53,8 +54,7 @@ exports.createPicture = (req, res) => {
         const path = file.picturePath.path;
         const uniqueFilename = uuidv4();
         const picture = new Post(fields);
-        console.log(picture);
-        console.log(path);
+
         if (
             path.match(/\.(jpg|jpeg|png)$/) &&
             file.picturePath.size < 5000000
@@ -69,10 +69,9 @@ exports.createPicture = (req, res) => {
                 function (err, image) {
                     if (err) return res.send(err);
                     console.log('file uploaded to Cloudinary');
-
+                    picture.UserId = req.profile._id;
                     picture.picturePath = image.public_id;
                     picture.pictureUrl = image.url;
-                    // console.log(user);
                     picture.save((err, picture) => {
                         if (err) {
                             res.status(400).json({
@@ -91,7 +90,8 @@ exports.createPicture = (req, res) => {
     });
 };
 
-exports.removePicture = (req, res) => {
+//Deleting Post
+exports.removePicture = (req, res, next) => {
     if (toString(req.profile._id) == toString(req.picture.UserId)) {
         let picture = req.picture;
         cloudinary.uploader.destroy(picture.picturePath, function (result) {
@@ -107,6 +107,7 @@ exports.removePicture = (req, res) => {
                 message: 'Delete was successful',
             });
         });
+        next();
     } else {
         return res.status(400).json({
             err: 'Not authorized to remove comment',
@@ -141,7 +142,7 @@ exports.updateCaption = (req, res) => {
 exports.likePicture = (req, res) => {
     let user = req.profile;
     let picture = req.picture;
-
+    const username = user.username;
     if (picture.likesFromUserId.includes(user._id)) {
         Post.findByIdAndUpdate(
             { _id: req.picture._id },
@@ -153,7 +154,10 @@ exports.likePicture = (req, res) => {
                         error: err,
                     });
                 }
-                res.json(picture);
+                res.json({
+                    message: 'Post wad unliked by: ' + username,
+                    picture: picture,
+                });
             }
         );
     } else {
@@ -167,8 +171,75 @@ exports.likePicture = (req, res) => {
                         error: err,
                     });
                 }
-                res.json(picture);
+                res.json({
+                    message: 'Post wad liked by: ' + username,
+                    picture: picture,
+                });
             }
         );
     }
+};
+
+//Uploading Story
+exports.uploadStory = (req, res) => {
+    let form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+
+    form.parse(req, function (error, fields, file) {
+        const path = file.picturePath.path;
+        const uniqueFilename = uuidv4();
+        const picture = new Post(fields);
+
+        if (
+            path.match(/\.(jpg|jpeg|png)$/) &&
+            file.picturePath.size < 5000000
+        ) {
+            cloudinary.uploader.upload(
+                path,
+                {
+                    public_id: `InstaClone/${uniqueFilename}`,
+                    tags: `InstaClone`,
+                }, // directory and tags are optional
+
+                async function (err, image) {
+                    if (err) return res.send(err);
+                    console.log('file uploaded to Cloudinary');
+                    picture.isStory = true;
+                    picture.UserId = req.profile._id;
+                    picture.picturePath = image.public_id;
+                    picture.pictureUrl = image.url;
+                    await picture.save((err, picture) => {
+                        if (err) {
+                            return res.status(400).json({
+                                error: err,
+                            });
+                        }
+                        res.json(picture);
+                    });
+
+                    //delay for deleting story
+                    setTimeout(
+                        () =>
+                            picture.remove((err, deletedpicture) => {
+                                if (err) {
+                                    console.log('failed');
+                                }
+                                console.log(deletedpicture);
+                                cloudinary.uploader.destroy(
+                                    deletedpicture.picturePath,
+                                    function (result) {
+                                        console.log('deleted from cloud');
+                                    }
+                                );
+                            }),
+                        120000
+                    );
+                }
+            );
+        } else {
+            return res.json({
+                error: 'Invalid File Type',
+            });
+        }
+    });
 };

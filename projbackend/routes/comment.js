@@ -18,7 +18,7 @@ const {
     getAllReplyByUser,
     removeUserReply,
     removeCommentReply,
-    removeReplies
+    removeReplies,
 } = require('../controllers/comment');
 
 router.param('userId', getUserById);
@@ -45,7 +45,7 @@ router.get(
 
 //get all comments by a user
 router.get(
-    '/getAllCommentsByUser/:userId/:pictureId',
+    '/getAllCommentsByUser/:userId',
     isSignedIn,
     isAuthenticated,
     getAllCommentsByUser
@@ -70,8 +70,8 @@ router.delete(
     removeUserComment,
     removeReplies
 );
-//remove comment from your post
 
+//remove comment from your post
 router.delete(
     '/removePostComment/:pictureId/:userId/:commentId',
     isSignedIn,
@@ -80,17 +80,18 @@ router.delete(
     removeReplies
 );
 
+//have to pass req.body.replyBody
 //create Reply
 router.post(
-    "/createReply/:userId/:commentId",
+    '/createReply/:userId/:commentId',
     isSignedIn,
     isAuthenticated,
     createReply
-)
+);
 
 //get all reply by a user
 router.get(
-    '/getAllCommentsByUser/:userId/:replyId',
+    '/getAllReplyByUser/:userId/:replyId',
     isSignedIn,
     isAuthenticated,
     getAllReplyByUser
@@ -99,7 +100,7 @@ router.get(
 //update a reply
 //req.body.replyBody is must and will update replyBody
 router.put(
-    '/updateComment/:userId/:replyId',
+    '/updateReply/:userId/:replyId',
     isSignedIn,
     isAuthenticated,
     updateReply
@@ -108,18 +109,17 @@ router.put(
 //delete reply by user
 
 router.delete(
-    '/removeUserReply/:userId/:commentId',
+    '/removeUserReply/:userId/:replyId',
     isSignedIn,
     isAuthenticated,
     removeUserReply
 );
 //delete reply on that comment Id
 router.delete(
-    "/removeCommentReply/:userId/:commentId/:replyId",
+    '/removeCommentReply/:userId/:commentId/:replyId',
     isSignedIn,
     isAuthenticated,
     removeCommentReply
-)
-
+);
 
 module.exports = router;

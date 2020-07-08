@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
+const Reply = require('../models/reply');
 
 exports.getCommentById = (req, res, next, id) => {
     Comment.findById(id).exec((err, comment) => {
@@ -34,8 +35,8 @@ exports.getAllCommentsByPost = (req, res) => {
         .limit(8)
         .exec((err, comments) => {
             if (err) {
-                return res.status.json({
-                    error: 'No product found',
+                return res.status(500).json({
+                    error: 'No comment found',
                 });
             }
             res.json(comments);
@@ -43,17 +44,18 @@ exports.getAllCommentsByPost = (req, res) => {
 };
 
 exports.getAllCommentsByUser = (req, res) => {
-
+    console.log('hit');
     Comment.find({ UserId: req.profile._id })
         .populate('PostId', 'picturePath')
         .limit(10)
+        //Add skip count *10
         .exec((err, comments) => {
             if (err) {
-                return res.status.json({
-                    error: 'No product found',
+                return res.status(500).json({
+                    error: 'No comment found',
                 });
             }
-            res.json(comments);
+            res.status(400).json(comments);
         });
 };
 
@@ -87,7 +89,7 @@ exports.removeUserComment = (req, res, next) => {
                     error: err,
                 });
             }
-            next()
+            next();
         });
     } else {
         return res.status(400).json({
@@ -97,9 +99,7 @@ exports.removeUserComment = (req, res, next) => {
 };
 
 exports.removePostComment = (req, res, next) => {
-    if (
-        toString(req.profile._id) === toString(req.picture.userId)
-    ) {
+    if (toString(req.profile._id) === toString(req.picture.userId)) {
         Comment.findByIdAndDelete(req.comment._id, (err, comment) => {
             if (err) {
                 return res.status(500).json({
@@ -125,7 +125,7 @@ exports.getReplyById = (req, res, next, id) => {
         req.reply = reply;
         next();
     });
-}
+};
 
 exports.createReply = (req, res) => {
     const reply = new Reply(req.body);
@@ -134,17 +134,17 @@ exports.createReply = (req, res) => {
     reply.save((err, reply) => {
         if (err) {
             return res.status(500).send({
-                error: err
+                error: err,
             });
         }
         return res.json(reply);
     });
-}
+};
 
 exports.getAllReplyByUser = (req, res) => {
     Reply.find({ UserId: req.profile._id })
         .populate('CommentId', 'UserId commentBody')
-        .populate("UserId", "username")
+        .populate('UserId', 'username')
         .limit(10)
         .exec((err, comments) => {
             if (err) {
@@ -154,7 +154,7 @@ exports.getAllReplyByUser = (req, res) => {
             }
             res.json(comments);
         });
-}
+};
 
 exports.updateReply = (req, res) => {
     if (toString(req.profile._id) == toString(req.reply.UserId)) {
@@ -176,7 +176,7 @@ exports.updateReply = (req, res) => {
             err: 'Not authorized to remove reply',
         });
     }
-}
+};
 
 exports.removeUserReply = (req, res) => {
     if (toString(req.profile._id) == toString(req.reply.UserId)) {
@@ -186,14 +186,16 @@ exports.removeUserReply = (req, res) => {
                     error: err,
                 });
             }
-            res.json(reply);
+            res.json({
+                msg: 'Reply Deleted Successfully',
+            });
         });
     } else {
         return res.status(400).json({
             err: 'Not authorized to remove reply',
         });
     }
-}
+};
 
 exports.removeCommentReply = (req, res) => {
     if (toString(req.profile._id) == toString(req.comment.UserId)) {
@@ -203,14 +205,16 @@ exports.removeCommentReply = (req, res) => {
                     error: err,
                 });
             }
-            res.json(reply);
+            res.json({
+                msg: 'Reply Deleted Successfully On Your Comment',
+            });
         });
     } else {
         return res.status(400).json({
             err: 'Not authorized to remove comment',
         });
     }
-}
+};
 
 exports.removeReplies = (req, res) => {
     Reply.deleteMany({ CommentId: req.comment._id }, (err) => {
@@ -220,7 +224,18 @@ exports.removeReplies = (req, res) => {
             });
         }
         return res.json({
-            message: "Comment with Replies deleted Successfully"
+            message: 'Comment with Replies deleted Successfully',
         });
-    })
-}
+    });
+};
+
+exports.removeAllComment = (req, res, next) => {
+    Comment.deleteMany({ PostId: req.picture._id }, (err) => {
+        if (err) {
+            return res.status(500).json({
+                error: err,
+            });
+        }
+        next();
+    });
+};

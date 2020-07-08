@@ -241,9 +241,9 @@ exports.removeAllCommentWithReply = async (req, res) => {
     // });
     let resValue;
 
-    let comments = []
-    await Comment.find({ PostId: req.picture._id }, (err) => {
-        if (err, result) {
+    let comments = await Comment.find({ PostId: req.picture._id })
+    await Comment.find({ PostId: req.picture._id }, { projection: { _id: 1 } }).toArray(function (err, result) {
+        if (err) {
             return res.status(500).json({
                 error: err,
             });
@@ -267,13 +267,15 @@ exports.removeAllCommentWithReply = async (req, res) => {
         })
     })
 
-    if (resValue == "error")
-        return res.status(500).json({
-            error: "Something went wrong"
-        })
-    else
-        return res.status(200).json({
-            message: "Succesfully deleted all comments and reply"
-        })
+    const respond = () => {
+        if (resValue == "error")
+            return res.status(500).json({
+                error: "Something went wrong"
+            })
+        else
+            return res.status(200).json({
+                message: "Succesfully deleted all comments and reply"
+            })
+    }
 
 };

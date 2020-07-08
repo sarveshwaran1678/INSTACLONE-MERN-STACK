@@ -15,7 +15,7 @@ const {
     uploadStory,
 } = require('../controllers/post');
 
-const { removeReplies, removeAllComment } = require('../controllers/comment');
+const { removeAllCommentWithReply } = require('../controllers/comment');
 
 router.param('userId', getUserById);
 router.param('pictureId', getPictureById);
@@ -33,8 +33,7 @@ router.delete(
     isSignedIn,
     isAuthenticated,
     removePicture,
-    removeAllComment,
-    removeReplies
+    removeAllCommentWithReply
 );
 
 router.put(

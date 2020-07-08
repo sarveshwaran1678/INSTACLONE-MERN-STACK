@@ -2,6 +2,7 @@ const User = require('../models/user');
 const Post = require('../models/post');
 const Comment = require('../models/comment');
 const Reply = require('../models/reply');
+const { result } = require('lodash');
 
 exports.getCommentById = (req, res, next, id) => {
     Comment.findById(id).exec((err, comment) => {
@@ -229,13 +230,50 @@ exports.removeReplies = (req, res) => {
     });
 };
 
-exports.removeAllComment = (req, res, next) => {
-    Comment.deleteMany({ PostId: req.picture._id }, (err) => {
-        if (err) {
+exports.removeAllCommentWithReply = async (req, res) => {
+    // Comment.deleteMany({ PostId: req.picture._id }, (err) => {
+    //     if (err) {
+    //         return res.status(500).json({
+    //             error: err,
+    //         });
+    //     }
+    //     next();
+    // });
+    let resValue;
+
+    let comments = []
+    await Comment.find({ PostId: req.picture._id }, (err) => {
+        if (err, result) {
             return res.status(500).json({
                 error: err,
             });
         }
-        next();
-    });
+        comments = [result]
+    })
+
+    await comments.map((commentObj) => {
+        Comment.findByIdAndDelete(commentObj._id, (err, comment) => {
+            if (err) {
+                resValue = "error"
+                return
+            }
+        })
+
+        Reply.deleteMany({ CommentId: commentObj._id }, (err) => {
+            if (err) {
+                resValue = "error"
+                return
+            }
+        })
+    })
+
+    if (resValue == "error")
+        return res.status(500).json({
+            error: "Something went wrong"
+        })
+    else
+        return res.status(200).json({
+            message: "Succesfully deleted all comments and reply"
+        })
+
 };

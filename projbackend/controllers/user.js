@@ -84,7 +84,6 @@ exports.updatePassword = (req, res) => {
     }
 };
 
-//Middleware Update Profile Photo
 exports.updateProfilePhoto = (req, res) => {
     let user = req.profile;
     let form = new formidable.IncomingForm();

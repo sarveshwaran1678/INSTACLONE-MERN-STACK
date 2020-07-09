@@ -2,6 +2,7 @@ var mongoose = require('mongoose');
 const crypto = require('crypto');
 const { v4: uuidv4 } = require('uuid');
 var validator = require('validator');
+const { ObjectId } = mongoose.Schema;
 
 var userSchema = new mongoose.Schema(
     {
@@ -70,6 +71,19 @@ var userSchema = new mongoose.Schema(
             type: Array,
             default: [],
         },
+        updateNotification: [
+            {
+                UserId: {
+                    type: ObjectId,
+                    ref: 'User',
+                },
+                updatedFieldName: String,
+                updateNotificationTime: {
+                    type: Date,
+                    default: Date.now,
+                },
+            },
+        ],
     },
     { timestamps: true }
 );

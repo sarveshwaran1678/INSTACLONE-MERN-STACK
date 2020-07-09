@@ -156,6 +156,12 @@ exports.likePicture = (req, res) => {
             }
         );
     } else {
+        let { _id, username } = req.profile;
+        const pushNotification = {
+            _id,
+            updatedFieldName: username + 'liked your photo',
+        };
+        //Logic for like
         Post.findByIdAndUpdate(
             { _id: req.picture._id },
             { $push: { likesFromUserId: req.profile._id } },
@@ -166,6 +172,20 @@ exports.likePicture = (req, res) => {
                         error: err,
                     });
                 }
+                //Notification Logic
+                User.findByIdAndUpdate(
+                    { _id: req.picture.UserId },
+                    { $push: { updateNotification: pushNotification } },
+                    { new: true, runValidators: true },
+                    (err, user) => {
+                        if (err) {
+                            return res.json({
+                                msg: 'error',
+                            });
+                        }
+                        console.log('Done');
+                    }
+                );
                 res.json({
                     message: 'Post wad liked by: ' + username,
                     picture: picture,

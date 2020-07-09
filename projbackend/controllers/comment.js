@@ -158,6 +158,17 @@ exports.getAllReplyByUser = (req, res) => {
         });
 };
 
+exports.getAllReplyByCommentId = (req, res) => {
+    Reply.find({ CommentId: req.comment })
+        .then((replies) => {
+            return res.status(201).json({ replies })
+
+        })
+        .catch((err) => {
+            return res.status(500).json({ error: err })
+        })
+}
+
 exports.updateReply = (req, res) => {
     if (toString(req.profile._id) == toString(req.reply.UserId)) {
         Reply.findByIdAndUpdate(

@@ -256,6 +256,12 @@ exports.followToggle = (req, res) => {
                     });
                 }
             );
+
+            updateAnotherNotification(
+                user._id,
+                userName + ' have sent Follow request',
+                req
+            );
         }
     } else {
         if (followers.includes(user._id)) {
@@ -300,9 +306,13 @@ exports.followToggle = (req, res) => {
                         },
                     },
                     {
-                        updateOne: {
+                        updateMany: {
                             filter: { _id: anotherUser._id },
-                            update: { $push: { followers: user._id } },
+                            update: {
+                                $push: {
+                                    followers: user._id,
+                                },
+                            },
                         },
                     },
                 ],
@@ -319,6 +329,13 @@ exports.followToggle = (req, res) => {
                     });
                 }
             );
+            let msg = '';
+            if (user.followers.includes(anotherUser._id)) {
+                msg = userName + ' started Following you';
+            } else {
+                msg = userName + ' started Following you.Follow Back';
+            }
+            updateAnotherNotification(user._id, msg, req);
         }
     }
 };
@@ -368,6 +385,11 @@ exports.followRequestHandler = (req, res) => {
                         anotherUserName,
                 });
             }
+        );
+        updateAnotherNotification(
+            user._id,
+            userName + ' accepted your follow request',
+            req
         );
     } else {
         User.bulkWrite(
@@ -423,4 +445,24 @@ exports.toggleIsPrivate = (req, res) => {
             message: 'isPrivate changed',
         });
     });
+};
+
+const updateAnotherNotification = (UserId, fieldName, req) => {
+    const pushNotification = {
+        UserId,
+        updatedFieldName: fieldName,
+    };
+    User.findByIdAndUpdate(
+        { _id: req.anotherProfile._id },
+        { $push: { updateNotification: pushNotification } },
+        { new: true, runValidators: true },
+        (err, user) => {
+            if (err) {
+                return res.json({
+                    msg: 'error',
+                });
+            }
+            console.log('Done');
+        }
+    );
 };

@@ -159,7 +159,7 @@ exports.likePicture = (req, res) => {
         let { _id, username } = req.profile;
         const pushNotification = {
             _id,
-            updatedFieldName: username + 'liked your photo',
+            updatedFieldName: username + ' liked your photo',
         };
         //Logic for like
         Post.findByIdAndUpdate(

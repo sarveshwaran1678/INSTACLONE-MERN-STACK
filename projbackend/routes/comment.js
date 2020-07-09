@@ -18,7 +18,7 @@ const {
     getAllReplyByUser,
     removeUserReply,
     removeCommentReply,
-    removeReplies,
+    removeReplies, getAllReplyByCommentId
 } = require('../controllers/comment');
 
 router.param('userId', getUserById);
@@ -96,6 +96,12 @@ router.get(
     isAuthenticated,
     getAllReplyByUser
 );
+
+//get all reply by comment Id
+router.get(
+    "/getAllReplyByCommentId/:userId/:commentId",
+    isSignedIn, isAuthenticated, getAllReplyByCommentId
+)
 
 //update a reply
 //req.body.replyBody is must and will update replyBody

@@ -1,5 +1,5 @@
 const User = require('../models/user');
-
+const Post = require("../models/post")
 
 
 exports.getNotifications = (req, res) => {
@@ -30,4 +30,16 @@ exports.searchUsers = (req, res) => {
         .catch((err) => {
             return res.status(500).send(err)
         })
+}
+
+
+//global array
+//load more feed //take count
+//load comments 
+//load replies
+
+let followings
+exports.getUserFeed = (req, res) => {
+    followings = req.profile.followings
+
 }

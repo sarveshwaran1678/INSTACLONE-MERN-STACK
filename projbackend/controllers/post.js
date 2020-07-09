@@ -37,12 +37,18 @@ exports.getAnotherPictureById = (req, res, next, id) => {
         });
 };
 
-exports.getPicture = (req, res) => {
-    return res.json(req.picture);
+exports.getPicture = (req, res, next) => {
+    if (toString(req.profile._id) == toString(req.picture.UserId))
+        res.json(req.picture);
+    next()
+    // return res.json(req.picture);
+
 };
 
-exports.getAnotherUserPicture = (req, res) => {
-    return res.json(req.anotherPicture);
+exports.getAnotherUserPicture = (req, res, next) => {
+    res.json(req.anotherPicture)
+    next()
+    //return res.json(req.anotherPicture);
 };
 
 //Uploading Post
@@ -94,7 +100,7 @@ exports.uploadPost = (req, res) => {
 exports.removePicture = (req, res, next) => {
     if (toString(req.profile._id) == toString(req.picture.UserId)) {
         let picture = req.picture;
-        cloudinary.uploader.destroy(picture.picturePath, function (result) {});
+        cloudinary.uploader.destroy(picture.picturePath, function (result) { });
         picture.remove((err, deletedpicture) => {
             if (err) {
                 return res.status(400).json({
@@ -115,7 +121,7 @@ exports.updateCaption = (req, res) => {
     if (toString(req.profile._id) == toString(req.picture.UserId)) {
         Post.findByIdAndUpdate(
             { _id: req.picture._id },
-            { $set: req.body }, //req.body will have values from frontend to be updated
+            { $set: { caption: req.body.caption } }, //req.body will have values from frontend to be updated
             { new: true, runValidators: true },
             (err, picture) => {
                 if (err) {

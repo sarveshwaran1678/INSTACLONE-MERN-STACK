@@ -5,7 +5,7 @@ const router = express.Router();
 
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
 const { getUserById } = require('../controllers/user');
-const { getNotifications, searchUsers } = require('../controllers/navbar');
+const { getNotifications, searchUsers, getUserFeed } = require('../controllers/navbar');
 
 router.param('userId', getUserById);
 
@@ -22,6 +22,6 @@ router.get("/getNotification/:userId", isSignedIn, isAuthenticated, getNotificat
 router.get("/searchUsers/:userId", isSignedIn, isAuthenticated, searchUsers)
 
 //user feed
-
+router.get("/getFeed/:userId", isSignedIn, isAuthenticated, getUserFeed)
 
 module.exports = router;

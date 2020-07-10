@@ -71,6 +71,18 @@ var userSchema = new mongoose.Schema(
             type: Array,
             default: [],
         },
+        otpFlag: {
+            type: Boolean,
+            default: false,
+        },
+        otp: {
+            type: String,
+            trim: true,
+        },
+        // otpTimeout: {
+        //     type: String,
+        //     default: '',
+        // },
         updateNotification: [
             {
                 UserId: {
@@ -98,7 +110,20 @@ userSchema
     .get(function () {
         return this._password;
     });
-
+// userSchema
+//     .virtual('otp')
+//     .set(function (otp) {
+//         this._otp = otp;
+//         console.log('Otp', this._otp);
+//         this.otpFlag = true;
+//         setTimeout(() => {
+//             this.otpFlag = false;
+//             console.log('AFTER TIMEOUT', this.otpFlag);
+//         }, 6000);
+//     })
+//     .get(function () {
+//         return this._otp;
+//     });
 userSchema.methods = {
     securePassword: function (plainpassword) {
         if (!plainpassword) return '';
@@ -111,7 +136,12 @@ userSchema.methods = {
             return '';
         }
     },
-
+    otpTimer: function () {
+        console.log(this.otpFlag);
+        setTimeout(() => {
+            return (this.otpFlag = false);
+        }, 10000);
+    },
     authenticate: function (plainpassword) {
         return this.securePassword(plainpassword) === this.encry_password;
     },

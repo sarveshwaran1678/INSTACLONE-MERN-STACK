@@ -13,6 +13,8 @@ const {
     followToggle,
     followRequestHandler,
     toggleIsPrivate,
+    forgotPasswordMailSend,
+    newPasswordSubmitted,
 } = require('../controllers/user');
 
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
@@ -66,5 +68,13 @@ router.put(
     isAuthenticated,
     toggleIsPrivate
 );
+
+//For sending otp to reset password
+//req.body.email
+router.get('/password/sendOtp', forgotPasswordMailSend);
+
+//req.body.email,confirmEmail,userOtp
+//reset Password submission
+router.put('/password/resetPassword', newPasswordSubmitted);
 
 module.exports = router;

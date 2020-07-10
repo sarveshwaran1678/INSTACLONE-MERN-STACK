@@ -14,6 +14,7 @@ router.param('userId', getUserById);
 router.get("/getNotification/:userId", isSignedIn, isAuthenticated, getNotifications)
 
 //to get all your followings stories
+//##Made Already In Post Route
 
 
 //to search

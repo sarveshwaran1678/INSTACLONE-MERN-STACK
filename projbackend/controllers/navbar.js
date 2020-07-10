@@ -43,3 +43,4 @@ exports.getUserFeed = (req, res) => {
     followings = req.profile.followings
 
 }
+

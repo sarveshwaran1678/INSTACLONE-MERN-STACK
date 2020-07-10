@@ -264,3 +264,118 @@ exports.uploadStory = (req, res) => {
         }
     });
 };
+
+
+//get all your stories
+exports.getAllYourStories = (req, res) => {
+    Post.find({ UserId: req.profile._id, isStory: true })
+        .exec((err, posts) => {
+            if (err) {
+                return res.status(500).json(err)
+            }
+            return res.status(201).json(posts)
+        })
+}
+
+
+//get all other stories
+exports.getAllAnotherStory = (req, res) => {
+    let user = req.profile;
+    let anotherUser = req.anotherProfile;
+
+    if (anotherUser.isPrivate) {
+        if (anotherUser.followers.includes(user._id)) {
+            Post.find({ UserId: anotherUser._id, isStory: true })
+                .sort("updatedAt")
+                .then((posts) => {
+                    return res.status(201).json(posts)
+                }).catch((err) => {
+                    return res.status(500).json(err)
+                })
+        }
+        else {
+            return res.status(401).json({
+                message: "Private Account"
+            })
+        }
+    } else {
+        Post.find({ UserId: anotherUser._id, isStory: true })
+            .sort("updatedAt")
+            .then((posts) => {
+                return res.status(201).json(posts)
+            }).catch((err) => {
+                return res.status(500).json(err)
+            })
+    }
+}
+
+//get all your followings stories
+exports.getAllFollowingStory = (req, res) => {
+    let user = req.profile
+    let users = []
+
+    let followingUserStories = []
+
+    user.followings.map((userId) => {
+
+        let userStories = []
+
+        Post.find({ UserId: userId, isStory: true })
+            .exec((err, posts) => {
+                if (err) {
+                    return res.status(500).json({
+                        error: "Server Issue"
+                    })
+                }
+                userStories.push(posts);
+            })
+
+        users.push(userStories)
+    })
+
+    return res.status(201).json(users)
+}
+
+//get all of your post
+exports.getAllYourPost = (req, res) => {
+    Post.find({ UserId: req.profile._id, isStory: false })
+        .sort("updatedAt")
+        .then((posts) => {
+            return res.status(201).json(posts)
+        }).catch((err) => {
+            return res.status(500).json(err)
+        })
+
+}
+
+
+//get all other user posts
+exports.getAllAnotherPost = (req, res) => {
+    let user = req.profile;
+    let anotherUser = req.anotherProfile;
+
+    if (anotherUser.isPrivate) {
+        if (anotherUser.followers.includes(user._id)) {
+            Post.find({ UserId: anotherUser._id, isStory: false })
+                .sort("updatedAt")
+                .then((posts) => {
+                    return res.status(201).json(posts)
+                }).catch((err) => {
+                    return res.status(500).json(err)
+                })
+        }
+        else {
+            return res.status(401).json({
+                message: "Private Account"
+            })
+        }
+    } else {
+        Post.find({ UserId: anotherUser._id, isStory: false })
+            .sort("updatedAt")
+            .then((posts) => {
+                return res.status(201).json(posts)
+            }).catch((err) => {
+                return res.status(500).json(err)
+            })
+    }
+}

@@ -13,6 +13,11 @@ const {
     updateCaption,
     getAnotherUserPicture,
     uploadStory,
+    getAllYourPost,
+    getAllAnotherPost,
+    getAllYourStories,
+    getAllAnotherStory,
+    getAllFollowingStory
 } = require('../controllers/post');
 const { getAllCommentsByPost } = require('../controllers/comment');
 
@@ -37,6 +42,25 @@ router.post(
     isAuthenticated,
     uploadStory
 );
+
+//to get all your stories
+router.get(
+    "/picture/getYourStories/:userId",
+    isSignedIn,
+    isAuthenticated,
+    getAllYourStories
+)
+
+//to get all other stories(for their profile page)
+router.get(
+    "/picture/getAllOthersStories/:userId/:anotherUserId",
+    isSignedIn,
+    isAuthenticated,
+    getAllAnotherStory
+)
+
+//to get all you followings stories
+
 
 //to delete a post with all it's comment and reply
 router.delete(
@@ -83,8 +107,29 @@ router.get(
 );
 
 
-//get other user all pictures
-
-
 //get your all pictures
+router.get(
+    'getYourAllPost/:userId',
+    isSignedIn,
+    isAuthenticated,
+    getAllYourPost
+)
+
+//get other user all picutre
+router.get(
+    "getAnptherAllPost/:userId/:anotherId",
+    isSignedIn,
+    isAuthenticated,
+    getAllAnotherPost
+)
+
+
+//get all followings story
+router.get(
+    "/getAllFollowingsStories/:userId",
+    isSignedIn,
+    isAuthenticated,
+    getAllFollowingStory
+)
+
 module.exports = router;

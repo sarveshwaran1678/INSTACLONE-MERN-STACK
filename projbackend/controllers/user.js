@@ -5,6 +5,9 @@ var Jimp = require('jimp');
 var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const cloudinary = require('cloudinary').v2;
+const nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+const user = require('../models/user');
 
 exports.getUserById = (req, res, next, id) => {
     User.findById(id, (err, user) => {
@@ -464,4 +467,110 @@ const updateAnotherNotification = (UserId, fieldName, req) => {
             console.log('Done');
         }
     );
+};
+
+let otp, receiverEmail;
+exports.forgotPasswordMailSend = (req, res) => {
+    const { email } = req.body;
+    receiverEmail = email;
+    otp = Math.floor(100000 + Math.random() * 900000) + '';
+    console.log(otp, receiverEmail);
+    var transporter = nodemailer.createTransport(
+        smtpTransport({
+            service: 'gmail',
+            host: 'smtp.gmail.com',
+            auth: {
+                user: 'gfreaks303@gmail.com',
+                pass: process.env.EMAILPASSWORD,
+            },
+        })
+    );
+
+    var mailOptions = {
+        from: 'noreply@gmail.com',
+        to: receiverEmail,
+        subject: 'Reset Password',
+        text: otp,
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+            User.findOne({ email: email }).exec((err, foundUser) => {
+                if (err) {
+                    return res.status(400).json({
+                        error: 'User Email Not Found',
+                    });
+                }
+                // foundUser.otpFlag = true;
+                foundUser.otpFlag = true;
+                foundUser.otp = otp;
+                foundUser.save((err, user) => {
+                    if (err) {
+                        return res.status(400).json({
+                            error: err,
+                        });
+                    }
+                    foundUser.otpTimer();
+                    return res.status(201).json({
+                        message: 'OTP sent successfully',
+                    });
+                });
+            });
+        }
+    });
+};
+
+exports.newPasswordSubmitted = async (req, res) => {
+    let user;
+    let { newPassword, confirmNewPassword, userOtp, email } = req.body;
+    console.log(userOtp);
+    await User.findOne({ email: email }).exec((err, foundUser) => {
+        if (err) {
+            return res.status(400).json({
+                error: 'User Not Found',
+            });
+        }
+        let { otp, otpFlag } = foundUser;
+        console.log(foundUser.otpFlag, foundUser.otp);
+        if (otpFlag) {
+            if (userOtp === otp) {
+                if (newPassword === confirmNewPassword) {
+                    //Doing password validation
+                    if (newPassword.length < 5 || newPassword.length > 15) {
+                        return res.json({
+                            msg: 'Password validation failed',
+                        });
+                    } else {
+                        foundUser.password = newPassword;
+                        foundUser.save((err, user) => {
+                            if (err) {
+                                return res.status(400).json({
+                                    error: 'Updation of password failed',
+                                });
+                            }
+                            return res.status(201).json({
+                                message: 'Password updated succesfully',
+                            });
+                        });
+                    }
+                } else {
+                    return res.status(401).json({
+                        msg: 'newPassword and confirmPassword are not Same',
+                    });
+                }
+            } else {
+                console.log('Otp', otp);
+                return res.status(401).json({
+                    msg: "OTP didn't match!!!!",
+                });
+            }
+        } else {
+            return res.status(401).json({
+                msg: 'OTP expired!!!!',
+            });
+        }
+    });
 };

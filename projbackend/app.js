@@ -41,6 +41,7 @@ app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', postRoutes);
 app.use('/api', commentRoutes);
+
 // app.use('/api', notificationRoutes);
 
 //Port

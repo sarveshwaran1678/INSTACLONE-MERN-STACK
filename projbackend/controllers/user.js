@@ -474,7 +474,7 @@ exports.forgotPasswordMailSend = (req, res) => {
     const { email } = req.body;
     receiverEmail = email;
     otp = Math.floor(100000 + Math.random() * 900000) + '';
-    console.log(otp, receiverEmail);
+
     var transporter = nodemailer.createTransport(
         smtpTransport({
             service: 'gmail',
@@ -492,7 +492,7 @@ exports.forgotPasswordMailSend = (req, res) => {
         subject: 'Reset Password',
         text: otp,
     };
-
+    console.log(otp);
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error);
@@ -504,16 +504,15 @@ exports.forgotPasswordMailSend = (req, res) => {
                         error: 'User Email Not Found',
                     });
                 }
-                // foundUser.otpFlag = true;
-                foundUser.otpFlag = true;
+
                 foundUser.otp = otp;
+                foundUser.otpTimeout = new Date();
                 foundUser.save((err, user) => {
                     if (err) {
                         return res.status(400).json({
                             error: err,
                         });
                     }
-                    foundUser.otpTimer();
                     return res.status(201).json({
                         message: 'OTP sent successfully',
                     });
@@ -524,18 +523,17 @@ exports.forgotPasswordMailSend = (req, res) => {
 };
 
 exports.newPasswordSubmitted = async (req, res) => {
-    let user;
+    let currentTime = Date.now();
     let { newPassword, confirmNewPassword, userOtp, email } = req.body;
-    console.log(userOtp);
+
     await User.findOne({ email: email }).exec((err, foundUser) => {
         if (err) {
             return res.status(400).json({
                 error: 'User Not Found',
             });
         }
-        let { otp, otpFlag } = foundUser;
-        console.log(foundUser.otpFlag, foundUser.otp);
-        if (otpFlag) {
+        let { otp, otpTimeout } = foundUser;
+        if (currentTime - otpTimeout < 60000) {
             if (userOtp === otp) {
                 if (newPassword === confirmNewPassword) {
                     //Doing password validation
@@ -569,7 +567,7 @@ exports.newPasswordSubmitted = async (req, res) => {
             }
         } else {
             return res.status(401).json({
-                msg: 'OTP expired!!!!',
+                msg: 'OTP expired',
             });
         }
     });

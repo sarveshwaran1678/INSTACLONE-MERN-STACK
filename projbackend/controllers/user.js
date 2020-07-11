@@ -572,3 +572,4 @@ exports.newPasswordSubmitted = async (req, res) => {
         }
     });
 };
+//Fixed

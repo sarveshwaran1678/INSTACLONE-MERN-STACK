@@ -9,8 +9,8 @@ const nodemailer = require('nodemailer');
 var smtpTransport = require('nodemailer-smtp-transport');
 const user = require('../models/user');
 
-exports.getUserById = (req, res, next, id) => {
-    User.findById(id, (err, user) => {
+exports.getUserById = async (req, res, next, id) => {
+    await User.findById(id, (err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 error: 'User Not found in DB',
@@ -21,8 +21,8 @@ exports.getUserById = (req, res, next, id) => {
     });
 };
 
-exports.getAnotherUserById = (req, res, next, id) => {
-    User.findById(id, (err, user) => {
+exports.getAnotherUserById = async (req, res, next, id) => {
+    await User.findById(id, (err, user) => {
         if (err || !user) {
             return res.status(400).json({
                 error: 'User Not found in DB',
@@ -56,7 +56,7 @@ exports.getAnotherUser = (req, res) => {
     return res.json(req.anotherProfile);
 };
 
-exports.updatePassword = (req, res) => {
+exports.updatePassword = async (req, res) => {
     let user = req.profile;
 
     let { oldPassword, newPassword } = req.body;
@@ -65,7 +65,7 @@ exports.updatePassword = (req, res) => {
         if (newPassword.length > 5 && newPassword.length < 15) {
             user.password = newPassword;
 
-            user.save((err, user) => {
+            await user.save((err, user) => {
                 if (err) {
                     return res.status(400).json({
                         error: 'Updation of password failed',
@@ -87,7 +87,7 @@ exports.updatePassword = (req, res) => {
     }
 };
 
-exports.updateProfilePhoto = (req, res) => {
+exports.updateProfilePhoto = async (req, res) => {
     let user = req.profile;
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
@@ -101,14 +101,14 @@ exports.updateProfilePhoto = (req, res) => {
                     public_id: `InstaClone/${uniqueFilename}`,
                     tags: `InstaClone`,
                 }, // directory and tags are optional
-                function (err, image) {
+                async function (err, image) {
                     if (err) return res.send(err);
                     console.log('file uploaded to Cloudinary');
 
                     user.profilePicPath = image.public_id;
                     user.pictureUrl = image.url;
                     // console.log(user);
-                    user.save((err, user) => {
+                    await user.save((err, user) => {
                         if (err) {
                             res.status(400).json({
                                 error: err,
@@ -131,11 +131,11 @@ exports.updateUser = async (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
 
-    form.parse(req, (err, fields, file) => {
+    form.parse(req, async (err, fields, file) => {
         //updation code
         let user = req.profile;
         user = _.extend(user, fields);
-        user.save((err, user) => {
+        await user.save((err, user) => {
             if (err) {
                 res.status(400).json({
                     error: err,
@@ -146,7 +146,7 @@ exports.updateUser = async (req, res) => {
     });
 };
 
-exports.followToggle = (req, res) => {
+exports.followToggle = async (req, res) => {
     let user = req.profile;
     let anotherUser = req.anotherProfile;
     let userName = user.username;
@@ -156,7 +156,7 @@ exports.followToggle = (req, res) => {
 
     if (anotherUser.isPrivate) {
         if (followers.includes(user._id)) {
-            User.bulkWrite(
+            await User.bulkWrite(
                 [
                     {
                         updateOne: {
@@ -189,7 +189,7 @@ exports.followToggle = (req, res) => {
             followRequestSent.includes(anotherUser._id) &&
             followRequestPending.includes(user._id)
         ) {
-            User.bulkWrite(
+            await User.bulkWrite(
                 [
                     {
                         updateOne: {
@@ -224,7 +224,7 @@ exports.followToggle = (req, res) => {
                 }
             );
         } else {
-            User.bulkWrite(
+            await User.bulkWrite(
                 [
                     {
                         updateOne: {
@@ -267,7 +267,7 @@ exports.followToggle = (req, res) => {
         }
     } else {
         if (followers.includes(user._id)) {
-            User.bulkWrite(
+            await User.bulkWrite(
                 [
                     {
                         updateOne: {
@@ -297,7 +297,7 @@ exports.followToggle = (req, res) => {
                 }
             );
         } else {
-            User.bulkWrite(
+            await User.bulkWrite(
                 [
                     {
                         updateOne: {
@@ -342,7 +342,7 @@ exports.followToggle = (req, res) => {
     }
 };
 
-exports.followRequestHandler = (req, res) => {
+exports.followRequestHandler = async (req, res) => {
     let { accept } = req.body;
     let user = req.profile;
     let anotherUser = req.anotherProfile;
@@ -352,7 +352,7 @@ exports.followRequestHandler = (req, res) => {
         return res.json({ msg: 'No request received' });
     }
     if (accept === 'yes') {
-        User.bulkWrite(
+        await User.bulkWrite(
             [
                 {
                     updateMany: {
@@ -394,7 +394,7 @@ exports.followRequestHandler = (req, res) => {
             req
         );
     } else {
-        User.bulkWrite(
+        await User.bulkWrite(
             [
                 {
                     updateMany: {
@@ -431,12 +431,12 @@ exports.followRequestHandler = (req, res) => {
     }
 };
 
-exports.toggleIsPrivate = (req, res) => {
+exports.toggleIsPrivate = async (req, res) => {
     let user = req.profile;
 
     user.isPrivate = !user.isPrivate;
 
-    user.save((err, user) => {
+    await user.save((err, user) => {
         if (err) {
             return res.status(500).json({
                 error: 'DB error',
@@ -449,12 +449,12 @@ exports.toggleIsPrivate = (req, res) => {
     });
 };
 
-const updateAnotherNotification = (UserId, fieldName, req) => {
+const updateAnotherNotification = async (UserId, fieldName, req) => {
     const pushNotification = {
         UserId,
         updatedFieldName: fieldName,
     };
-    User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         { _id: req.anotherProfile._id },
         { $push: { updateNotification: pushNotification } },
         { new: true, runValidators: true },
@@ -469,8 +469,7 @@ const updateAnotherNotification = (UserId, fieldName, req) => {
     );
 };
 
-
-exports.forgotPasswordMailSend = (req, res) => {
+exports.forgotPasswordMailSend = async (req, res) => {
     const { email } = req.body;
     let receiverEmail = email;
     let otp = Math.floor(100000 + Math.random() * 900000) + '';
@@ -493,33 +492,35 @@ exports.forgotPasswordMailSend = (req, res) => {
         text: otp,
     };
     console.log(otp);
-    transporter.sendMail(mailOptions, function (error, info) {
+    await transporter.sendMail(mailOptions, async function (error, info) {
         if (error) {
             return res.status(500).json({
-                error: "Email not sent"
-            })
+                error: 'Email not sent',
+            });
         } else {
             console.log('Email sent: ' + info.response);
-            User.findOne({ email: email }).exec((err, foundUser) => {
-                if (err) {
-                    return res.status(400).json({
-                        error: 'User Email Not Found',
-                    });
-                }
-
-                foundUser.otp = otp;
-                foundUser.otpTimeout = new Date();
-                foundUser.save((err, user) => {
+            await User.findOne({ email: email }).exec(
+                async (err, foundUser) => {
                     if (err) {
                         return res.status(400).json({
-                            error: err,
+                            error: 'User Email Not Found',
                         });
                     }
-                    return res.status(201).json({
-                        message: 'OTP sent successfully',
+
+                    foundUser.otp = otp;
+                    foundUser.otpTimeout = new Date();
+                    await foundUser.save((err, user) => {
+                        if (err) {
+                            return res.status(400).json({
+                                error: err,
+                            });
+                        }
+                        return res.status(201).json({
+                            message: 'OTP sent successfully',
+                        });
                     });
-                });
-            });
+                }
+            );
         }
     });
 };
@@ -528,7 +529,7 @@ exports.newPasswordSubmitted = async (req, res) => {
     let currentTime = Date.now();
     let { newPassword, confirmNewPassword, userOtp, email } = req.body;
 
-    await User.findOne({ email: email }).exec((err, foundUser) => {
+    await User.findOne({ email: email }).exec(async (err, foundUser) => {
         if (err) {
             return res.status(400).json({
                 error: 'User Not Found',
@@ -545,7 +546,7 @@ exports.newPasswordSubmitted = async (req, res) => {
                         });
                     } else {
                         foundUser.password = newPassword;
-                        foundUser.save((err, user) => {
+                        await foundUser.save((err, user) => {
                             if (err) {
                                 return res.status(400).json({
                                     error: 'Updation of password failed',

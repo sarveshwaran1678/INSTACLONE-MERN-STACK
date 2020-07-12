@@ -9,8 +9,8 @@ var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 var cloudinary = require('cloudinary').v2;
 
-exports.getPictureById = (req, res, next, id) => {
-    Post.findById(id)
+exports.getPictureById = async (req, res, next, id) => {
+    await Post.findById(id)
         .populate('user')
         .exec((err, picture) => {
             if (err) {
@@ -23,8 +23,8 @@ exports.getPictureById = (req, res, next, id) => {
         });
 };
 
-exports.getAnotherPictureById = (req, res, next, id) => {
-    Post.findById(id)
+exports.getAnotherPictureById = async (req, res, next, id) => {
+    await Post.findById(id)
         .populate('user')
         .exec((err, picture) => {
             if (err) {
@@ -40,19 +40,18 @@ exports.getAnotherPictureById = (req, res, next, id) => {
 exports.getPicture = (req, res, next) => {
     if (toString(req.profile._id) == toString(req.picture.UserId))
         res.json(req.picture);
-    next()
+    next();
     // return res.json(req.picture);
-
 };
 
 exports.getAnotherUserPicture = (req, res, next) => {
-    res.json(req.anotherPicture)
-    next()
+    res.json(req.anotherPicture);
+    next();
     //return res.json(req.anotherPicture);
 };
 
 //Uploading Post
-exports.uploadPost = (req, res) => {
+exports.uploadPost = async (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
 
@@ -72,13 +71,13 @@ exports.uploadPost = (req, res) => {
                     tags: `InstaClone`,
                 }, // directory and tags are optional
 
-                function (err, image) {
+                async function (err, image) {
                     if (err) return res.send(err);
                     console.log('file uploaded to Cloudinary');
                     picture.UserId = req.profile._id;
                     picture.picturePath = image.public_id;
                     picture.pictureUrl = image.url;
-                    picture.save((err, picture) => {
+                    await picture.save((err, picture) => {
                         if (err) {
                             res.status(400).json({
                                 error: err,
@@ -100,7 +99,7 @@ exports.uploadPost = (req, res) => {
 exports.removePicture = (req, res, next) => {
     if (toString(req.profile._id) == toString(req.picture.UserId)) {
         let picture = req.picture;
-        cloudinary.uploader.destroy(picture.picturePath, function (result) { });
+        cloudinary.uploader.destroy(picture.picturePath, function (result) {});
         picture.remove((err, deletedpicture) => {
             if (err) {
                 return res.status(400).json({
@@ -117,9 +116,9 @@ exports.removePicture = (req, res, next) => {
 };
 
 //Update the Picture Caption
-exports.updateCaption = (req, res) => {
+exports.updateCaption = async (req, res) => {
     if (toString(req.profile._id) == toString(req.picture.UserId)) {
-        Post.findByIdAndUpdate(
+        await Post.findByIdAndUpdate(
             { _id: req.picture._id },
             { $set: { caption: req.body.caption } }, //req.body will have values from frontend to be updated
             { new: true, runValidators: true },
@@ -140,12 +139,12 @@ exports.updateCaption = (req, res) => {
 };
 
 //Like and Unlike
-exports.likePicture = (req, res) => {
+exports.likePicture = async (req, res) => {
     let user = req.profile;
     let picture = req.picture;
     const username = user.username;
     if (picture.likesFromUserId.includes(user._id)) {
-        Post.findByIdAndUpdate(
+        await Post.findByIdAndUpdate(
             { _id: req.picture._id },
             { $pull: { likesFromUserId: req.profile._id } },
             { new: true, useFindAndModify: false },
@@ -168,18 +167,18 @@ exports.likePicture = (req, res) => {
             updatedFieldName: username + ' liked your photo',
         };
         //Logic for like
-        Post.findByIdAndUpdate(
+        await Post.findByIdAndUpdate(
             { _id: req.picture._id },
             { $push: { likesFromUserId: req.profile._id } },
             { new: true, useFindAndModify: false },
-            (err, picture) => {
+            async (err, picture) => {
                 if (err) {
                     return res.status(400).json({
                         error: err,
                     });
                 }
                 //Notification Logic
-                User.findByIdAndUpdate(
+                await User.findByIdAndUpdate(
                     { _id: req.picture.UserId },
                     { $push: { updateNotification: pushNotification } },
                     { new: true, runValidators: true },
@@ -202,7 +201,7 @@ exports.likePicture = (req, res) => {
 };
 
 //Uploading Story
-exports.uploadStory = (req, res) => {
+exports.uploadStory = async (req, res) => {
     let form = new formidable.IncomingForm();
     form.keepExtensions = true;
 
@@ -265,117 +264,117 @@ exports.uploadStory = (req, res) => {
     });
 };
 
-
 //get all your stories
-exports.getAllYourStories = (req, res) => {
-    Post.find({ UserId: req.profile._id, isStory: true })
-        .exec((err, posts) => {
+exports.getAllYourStories = async (req, res) => {
+    await Post.find({ UserId: req.profile._id, isStory: true }).exec(
+        (err, posts) => {
             if (err) {
-                return res.status(500).json(err)
+                return res.status(500).json(err);
             }
-            return res.status(201).json(posts)
-        })
-}
-
+            return res.status(201).json(posts);
+        }
+    );
+};
 
 //get all other stories
-exports.getAllAnotherStory = (req, res) => {
+exports.getAllAnotherStory = async (req, res) => {
     let user = req.profile;
     let anotherUser = req.anotherProfile;
 
     if (anotherUser.isPrivate) {
         if (anotherUser.followers.includes(user._id)) {
-            Post.find({ UserId: anotherUser._id, isStory: true })
-                .sort("updatedAt")
+            await Post.find({ UserId: anotherUser._id, isStory: true })
+                .sort('updatedAt')
                 .then((posts) => {
-                    return res.status(201).json(posts)
-                }).catch((err) => {
-                    return res.status(500).json(err)
+                    return res.status(201).json(posts);
                 })
-        }
-        else {
+                .catch((err) => {
+                    return res.status(500).json(err);
+                });
+        } else {
             return res.status(401).json({
-                message: "Private Account"
-            })
+                message: 'Private Account',
+            });
         }
     } else {
-        Post.find({ UserId: anotherUser._id, isStory: true })
-            .sort("updatedAt")
+        await Post.find({ UserId: anotherUser._id, isStory: true })
+            .sort('updatedAt')
             .then((posts) => {
-                return res.status(201).json(posts)
-            }).catch((err) => {
-                return res.status(500).json(err)
+                return res.status(201).json(posts);
             })
+            .catch((err) => {
+                return res.status(500).json(err);
+            });
     }
-}
+};
 
 //get all your followings stories
-exports.getAllFollowingStory = (req, res) => {
-    let user = req.profile
-    let users = []
+exports.getAllFollowingStory = async (req, res) => {
+    let user = req.profile;
+    let users = [];
 
-    let followingUserStories = []
+    let followingUserStories = [];
 
-    user.followings.map((userId) => {
+    user.followings.map(async (userId) => {
+        let userStories = [];
 
-        let userStories = []
-
-        Post.find({ UserId: userId, isStory: true })
-            .exec((err, posts) => {
+        await Post.find({ UserId: userId, isStory: true }).exec(
+            (err, posts) => {
                 if (err) {
                     return res.status(500).json({
-                        error: "Server Issue"
-                    })
+                        error: 'Server Issue',
+                    });
                 }
                 userStories.push(posts);
-            })
+            }
+        );
 
-        users.push(userStories)
-    })
+        users.push(userStories);
+    });
 
-    return res.status(201).json(users)
-}
+    return res.status(201).json(users);
+};
 
 //get all of your post
-exports.getAllYourPost = (req, res) => {
-    Post.find({ UserId: req.profile._id, isStory: false })
-        .sort("updatedAt")
+exports.getAllYourPost = async (req, res) => {
+    await Post.find({ UserId: req.profile._id, isStory: false })
+        .sort('updatedAt')
         .then((posts) => {
-            return res.status(201).json(posts)
-        }).catch((err) => {
-            return res.status(500).json(err)
+            return res.status(201).json(posts);
         })
-
-}
-
+        .catch((err) => {
+            return res.status(500).json(err);
+        });
+};
 
 //get all other user posts
-exports.getAllAnotherPost = (req, res) => {
+exports.getAllAnotherPost = async (req, res) => {
     let user = req.profile;
     let anotherUser = req.anotherProfile;
 
     if (anotherUser.isPrivate) {
         if (anotherUser.followers.includes(user._id)) {
-            Post.find({ UserId: anotherUser._id, isStory: false })
-                .sort("updatedAt")
+            await Post.find({ UserId: anotherUser._id, isStory: false })
+                .sort('updatedAt')
                 .then((posts) => {
-                    return res.status(201).json(posts)
-                }).catch((err) => {
-                    return res.status(500).json(err)
+                    return res.status(201).json(posts);
                 })
-        }
-        else {
+                .catch((err) => {
+                    return res.status(500).json(err);
+                });
+        } else {
             return res.status(401).json({
-                message: "Private Account"
-            })
+                message: 'Private Account',
+            });
         }
     } else {
-        Post.find({ UserId: anotherUser._id, isStory: false })
-            .sort("updatedAt")
+        await Post.find({ UserId: anotherUser._id, isStory: false })
+            .sort('updatedAt')
             .then((posts) => {
-                return res.status(201).json(posts)
-            }).catch((err) => {
-                return res.status(500).json(err)
+                return res.status(201).json(posts);
             })
+            .catch((err) => {
+                return res.status(500).json(err);
+            });
     }
-}
+};

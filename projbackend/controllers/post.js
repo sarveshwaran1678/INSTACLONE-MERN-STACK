@@ -4,7 +4,7 @@ const Post = require('../models/post');
 
 const formidable = require('formidable');
 const _ = require('lodash');
-var Jimp = require('jimp');
+
 var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 var cloudinary = require('cloudinary').v2;
@@ -99,7 +99,7 @@ exports.uploadPost = async (req, res) => {
 exports.removePicture = (req, res, next) => {
     if (toString(req.profile._id) == toString(req.picture.UserId)) {
         let picture = req.picture;
-        cloudinary.uploader.destroy(picture.picturePath, function (result) {});
+        cloudinary.uploader.destroy(picture.picturePath, function (result) { });
         picture.remove((err, deletedpicture) => {
             if (err) {
                 return res.status(400).json({

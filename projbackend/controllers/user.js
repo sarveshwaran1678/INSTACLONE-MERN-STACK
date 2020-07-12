@@ -1,7 +1,6 @@
 const User = require('../models/user');
 const formidable = require('formidable');
 const _ = require('lodash');
-var Jimp = require('jimp');
 var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const cloudinary = require('cloudinary').v2;
@@ -479,7 +478,7 @@ exports.forgotPasswordMailSend = async (req, res) => {
             service: 'gmail',
             host: 'smtp.gmail.com',
             auth: {
-                user: 'gfreaks303@gmail.com',
+                user: process.env.EMAIL,
                 pass: process.env.EMAILPASSWORD,
             },
         })

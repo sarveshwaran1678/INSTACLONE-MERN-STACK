@@ -20,12 +20,13 @@
         "express-validator": "^6.4.0",
         "formidable": "^1.2.2",
         "jsonwebtoken": "^8.5.1",
-        "lodash": "^4.17.15",
+        "lodash": "^4.17.19",
+        "mongodb": "^3.5.9",
         "mongoose": "^5.7.7",
         "nodemailer": "^6.4.10",
         "nodemailer-smtp-transport": "^2.7.4",
         "nodemon": "^1.19.4",
-        "npm": "^6.13.0",
+        "npm": "^6.14.6",
         "uuid": "^8.2.0",
         "validator": "^13.1.1"
     }

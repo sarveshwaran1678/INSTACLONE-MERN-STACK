@@ -2,12 +2,12 @@ const User = require('../models/user');
 const Post = require("../models/post")
 
 
-exports.getNotifications = (req, res) => {
+exports.getNotifications = async (req, res) => {
     let user = req.profile
 
     let skipCount = req.body.skipCount || 0
 
-    User.findById(user._id)
+    await User.findById(user._id)
         .populate("UpdateNotification.UserId", "username profilePicPath")
         .limit(8)
         .skip(8 * skipCount)
@@ -18,10 +18,10 @@ exports.getNotifications = (req, res) => {
         })
 }
 
-exports.searchUsers = (req, res) => {
+exports.searchUsers = async (req, res) => {
     let skipCount = req.body.skipCount || 0
 
-    User.find({ username: req.body.searchTerm })
+    await User.find({ username: req.body.searchTerm })
         .limit(10)
         .skip(10 * skipCount)
         .then((result) => {
@@ -38,11 +38,11 @@ exports.searchUsers = (req, res) => {
 //load comments 
 //load replies
 
-exports.getUserFeed = (req, res) => {
+exports.getUserFeed = async (req, res) => {
     let followings = req.profile.followings
 
 
-    Post.find({ UserId: { $in: followings }, isStory: false })
+    await Post.find({ UserId: { $in: followings }, isStory: false })
         .sort({ 'updatedAt': 1 })
         .exec((err, posts) => {
             if (err) {

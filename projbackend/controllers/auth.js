@@ -3,7 +3,7 @@ const { check, validationResult } = require('express-validator');
 var jwt = require('jsonwebtoken');
 var expressJwt = require('express-jwt');
 
-exports.signup = (req, res) => {
+exports.signup = async (req, res) => {
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -14,7 +14,7 @@ exports.signup = (req, res) => {
     }
 
     const user = new User(req.body);
-    user.save((err, user) => {
+    await user.save((err, user) => {
         if (err) {
             return res.status(400).json({
                 err: 'NOT able to save user in DB',
@@ -29,7 +29,7 @@ exports.signup = (req, res) => {
     });
 };
 
-exports.signin = (req, res) => {
+exports.signin = async (req, res) => {
     const { email, password } = req.body;
     const errors = validationResult(req);
 
@@ -40,7 +40,7 @@ exports.signin = (req, res) => {
         });
     }
 
-    User.findOne({ email }, (err, user) => {
+    await User.findOne({ email }, (err, user) => {
         if (err) {
             return res.status(400).json({
                 error: 'DB Error',

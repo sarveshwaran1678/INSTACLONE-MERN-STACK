@@ -17,11 +17,11 @@ exports.getCommentById = (req, res, next, id) => {
     });
 };
 
-exports.createComment = (req, res) => {
+exports.createComment = async (req, res) => {
     const comment = new Comment(req.body);
     comment.PostId = req.picture._id;
     comment.UserId = req.profile._id;
-    comment.save((err, comment) => {
+    await comment.save((err, comment) => {
         if (err) {
             return res.status(500).send({
                 error: err,
@@ -31,8 +31,8 @@ exports.createComment = (req, res) => {
     });
 };
 
-exports.getAllCommentsByPost = (req, res) => {
-    Comment.find({ PostId: req.picture._id })
+exports.getAllCommentsByPost = async (req, res) => {
+    await Comment.find({ PostId: req.picture._id })
         .populate('UserId', 'username')
         .limit(8)
         .exec((err, comments) => {
@@ -45,9 +45,9 @@ exports.getAllCommentsByPost = (req, res) => {
         });
 };
 
-exports.getAllCommentsByUser = (req, res) => {
+exports.getAllCommentsByUser = async (req, res) => {
     console.log('hit');
-    Comment.find({ UserId: req.profile._id })
+    await Comment.find({ UserId: req.profile._id })
         .populate('PostId', 'picturePath')
         .limit(10)
         //Add skip count *10
@@ -61,9 +61,9 @@ exports.getAllCommentsByUser = (req, res) => {
         });
 };
 
-exports.updateComment = (req, res) => {
+exports.updateComment = async (req, res) => {
     if (toString(req.profile._id) == toString(req.comment.UserId)) {
-        Comment.findByIdAndUpdate(
+        await Comment.findByIdAndUpdate(
             req.comment._id,
             { commentBody: req.body.commentBody },
             { new: true, runValidators: true },
@@ -83,9 +83,9 @@ exports.updateComment = (req, res) => {
     }
 };
 
-exports.removeUserComment = (req, res, next) => {
+exports.removeUserComment = async (req, res, next) => {
     if (toString(req.profile._id) == toString(req.comment.UserId)) {
-        Comment.findByIdAndDelete(req.comment._id, (err, comment) => {
+        await Comment.findByIdAndDelete(req.comment._id, (err, comment) => {
             if (err) {
                 return res.status(500).json({
                     error: err,
@@ -100,9 +100,9 @@ exports.removeUserComment = (req, res, next) => {
     }
 };
 
-exports.removePostComment = (req, res, next) => {
+exports.removePostComment = async (req, res, next) => {
     if (toString(req.profile._id) === toString(req.picture.userId)) {
-        Comment.findByIdAndDelete(req.comment._id, (err, comment) => {
+        await Comment.findByIdAndDelete(req.comment._id, (err, comment) => {
             if (err) {
                 return res.status(500).json({
                     error: err,
@@ -117,8 +117,8 @@ exports.removePostComment = (req, res, next) => {
     }
 };
 
-exports.getReplyById = (req, res, next, id) => {
-    Reply.findById(id).exec((err, reply) => {
+exports.getReplyById = async (req, res, next, id) => {
+    await Reply.findById(id).exec((err, reply) => {
         if (err) {
             return res.status(400).json({
                 error: 'Picture not found',
@@ -129,11 +129,11 @@ exports.getReplyById = (req, res, next, id) => {
     });
 };
 
-exports.createReply = (req, res) => {
+exports.createReply = async (req, res) => {
     const reply = new Reply(req.body);
     reply.CommentId = req.comment._id;
     reply.UserId = req.profile._id;
-    reply.save((err, reply) => {
+    await reply.save((err, reply) => {
         if (err) {
             return res.status(500).send({
                 error: err,
@@ -143,8 +143,8 @@ exports.createReply = (req, res) => {
     });
 };
 
-exports.getAllReplyByUser = (req, res) => {
-    Reply.find({ UserId: req.profile._id })
+exports.getAllReplyByUser = async (req, res) => {
+    await Reply.find({ UserId: req.profile._id })
         .populate('CommentId', 'UserId commentBody')
         .populate('UserId', 'username')
         .limit(10)
@@ -158,8 +158,8 @@ exports.getAllReplyByUser = (req, res) => {
         });
 };
 
-exports.getAllReplyByCommentId = (req, res) => {
-    Reply.find({ CommentId: req.comment })
+exports.getAllReplyByCommentId = async (req, res) => {
+    await Reply.find({ CommentId: req.comment })
         .then((replies) => {
             return res.status(201).json({ replies })
 
@@ -169,9 +169,9 @@ exports.getAllReplyByCommentId = (req, res) => {
         })
 }
 
-exports.updateReply = (req, res) => {
+exports.updateReply = async (req, res) => {
     if (toString(req.profile._id) == toString(req.reply.UserId)) {
-        Reply.findByIdAndUpdate(
+        await Reply.findByIdAndUpdate(
             req.reply._id,
             { replyBody: req.body.replyBody },
             { new: true, runValidators: true },
@@ -191,9 +191,9 @@ exports.updateReply = (req, res) => {
     }
 };
 
-exports.removeUserReply = (req, res) => {
+exports.removeUserReply = async (req, res) => {
     if (toString(req.profile._id) == toString(req.reply.UserId)) {
-        Reply.findByIdAndDelete(req.reply._id, (err, reply) => {
+        await Reply.findByIdAndDelete(req.reply._id, (err, reply) => {
             if (err) {
                 return res.status(500).json({
                     error: err,
@@ -210,9 +210,9 @@ exports.removeUserReply = (req, res) => {
     }
 };
 
-exports.removeCommentReply = (req, res) => {
+exports.removeCommentReply = async (req, res) => {
     if (toString(req.profile._id) == toString(req.comment.UserId)) {
-        Reply.findByIdAndDelete(req.reply._id, (err, reply) => {
+        await Reply.findByIdAndDelete(req.reply._id, (err, reply) => {
             if (err) {
                 return res.status(500).json({
                     error: err,
@@ -229,8 +229,8 @@ exports.removeCommentReply = (req, res) => {
     }
 };
 
-exports.removeReplies = (req, res) => {
-    Reply.deleteMany({ CommentId: req.comment._id }, (err) => {
+exports.removeReplies = async (req, res) => {
+    await Reply.deleteMany({ CommentId: req.comment._id }, (err) => {
         if (err) {
             return res.status(500).json({
                 error: err,

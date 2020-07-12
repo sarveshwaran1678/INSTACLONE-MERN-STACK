@@ -21,6 +21,7 @@ const commentRoutes = require('./routes/comment');
 // const notificationRoutes = require('./routes/notification');
 
 //DB Connection
+
 mongoose
     .connect(process.env.DATABASE, {
         useNewUrlParser: true,

@@ -449,12 +449,12 @@ exports.toggleIsPrivate = async (req, res) => {
     });
 };
 
-const updateAnotherNotification = async (UserId, fieldName, req) => {
+const updateAnotherNotification = (UserId, fieldName, req) => {
     const pushNotification = {
         UserId,
         updatedFieldName: fieldName,
     };
-    await User.findByIdAndUpdate(
+    User.findByIdAndUpdate(
         { _id: req.anotherProfile._id },
         { $push: { updateNotification: pushNotification } },
         { new: true, runValidators: true },
@@ -471,56 +471,73 @@ const updateAnotherNotification = async (UserId, fieldName, req) => {
 
 exports.forgotPasswordMailSend = async (req, res) => {
     const { email } = req.body;
-    let receiverEmail = email;
-    let otp = Math.floor(100000 + Math.random() * 900000) + '';
-
-    var transporter = nodemailer.createTransport(
-        smtpTransport({
-            service: 'gmail',
-            host: 'smtp.gmail.com',
-            auth: {
-                user: 'gfreaks303@gmail.com',
-                pass: process.env.EMAILPASSWORD,
-            },
-        })
-    );
-
-    var mailOptions = {
-        from: 'noreply@gmail.com',
-        to: receiverEmail,
-        subject: 'Reset Password',
-        text: otp,
-    };
-    console.log(otp);
-    await transporter.sendMail(mailOptions, async function (error, info) {
-        if (error) {
-            return res.status(500).json({
-                error: 'Email not sent',
+    User.findOne({ email: email }).exec(async (err, foundUser) => {
+        if (err) {
+            return res.status(400).json({
+                error: 'User Email Not Found',
             });
-        } else {
-            console.log('Email sent: ' + info.response);
-            await User.findOne({ email: email }).exec(
-                async (err, foundUser) => {
-                    if (err) {
-                        return res.status(400).json({
-                            error: 'User Email Not Found',
-                        });
-                    }
+        }
+        if (foundUser) {
+            let receiverEmail = email;
+            let otp = Math.floor(100000 + Math.random() * 900000) + '';
 
-                    foundUser.otp = otp;
-                    foundUser.otpTimeout = new Date();
-                    await foundUser.save((err, user) => {
-                        if (err) {
-                            return res.status(400).json({
-                                error: err,
+            var transporter = nodemailer.createTransport(
+                smtpTransport({
+                    service: 'gmail',
+                    host: 'smtp.gmail.com',
+                    auth: {
+                        user: 'gfreaks303@gmail.com',
+                        pass: process.env.EMAILPASSWORD,
+                    },
+                })
+            );
+
+            console.log(receiverEmail);
+            var mailOptions = {
+                from: 'gfreaks303@gmail.com',
+                to: receiverEmail,
+                subject: 'Reset Password',
+                text: otp,
+            };
+            console.log(otp);
+            await transporter.sendMail(mailOptions, async function (
+                error,
+                info
+            ) {
+                if (error) {
+                    return res.status(500).json({
+                        error: 'Email not sent',
+                    });
+                } else {
+                    console.log('Email sent: ' + info.response);
+                    await User.findOne({ email: email }).exec(
+                        async (err, foundUser) => {
+                            if (err) {
+                                return res.status(400).json({
+                                    error: 'User Email Not Found',
+                                });
+                            }
+
+                            foundUser.otp = otp;
+                            foundUser.otpTimeout = new Date();
+                            await foundUser.save((err, user) => {
+                                if (err) {
+                                    return res.status(400).json({
+                                        error: err,
+                                    });
+                                }
+                                return res.status(201).json({
+                                    message: 'OTP sent successfully',
+                                });
                             });
                         }
-                        return res.status(201).json({
-                            message: 'OTP sent successfully',
-                        });
-                    });
+                    );
                 }
-            );
+            });
+        } else {
+            return res.json({
+                msg: 'email not valid',
+            });
         }
     });
 };
@@ -536,7 +553,7 @@ exports.newPasswordSubmitted = async (req, res) => {
             });
         }
         let { otp, otpTimeout } = foundUser;
-        if (currentTime - otpTimeout < 60000) {
+        if (currentTime - otpTimeout < 600000) {
             if (userOtp === otp) {
                 if (newPassword === confirmNewPassword) {
                     //Doing password validation

@@ -38,9 +38,17 @@ exports.searchUsers = (req, res) => {
 //load comments 
 //load replies
 
-let followings
 exports.getUserFeed = (req, res) => {
-    followings = req.profile.followings
+    let followings = req.profile.followings
 
+
+    Post.find({ UserId: { $in: followings }, isStory: false })
+        .sort({ 'updatedAt': 1 })
+        .exec((err, posts) => {
+            if (err) {
+                return res.status(500).send(err)
+            }
+            return res.status(200).send(posts)
+        })
 }
 

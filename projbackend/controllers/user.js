@@ -469,11 +469,11 @@ const updateAnotherNotification = (UserId, fieldName, req) => {
     );
 };
 
-let otp, receiverEmail;
+
 exports.forgotPasswordMailSend = (req, res) => {
     const { email } = req.body;
-    receiverEmail = email;
-    otp = Math.floor(100000 + Math.random() * 900000) + '';
+    let receiverEmail = email;
+    let otp = Math.floor(100000 + Math.random() * 900000) + '';
 
     var transporter = nodemailer.createTransport(
         smtpTransport({
@@ -495,7 +495,9 @@ exports.forgotPasswordMailSend = (req, res) => {
     console.log(otp);
     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
-            console.log(error);
+            return res.status(500).json({
+                error: "Email not sent"
+            })
         } else {
             console.log('Email sent: ' + info.response);
             User.findOne({ email: email }).exec((err, foundUser) => {

@@ -18,7 +18,8 @@ const {
     getAllReplyByUser,
     removeUserReply,
     removeCommentReply,
-    removeReplies, getAllReplyByCommentId
+    removeReplies,
+    getAllReplyByCommentId,
 } = require('../controllers/comment');
 
 router.param('userId', getUserById);
@@ -29,7 +30,7 @@ router.param('replyId', getReplyById);
 //create comment
 //commentBody must come from req.body
 router.post(
-    '/createComment/:userId/:pictureId',
+    '/comment/createComment/:userId/:pictureId',
     isSignedIn,
     isAuthenticated,
     createComment
@@ -37,7 +38,7 @@ router.post(
 
 //get all comments on a post
 router.get(
-    '/getAllCommentsByPost/:userId/:pictureId',
+    '/comment/getAllCommentsByPost/:userId/:pictureId',
     isSignedIn,
     isAuthenticated,
     getAllCommentsByPost
@@ -45,7 +46,7 @@ router.get(
 
 //get all comments by a user
 router.get(
-    '/getAllCommentsByUser/:userId',
+    '/comment/getAllCommentsByUser/:userId',
     isSignedIn,
     isAuthenticated,
     getAllCommentsByUser
@@ -54,7 +55,7 @@ router.get(
 //update a comment
 //req.body.commentBody is must and will update comment
 router.put(
-    '/updateComment/:userId/:commentId',
+    '/comment/updateComment/:userId/:commentId',
     isSignedIn,
     isAuthenticated,
     updateComment
@@ -64,7 +65,7 @@ router.put(
 //remove your own comment
 //will remove all its reply as well
 router.delete(
-    '/removeUserComment/:userId/:commentId',
+    '/comment/removeUserComment/:userId/:commentId',
     isSignedIn,
     isAuthenticated,
     removeUserComment,
@@ -73,7 +74,7 @@ router.delete(
 
 //remove comment from your post
 router.delete(
-    '/removePostComment/:pictureId/:userId/:commentId',
+    '/comment/removePostComment/:pictureId/:userId/:commentId',
     isSignedIn,
     isAuthenticated,
     removePostComment,
@@ -83,7 +84,7 @@ router.delete(
 //have to pass req.body.replyBody
 //create Reply
 router.post(
-    '/createReply/:userId/:commentId',
+    '/reply/createReply/:userId/:commentId',
     isSignedIn,
     isAuthenticated,
     createReply
@@ -91,7 +92,7 @@ router.post(
 
 //get all reply by a user
 router.get(
-    '/getAllReplyByUser/:userId/:replyId',
+    '/reply/getAllReplyByUser/:userId',
     isSignedIn,
     isAuthenticated,
     getAllReplyByUser
@@ -99,14 +100,16 @@ router.get(
 
 //get all reply by comment Id
 router.get(
-    "/getAllReplyByCommentId/:userId/:commentId",
-    isSignedIn, isAuthenticated, getAllReplyByCommentId
-)
+    '/reply/getAllReplyByCommentId/:userId/:commentId',
+    isSignedIn,
+    isAuthenticated,
+    getAllReplyByCommentId
+);
 
 //update a reply
 //req.body.replyBody is must and will update replyBody
 router.put(
-    '/updateReply/:userId/:replyId',
+    '/reply/updateReply/:userId/:replyId',
     isSignedIn,
     isAuthenticated,
     updateReply
@@ -115,14 +118,14 @@ router.put(
 //delete reply by user
 
 router.delete(
-    '/removeUserReply/:userId/:replyId',
+    '/reply/removeUserReply/:userId/:replyId',
     isSignedIn,
     isAuthenticated,
     removeUserReply
 );
 //delete reply on that comment Id
 router.delete(
-    '/removeCommentReply/:userId/:commentId/:replyId',
+    '/reply/removeCommentReply/:userId/:commentId/:replyId',
     isSignedIn,
     isAuthenticated,
     removeCommentReply

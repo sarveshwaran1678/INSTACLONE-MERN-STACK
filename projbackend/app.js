@@ -18,8 +18,8 @@ const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/user');
 const postRoutes = require('./routes/post');
 const commentRoutes = require('./routes/comment');
-// const notificationRoutes = require('./routes/notification');
-
+const navbarRoutes = require('./routes/navbar');
+const storiesRoutes = require('./routes/stories');
 //DB Connection
 
 mongoose
@@ -42,8 +42,8 @@ app.use('/api', authRoutes);
 app.use('/api', userRoutes);
 app.use('/api', postRoutes);
 app.use('/api', commentRoutes);
-
-// app.use('/api', notificationRoutes);
+app.use('/api', storiesRoutes);
+app.use('/api', navbarRoutes);
 
 //Port
 const port = process.env.PORT || 8000;

@@ -4,7 +4,7 @@ const Post = require('../models/post');
 
 const formidable = require('formidable');
 const _ = require('lodash');
-var Jimp = require('jimp');
+
 var fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 var cloudinary = require('cloudinary').v2;
@@ -37,16 +37,13 @@ exports.getAnotherPictureById = async (req, res, next, id) => {
         });
 };
 
-exports.getPicture = (req, res, next) => {
-    if (toString(req.profile._id) == toString(req.picture.UserId))
-        res.json(req.picture);
-    next();
-    // return res.json(req.picture);
+exports.getPicture = (req, res) => {
+    res.json(req.picture);
 };
 
-exports.getAnotherUserPicture = (req, res, next) => {
+exports.getAnotherUserPicture = (req, res) => {
     res.json(req.anotherPicture);
-    next();
+
     //return res.json(req.anotherPicture);
 };
 
@@ -110,7 +107,7 @@ exports.removePicture = (req, res, next) => {
         });
     } else {
         return res.status(400).json({
-            err: 'Not authorized to remove comment',
+            err: 'Not authorized to remove picture',
         });
     }
 };
@@ -139,12 +136,12 @@ exports.updateCaption = async (req, res) => {
 };
 
 //Like and Unlike
-exports.likePicture = async (req, res) => {
+exports.likePicture = (req, res) => {
     let user = req.profile;
     let picture = req.picture;
     const username = user.username;
     if (picture.likesFromUserId.includes(user._id)) {
-        await Post.findByIdAndUpdate(
+        Post.findByIdAndUpdate(
             { _id: req.picture._id },
             { $pull: { likesFromUserId: req.profile._id } },
             { new: true, useFindAndModify: false },
@@ -167,18 +164,18 @@ exports.likePicture = async (req, res) => {
             updatedFieldName: username + ' liked your photo',
         };
         //Logic for like
-        await Post.findByIdAndUpdate(
+        Post.findByIdAndUpdate(
             { _id: req.picture._id },
             { $push: { likesFromUserId: req.profile._id } },
             { new: true, useFindAndModify: false },
-            async (err, picture) => {
+            (err, picture) => {
                 if (err) {
                     return res.status(400).json({
                         error: err,
                     });
                 }
                 //Notification Logic
-                await User.findByIdAndUpdate(
+                User.findByIdAndUpdate(
                     { _id: req.picture.UserId },
                     { $push: { updateNotification: pushNotification } },
                     { new: true, runValidators: true },
@@ -230,30 +227,12 @@ exports.uploadStory = async (req, res) => {
                     picture.pictureUrl = image.url;
                     await picture.save((err, picture) => {
                         if (err) {
-                            return res.status(400).json({
+                            res.status(400).json({
                                 error: err,
                             });
                         }
-                        res.json(picture);
+                        return res.json(picture);
                     });
-
-                    //delay for deleting story
-                    setTimeout(
-                        () =>
-                            picture.remove((err, deletedpicture) => {
-                                if (err) {
-                                    console.log('failed');
-                                }
-                                console.log(deletedpicture);
-                                cloudinary.uploader.destroy(
-                                    deletedpicture.picturePath,
-                                    function (result) {
-                                        console.log('deleted from cloud');
-                                    }
-                                );
-                            }),
-                        120000
-                    );
                 }
             );
         } else {
@@ -266,6 +245,30 @@ exports.uploadStory = async (req, res) => {
 
 //get all your stories
 exports.getAllYourStories = async (req, res) => {
+    await Post.find({ UserId: req.profile._id, isStory: true }).exec(
+        (err, posts) => {
+            if (err) {
+                return res.status(500).json(err);
+            }
+            posts.map((pic) => {
+                if (Date.now() - pic.createdAt >= 600000) {
+                    pic.remove((err, deletedpicture) => {
+                        if (err) {
+                            console.log('failed');
+                        }
+                        console.log(deletedpicture);
+                        cloudinary.uploader.destroy(
+                            deletedpicture.picturePath,
+                            function (result) {
+                                console.log('deleted from cloud');
+                            }
+                        );
+                    });
+                }
+            });
+        }
+    );
+
     await Post.find({ UserId: req.profile._id, isStory: true }).exec(
         (err, posts) => {
             if (err) {
@@ -286,6 +289,30 @@ exports.getAllAnotherStory = async (req, res) => {
             await Post.find({ UserId: anotherUser._id, isStory: true })
                 .sort('updatedAt')
                 .then((posts) => {
+                    posts.map((pic) => {
+                        if (Date.now() - pic.createdAt >= 600000) {
+                            pic.remove((err, deletedpicture) => {
+                                if (err) {
+                                    console.log('failed');
+                                }
+                                console.log(deletedpicture);
+                                cloudinary.uploader.destroy(
+                                    deletedpicture.picturePath,
+                                    function (result) {
+                                        console.log('deleted from cloud');
+                                    }
+                                );
+                            });
+                        }
+                    });
+                })
+                .catch((err) => {
+                    return res.status(500).json(err);
+                });
+
+            await Post.find({ UserId: anotherUser._id, isStory: true })
+                .sort('updatedAt')
+                .then((posts) => {
                     return res.status(201).json(posts);
                 })
                 .catch((err) => {
@@ -300,6 +327,30 @@ exports.getAllAnotherStory = async (req, res) => {
         await Post.find({ UserId: anotherUser._id, isStory: true })
             .sort('updatedAt')
             .then((posts) => {
+                posts.map((pic) => {
+                    if (Date.now() - pic.createdAt >= 600000) {
+                        pic.remove((err, deletedpicture) => {
+                            if (err) {
+                                console.log('failed');
+                            }
+                            console.log(deletedpicture);
+                            cloudinary.uploader.destroy(
+                                deletedpicture.picturePath,
+                                function (result) {
+                                    console.log('deleted from cloud');
+                                }
+                            );
+                        });
+                    }
+                });
+            })
+            .catch((err) => {
+                return res.status(500).json(err);
+            });
+
+        await Post.find({ UserId: anotherUser._id, isStory: true })
+            .sort('updatedAt')
+            .then((posts) => {
                 return res.status(201).json(posts);
             })
             .catch((err) => {
@@ -310,31 +361,41 @@ exports.getAllAnotherStory = async (req, res) => {
 
 //get all your followings stories
 exports.getAllFollowingStory = async (req, res) => {
-    let user = req.profile;
-    let users = [];
+    let followings = req.profile.followings;
 
-    let followingUserStories = [];
-
-    user.followings.map(async (userId) => {
-        let userStories = [];
-
-        await Post.find({ UserId: userId, isStory: true }).exec(
-            (err, posts) => {
-                if (err) {
-                    return res.status(500).json({
-                        error: 'Server Issue',
+    await Post.find({ UserId: { $in: followings }, isStory: true })
+        .sort({ createdAt: 1 })
+        .exec((err, posts) => {
+            if (err) {
+                return res.status(500).send(err);
+            }
+            posts.map((pic) => {
+                if (Date.now() - pic.createdAt >= 600000) {
+                    pic.remove((err, deletedpicture) => {
+                        if (err) {
+                            console.log('failed');
+                        }
+                        console.log(deletedpicture);
+                        cloudinary.uploader.destroy(
+                            deletedpicture.picturePath,
+                            function (result) {
+                                console.log('deleted from cloud');
+                            }
+                        );
                     });
                 }
-                userStories.push(posts);
+            });
+        });
+
+    await Post.find({ UserId: { $in: followings }, isStory: true })
+        .sort({ createdAt: 1 })
+        .exec((err, posts) => {
+            if (err) {
+                return res.status(500).send(err);
             }
-        );
-
-        users.push(userStories);
-    });
-
-    return res.status(201).json(users);
+            return res.status(200).send(posts);
+        });
 };
-
 //get all of your post
 exports.getAllYourPost = async (req, res) => {
     await Post.find({ UserId: req.profile._id, isStory: false })
@@ -376,5 +437,23 @@ exports.getAllAnotherPost = async (req, res) => {
             .catch((err) => {
                 return res.status(500).json(err);
             });
+    }
+};
+
+exports.removeStory = async (req, res) => {
+    if (toString(req.profile._id) == toString(req.picture.UserId)) {
+        let story = req.picture;
+        cloudinary.uploader.destroy(story.picturePath, function (result) {});
+        story.remove((err, deletedStory) => {
+            if (err) {
+                return res.status(400).json({
+                    error: 'Failed to delete story',
+                });
+            }
+        });
+    } else {
+        return res.status(400).json({
+            err: 'Not authorized to remove story',
+        });
     }
 };

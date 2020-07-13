@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
-const { getUserById } = require('../controllers/user');
+const { getUserById, getAnotherUserById } = require('../controllers/user');
 const {
     getPictureById,
     getAnotherPictureById,
@@ -12,12 +12,8 @@ const {
     getPicture,
     updateCaption,
     getAnotherUserPicture,
-    uploadStory,
     getAllYourPost,
     getAllAnotherPost,
-    getAllYourStories,
-    getAllAnotherStory,
-    getAllFollowingStory
 } = require('../controllers/post');
 const { getAllCommentsByPost } = require('../controllers/comment');
 
@@ -26,41 +22,11 @@ const { removeAllCommentWithReply } = require('../controllers/comment');
 router.param('userId', getUserById);
 router.param('pictureId', getPictureById);
 router.param('anotherPictureId', getAnotherPictureById);
-
+router.param('anotherUserId', getAnotherUserById);
 //to Upload the  pictures
-router.post(
-    '/picture/upload/:userId',
-    isSignedIn,
-    isAuthenticated,
-    uploadPost
-);
+router.post('/picture/upload/:userId', isSignedIn, isAuthenticated, uploadPost);
 
-//to upload stories which will be removed after certain time
-router.post(
-    '/picture/uploadStory/:userId',
-    isSignedIn,
-    isAuthenticated,
-    uploadStory
-);
-
-//to get all your stories
-router.get(
-    "/picture/getYourStories/:userId",
-    isSignedIn,
-    isAuthenticated,
-    getAllYourStories
-)
-
-//to get all other stories(for their profile page)
-router.get(
-    "/picture/getAllOthersStories/:userId/:anotherUserId",
-    isSignedIn,
-    isAuthenticated,
-    getAllAnotherStory
-)
-
-//to get all you followings stories
-
+//get your all pictures
 
 //to delete a post with all it's comment and reply
 router.delete(
@@ -88,48 +54,35 @@ router.put(
     updateCaption
 );
 
-//read your picture and all it's comments and 
+//read your picture and all it's comments and
 router.get(
-    '/picture/:userId/:pictureId',
+    '/picture/getPicture/:userId/:pictureId',
     isSignedIn,
     isAuthenticated,
-    getPicture,
-    getAllCommentsByPost
+    getPicture
 );
 
 //to see another person picture and comments
 router.get(
-    '/anotherPicture/:userId/:anotherUserId/:pictureId',
+    '/picture/anotherPicture/:userId/:anotherUserId/:pictureId',
     isSignedIn,
     isAuthenticated,
-    getAnotherUserPicture,
-    getAllCommentsByPost
+    getAnotherUserPicture
 );
-
-
-//get your all pictures
-router.get(
-    'getYourAllPost/:userId',
-    isSignedIn,
-    isAuthenticated,
-    getAllYourPost
-)
 
 //get other user all picutre
 router.get(
-    "getAnptherAllPost/:userId/:anotherId",
+    '/picture/getAnotherAllPost/:userId/:anotherUserId',
     isSignedIn,
     isAuthenticated,
     getAllAnotherPost
-)
+);
 
-
-//get all followings story
 router.get(
-    "/getAllFollowingsStories/:userId",
+    '/picture/getYourAllPost/:userId',
     isSignedIn,
     isAuthenticated,
-    getAllFollowingStory
-)
+    getAllYourPost
+);
 
 module.exports = router;

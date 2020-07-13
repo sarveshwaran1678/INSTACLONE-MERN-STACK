@@ -46,7 +46,6 @@ exports.getAllCommentsByPost = async (req, res) => {
 };
 
 exports.getAllCommentsByUser = async (req, res) => {
-    console.log('hit');
     await Comment.find({ UserId: req.profile._id })
         .populate('PostId', 'picturePath')
         .limit(10)
@@ -161,13 +160,12 @@ exports.getAllReplyByUser = async (req, res) => {
 exports.getAllReplyByCommentId = async (req, res) => {
     await Reply.find({ CommentId: req.comment })
         .then((replies) => {
-            return res.status(201).json({ replies })
-
+            return res.status(201).json({ replies });
         })
         .catch((err) => {
-            return res.status(500).json({ error: err })
-        })
-}
+            return res.status(500).json({ error: err });
+        });
+};
 
 exports.updateReply = async (req, res) => {
     if (toString(req.profile._id) == toString(req.reply.UserId)) {

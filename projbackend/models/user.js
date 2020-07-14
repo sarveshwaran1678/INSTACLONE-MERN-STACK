@@ -37,6 +37,7 @@ var userSchema = new mongoose.Schema(
             type: String,
             trim: true,
             maxlength: 100,
+            default: ""
         },
         encry_password: {
             type: String,

@@ -2,6 +2,8 @@ body {
     background: rgb(252, 249, 249);
     margin: 0;
     padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    color: black;
 }
 
 h1 {
@@ -11,33 +13,38 @@ h1 {
 .form-control {
     box-shadow: none;
     outline: none;
-    border: 1px solid rgb(12, 210, 236);
+    border: 1px solid rgba(0, 0, 255, 0.815);
     border-right: 1px solid white;
     border-left: 1px solid white;
-
+    font-weight: 500;
     background-color: white;
     width: 100px;
+    color: black;
 }
 
 .form-control:focus {
     box-shadow: none;
     outline: none;
-    border: 1px solid rgb(12, 210, 236);
+    border: 1px solid rgba(0, 0, 255, 0.815);
     border-right: 1px solid white;
     border-left: 1px solid white;
     background-color: white;
     border-radius: 0 10px 0 10px;
+    color: black;
 }
-.pre-text {
-    background-color: white;
-    border: 1px solid rgb(12, 210, 236);
-    border-right: 1px solid white;
-    border-radius: 25px;
-}
-.post-text,
 .input-group-text {
+    border: 1px solid rgba(0, 0, 255, 0.815);
     background-color: white;
-    border: 1px solid rgb(12, 210, 236);
-    border-left: 1px solid white;
     border-radius: 25px;
+}
+
+.signIn {
+    margin-top: 20px;
+    border-radius: 25px;
+    border: none;
+    background-color: rgba(0, 0, 255, 0.815);
+    color: white;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 7px 40px;
 }

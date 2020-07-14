@@ -430,6 +430,24 @@ exports.followRequestHandler = async (req, res) => {
     }
 };
 
+exports.updateBio = async (req, res) => {
+    let user = req.profile
+    user.bio = req.body.bio
+
+    await user.save((err, user) => {
+        if (err) {
+            return res.status(500).json({
+                error: 'DB error',
+            });
+        }
+
+        return res.status(201).json({
+            message: 'bio updated',
+        });
+    });
+
+}
+
 exports.toggleIsPrivate = async (req, res) => {
     let user = req.profile;
 

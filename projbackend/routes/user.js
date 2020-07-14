@@ -15,6 +15,7 @@ const {
     toggleIsPrivate,
     forgotPasswordMailSend,
     newPasswordSubmitted,
+    updateBio
 } = require('../controllers/user');
 
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
@@ -67,6 +68,15 @@ router.put(
     isSignedIn,
     isAuthenticated,
     toggleIsPrivate
+);
+
+//update Bio
+//req.body.bio required
+router.put(
+    '/user/updateBio/:userId',
+    isSignedIn,
+    isAuthenticated,
+    updateBio
 );
 
 //For sending otp to reset password

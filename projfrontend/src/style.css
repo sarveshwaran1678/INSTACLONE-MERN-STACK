@@ -1,5 +1,5 @@
 body {
-    background: rgb(252, 249, 249);
+    background: white;
     margin: 0;
     padding: 0;
     font-family: 'Montserrat', sans-serif;
@@ -13,9 +13,10 @@ h1 {
 .form-control {
     box-shadow: none;
     outline: none;
+    border: none;
     border: 1px solid rgba(0, 0, 255, 0.815);
-    border-right: 1px solid white;
-    border-left: 1px solid white;
+    border-right: none;
+    border-left: none;
     font-weight: 500;
     background-color: white;
     width: 100px;
@@ -26,8 +27,8 @@ h1 {
     box-shadow: none;
     outline: none;
     border: 1px solid rgba(0, 0, 255, 0.815);
-    border-right: 1px solid white;
-    border-left: 1px solid white;
+    border-right: none;
+    border-left: none;
     background-color: white;
     border-radius: 0 10px 0 10px;
     color: black;
@@ -46,5 +47,8 @@ h1 {
     color: white;
     text-transform: uppercase;
     font-weight: 600;
-    padding: 7px 40px;
+    padding: 7px 50px;
+}
+button:focus {
+    outline: none;
 }

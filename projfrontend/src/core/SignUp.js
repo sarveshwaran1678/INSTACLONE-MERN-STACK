@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
+import { withRouter, Link } from 'react-router-dom';
 import '../style.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -62,7 +63,7 @@ const SignUp = () => {
                     minWidth: '300px',
                     maxWidth: '400px',
                 }}>
-                <h2 style={{ marginTop: '3vh' }}>
+                <h2 style={{ marginTop: '4.5vh' }}>
                     I
                     <h4
                         style={{
@@ -342,12 +343,17 @@ const SignUp = () => {
                                     zIndex: '10',
                                 }}>
                                 Already have an account?
-                                <span
+                                <Link
                                     style={{
                                         color: 'blue',
-                                    }}>
+                                        display: 'inline-block',
+                                    }}
+                                    // style={currentTab(history, '/signup')}
+                                    className='nav-link'
+                                    to='/signin'>
+                                    {' '}
                                     Sign In
-                                </span>
+                                </Link>
                             </h6>
                         </Form>
                     )}

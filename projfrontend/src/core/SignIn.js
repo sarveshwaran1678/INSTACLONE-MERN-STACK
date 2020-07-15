@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Formik, Form, Field, ErrorMessage, FormikProps } from 'formik';
+import { Formik, Form, Field } from 'formik';
+import { withRouter, Link } from 'react-router-dom';
 import * as Yup from 'yup';
 import '../style.css';
 
@@ -26,9 +27,9 @@ const validationSchema = Yup.object().shape({
         ),
 });
 
-const SignIn = () => {
+const SignIn = ({ props }) => {
     const [mode, setMode] = useState('password');
-    //console.log(mode);
+
     return (
         <div class='row text-center'>
             <div
@@ -50,7 +51,7 @@ const SignIn = () => {
                     minWidth: '300px',
                     maxWidth: '400px',
                 }}>
-                <h2 style={{ marginTop: '3vh' }}>
+                <h2 style={{ marginTop: '4.5vh' }}>
                     I
                     <h4
                         style={{
@@ -174,12 +175,17 @@ const SignIn = () => {
                                     textAlign: 'center',
                                 }}>
                                 Don't have an account?
-                                <span
+                                <Link
                                     style={{
                                         color: 'blue',
-                                    }}>
+                                        display: 'inline-block',
+                                    }}
+                                    // style={currentTab(history, '/signup')}
+                                    className='nav-link'
+                                    to='/signup'>
+                                    {' '}
                                     Sign Up
-                                </span>
+                                </Link>
                             </h6>
                         </Form>
                     )}
@@ -195,8 +201,21 @@ const SignIn = () => {
                         d='M0,32L40,58.7C80,85,160,139,240,176C320,213,400,235,480,250.7C560,267,640,277,720,266.7C800,256,880,224,960,213.3C1040,203,1120,213,1200,186.7C1280,160,1360,96,1400,64L1440,32L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z'></path>
                 </svg>
             </div>
+            <div class='fixed-bottom text-center'>
+                {' '}
+                <h6 style={{ color: '#2C3335' }}>
+                    <i class='far fa-copyright'></i> 2020 InstaClone Inspired By
+                    :
+                    <span
+                        style={{
+                            color: 'purple',
+                        }}>
+                        Instagram
+                    </span>
+                </h6>
+            </div>
         </div>
     );
 };
 
-export default SignIn;
+export default withRouter(SignIn);

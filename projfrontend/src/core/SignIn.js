@@ -12,6 +12,7 @@ const initialValues = {
 
 const onSubmit = (values, onSubmit) => {
     console.log('Form data', values);
+    
     onSubmit.resetForm();
 };
 
@@ -29,7 +30,6 @@ const validationSchema = Yup.object().shape({
 
 const SignIn = ({ props }) => {
     const [mode, setMode] = useState('password');
-
     return (
         <div class='row text-center'>
             <div

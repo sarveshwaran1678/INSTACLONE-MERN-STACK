@@ -375,9 +375,9 @@ const SignUp = () => {
                     :
                     <span
                         style={{
-                            color: 'purple',
+                            color: '#E1306C',
                         }}>
-                        Instagram
+                        Instagram <i class='fab fa-instagram'></i>
                     </span>
                 </h6>
             </div>

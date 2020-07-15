@@ -16,21 +16,21 @@ export const signIn = ({ email, password }) => {
             password,
         })
         .then((response) => {
-            return response.json();
+            return response;
         })
         .catch((err) => console.log(err));
 };
 
-export const signUp = ({ username, name, email, password }) => {
+export const signUp = ({ name, username, email, password }) => {
     apiClient
-        .post('/signin', {
+        .post('/signup', {
             username,
             name,
             email,
             password,
         })
         .then((response) => {
-            return response.json();
+            return response;
         })
         .catch((err) => console.log(err));
 };

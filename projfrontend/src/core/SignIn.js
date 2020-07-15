@@ -1,35 +1,64 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, Redirect } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+
 import * as Yup from 'yup';
 import '../style.css';
 
 import insta from '../Images/insta.gif';
-const initialValues = {
-    email: '',
-    password: '',
-};
-
-const onSubmit = (values, onSubmit) => {
-    console.log('Form data', values);
-    
-    onSubmit.resetForm();
-};
-
-const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string()
-        .min(5, 'Too Short!')
-        .max(15, 'Too Long!')
-        .required('Required')
-        .matches(
-            /^(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[!@#\$%\^&\*])/,
-            'One Uppercase, One Lowercase, One Number and One Special Case Character'
-        ),
-});
+import { signIn, authenticate } from './APICalls/signCalls';
 
 const SignIn = ({ props }) => {
     const [mode, setMode] = useState('password');
+
+    const initialValues = {
+        email: '',
+        password: '',
+    };
+
+    const onSubmit = (values, onSubmit) => {
+        console.log('hii');
+        console.log('Form data', values.email);
+
+        // signIn(values)
+        //     .then((data) => {
+        //         if (data.error) {
+        //             return (
+        //                 <div>
+        //                     <ToastContainer />
+        //                     {toast.error(data.error)}
+        //                 </div>
+        //             );
+        //         } else {
+        //             authenticate(data, () => {
+        //                 return (
+        //                     <>
+        //                         <ToastContainer />
+        //                         {toast.success('Sign In Succesfull')}
+        //                         <Redirect to='/' />
+        //                     </>
+        //                 );
+        //             });
+        //         }
+        //     })
+        //     .catch((err) => console.log(err));
+
+        onSubmit.resetForm();
+    };
+
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email('Invalid email').required('Required'),
+        password: Yup.string()
+            .min(5, 'Too Short!')
+            .max(15, 'Too Long!')
+            .required('Required')
+            .matches(
+                /^(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[!@#\$%\^&\*])/,
+                'One Uppercase, One Lowercase, One Number and One Special Case Character'
+            ),
+    });
+
     return (
         <div class='row text-center'>
             <div
@@ -201,7 +230,7 @@ const SignIn = ({ props }) => {
                         d='M0,32L40,58.7C80,85,160,139,240,176C320,213,400,235,480,250.7C560,267,640,277,720,266.7C800,256,880,224,960,213.3C1040,203,1120,213,1200,186.7C1280,160,1360,96,1400,64L1440,32L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z'></path>
                 </svg>
             </div>
-            <div class='fixed-bottom text-center'>
+            <div class='fixed-bottom text-center mb-1'>
                 {' '}
                 <h6 style={{ color: '#2C3335' }}>
                     <i class='far fa-copyright'></i> 2020 InstaClone Inspired By

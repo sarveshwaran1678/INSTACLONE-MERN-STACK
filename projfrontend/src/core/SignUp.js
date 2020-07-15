@@ -1,48 +1,68 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, Redirect } from 'react-router-dom';
 import '../style.css';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import insta from '../Images/insta.gif';
-
-const initialValues = {
-    fullname: '',
-    username: '',
-    email: '',
-    password: '',
-};
-
-const onSubmit = (values, onSubmit) => {
-    console.log('Form data', values);
-    onSubmit.resetForm();
-};
-
-const validationSchema = Yup.object().shape({
-    fullname: Yup.string()
-        .min(3, 'Should be of min 3 characters')
-        .max(32, 'Should have max of 32 characters'),
-    username: Yup.string()
-        .min(5, 'Should have min of 5 characters')
-        .max(20, 'Should have max of 20 characters'),
-    email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string()
-        .min(5, 'Too Short!')
-        .max(15, 'Too Long!')
-        .required('Required')
-        .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
-            'One Uppercase, One Lowercase, One Number and One Special Case Character'
-        ),
-});
+import { signUp } from './APICalls/signCalls';
 
 const SignUp = () => {
     const [mode, setMode] = useState('password');
 
+    const initialValues = {
+        fullname: '',
+        username: '',
+        email: '',
+        password: '',
+    };
+
+    const onSubmit = (values, onSubmit) => {
+        let { fullname, username, email, password } = values;
+
+        console.log('Form data', values);
+
+        // signUp({ name: fullname, username, email, password })
+        //     .then((data) => {
+        //         console.log(data);
+        //         if (data.error) {
+        //             return <>{toast.error(data.error)}</>;
+        //         } else {
+        //             return (
+        //                 <>
+        //                     {toast.success('Sign Up Succesfull')}
+        //                     <Redirect to='/signin' />
+        //                 </>
+        //             );
+        //         }
+        //     })
+        //     .catch((err) => console.log(err));
+
+        onSubmit.resetForm();
+    };
+
+    const validationSchema = Yup.object().shape({
+        fullname: Yup.string()
+            .min(3, 'Should be of min 3 characters')
+            .max(32, 'Should have max of 32 characters'),
+        username: Yup.string()
+            .min(5, 'Should have min of 5 characters')
+            .max(20, 'Should have max of 20 characters'),
+        email: Yup.string().email('Invalid email').required('Required'),
+        password: Yup.string()
+            .min(5, 'Too Short!')
+            .max(15, 'Too Long!')
+            .required('Required')
+            .matches(
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
+                'One Uppercase, One Lowercase, One Number and One Special Case Character'
+            ),
+    });
+
     return (
-        <div class='row'>
+        <div class='row' style={{ maxHeight: '100vh' }}>
             <ToastContainer />
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
@@ -338,7 +358,7 @@ const SignUp = () => {
                             </div>
                             <h6
                                 style={{
-                                    marginTop: '7vh',
+                                    marginTop: '6vh',
                                     textAlign: 'center',
                                     zIndex: '10',
                                 }}>
@@ -368,7 +388,7 @@ const SignUp = () => {
                         d='M0,32L40,58.7C80,85,160,139,240,176C320,213,400,235,480,250.7C560,267,640,277,720,266.7C800,256,880,224,960,213.3C1040,203,1120,213,1200,186.7C1280,160,1360,96,1400,64L1440,32L1440,320L1400,320C1360,320,1280,320,1200,320C1120,320,1040,320,960,320C880,320,800,320,720,320C640,320,560,320,480,320C400,320,320,320,240,320C160,320,80,320,40,320L0,320Z'></path>
                 </svg>
             </div>
-            <div class='fixed-bottom text-center'>
+            <div class='fixed-bottom text-center mb-1'>
                 {' '}
                 <h6 style={{ color: '#2C3335' }}>
                     <i class='far fa-copyright'></i> 2020 InstaClone Inspired By

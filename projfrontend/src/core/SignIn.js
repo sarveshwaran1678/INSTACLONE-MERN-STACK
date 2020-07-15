@@ -9,7 +9,7 @@ import '../style.css';
 import insta from '../Images/insta.gif';
 import { signIn, authenticate } from './APICalls/signCalls';
 
-const SignIn = ({ props }) => {
+const SignIn = () => {
     const [mode, setMode] = useState('password');
 
     const initialValues = {
@@ -20,30 +20,6 @@ const SignIn = ({ props }) => {
     const onSubmit = (values, onSubmit) => {
         console.log('hii');
         console.log('Form data', values.email);
-
-        // signIn(values)
-        //     .then((data) => {
-        //         if (data.error) {
-        //             return (
-        //                 <div>
-        //                     <ToastContainer />
-        //                     {toast.error(data.error)}
-        //                 </div>
-        //             );
-        //         } else {
-        //             authenticate(data, () => {
-        //                 return (
-        //                     <>
-        //                         <ToastContainer />
-        //                         {toast.success('Sign In Succesfull')}
-        //                         <Redirect to='/' />
-        //                     </>
-        //                 );
-        //             });
-        //         }
-        //     })
-        //     .catch((err) => console.log(err));
-
         onSubmit.resetForm();
     };
 
@@ -54,7 +30,7 @@ const SignIn = ({ props }) => {
             .max(15, 'Too Long!')
             .required('Required')
             .matches(
-                /^(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[!@#\$%\^&\*])/,
+                /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])/,
                 'One Uppercase, One Lowercase, One Number and One Special Case Character'
             ),
     });

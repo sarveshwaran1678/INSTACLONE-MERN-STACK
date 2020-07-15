@@ -1,34 +1,61 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, Redirect } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+
 import * as Yup from 'yup';
 import '../style.css';
 
 import insta from '../Images/insta.gif';
-const initialValues = {
-    email: '',
-    password: '',
-};
-
-const onSubmit = (values, onSubmit) => {
-    console.log('Form data', values);
-    onSubmit.resetForm();
-};
-
-const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Required'),
-    password: Yup.string()
-        .min(5, 'Too Short!')
-        .max(15, 'Too Long!')
-        .required('Required')
-        .matches(
-            /^(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[!@#\$%\^&\*])/,
-            'One Uppercase, One Lowercase, One Number and One Special Case Character'
-        ),
-});
+import { signIn, authenticate } from './APICalls/signCalls';
 
 const SignIn = ({ props }) => {
     const [mode, setMode] = useState('password');
+
+    const initialValues = {
+        email: '',
+        password: '',
+    }
+
+    const onSubmit = (values, onSubmit) => {
+        console.log('Form data', values);
+
+        signIn(values)
+            .then((data) => {
+                if (data.error) {
+                    return (<div>
+                        <ToastContainer />
+                        {toast.error(data.error)}
+                    </div>)
+                } else {
+                    authenticate(data, () => {
+                        return (<>
+                            <ToastContainer />
+                            {toast.success("Sign In Succesfull")}
+                            < Redirect to="/" />
+                        </>)
+                    })
+
+                }
+            })
+            .catch((err) => console.log(err))
+
+
+        onSubmit.resetForm();
+    }
+
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email('Invalid email').required('Required'),
+        password: Yup.string()
+            .min(5, 'Too Short!')
+            .max(15, 'Too Long!')
+            .required('Required')
+            .matches(
+                /^(?=.[a-z])(?=.[A-Z])(?=.[0-9])(?=.[!@#\$%\^&\*])/,
+                'One Uppercase, One Lowercase, One Number and One Special Case Character'
+            ),
+    });
+
 
     return (
         <div class='row text-center'>
@@ -132,16 +159,16 @@ const SignIn = ({ props }) => {
                                                         )
                                                     }></i>
                                             ) : (
-                                                <i
-                                                    class='fas fa-eye '
-                                                    onClick={() =>
-                                                        setMode(
-                                                            mode === 'text'
-                                                                ? 'password'
-                                                                : 'text'
-                                                        )
-                                                    }></i>
-                                            )}
+                                                    <i
+                                                        class='fas fa-eye '
+                                                        onClick={() =>
+                                                            setMode(
+                                                                mode === 'text'
+                                                                    ? 'password'
+                                                                    : 'text'
+                                                            )
+                                                        }></i>
+                                                )}
                                         </span>
                                     </div>
                                 }

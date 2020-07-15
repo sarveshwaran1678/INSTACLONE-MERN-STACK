@@ -21,7 +21,7 @@ export const signIn = ({ email, password }) => {
         .catch((err) => console.log(err));
 };
 
-export const signUp = ({ username, name, email, password }) => {
+export const signUp = ({ name, username, email, password }) => {
     apiClient
         .post('/signin', {
             username,

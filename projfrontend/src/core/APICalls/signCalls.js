@@ -18,16 +18,11 @@ export const signIn = ({ email, password }) => {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         },
-        body: {
+        data: {
             email,
             password
         }
     })
-        .then(res => {
-            console.log(res);
-            return (res)
-        })
-        .catch(err => console.error(err));
 };
 
 export const signUp = ({ name, username, email, password }) => {
@@ -45,14 +40,6 @@ export const signUp = ({ name, username, email, password }) => {
             'Content-Type': 'application/json',
         },
     })
-    // .then(res => {
-    //     console.log(res);
-    //     return (res)
-    // })
-    // .catch(err => {
-    //     console.log("Error:", err)
-    //     return (err)
-    // });
 };
 
 export const authenticate = (data, next) => {

@@ -20,40 +20,6 @@ const SignUp = () => {
         password: '',
     };
 
-    const onSubmit = async (values, onSubmit) => {
-        let { fullname, username, email, password } = values;
-
-        //console.log('Form data', values);
-
-        await signUp({ name: fullname, username, email, password })
-            .then((res) => {
-                //console.log("From DB", res);
-
-                setDidRedirect(true);
-                // return (
-                //     <div>
-                //         {toast.success('Sign Up Succesfull')}
-                //     </div>
-                // );
-
-            })
-            .catch((err) => {
-                //console.log("Inside Form", err)
-                return (<div>{toast.error('Not able to save in DB')}</div>)
-            });
-
-        onSubmit.resetForm();
-    };
-
-    const performRedirect = () => {
-        if (didRedirect) {
-            return <Redirect to={{
-                pathname: "/signin",
-                state: { showToast: true }
-            }} />
-        }
-    }
-
     const validationSchema = Yup.object().shape({
         fullname: Yup.string()
             .min(3, 'Should be of min 3 characters')
@@ -71,6 +37,31 @@ const SignUp = () => {
                 'One Uppercase, One Lowercase, One Number and One Special Case Character'
             ),
     });
+
+    const onSubmit = async (values, onSubmit) => {
+        let { fullname, username, email, password } = values;
+
+        //console.log('Form data', values);
+
+        await signUp({ name: fullname, username, email, password })
+            .then((res) => {
+                //console.log("From DB", res);
+
+                setDidRedirect(true);
+            })
+            .catch((err) => {
+                //console.log("Inside Form", err)
+                return (<div>{toast.error('Not able to save in DB')}</div>)
+            });
+
+        onSubmit.resetForm();
+    };
+
+    const performRedirect = () => {
+        if (didRedirect) {
+            return <Redirect to="/signin" />
+        }
+    }
 
     return (
         <div class='row' style={{ maxHeight: '100vh' }}>

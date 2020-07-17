@@ -15,7 +15,8 @@ const {
     toggleIsPrivate,
     forgotPasswordMailSend,
     newPasswordSubmitted,
-    updateBio
+    updateBio,
+    otpMatcher
 } = require('../controllers/user');
 
 const { isSignedIn, isAuthenticated } = require('../controllers/auth');
@@ -83,7 +84,12 @@ router.put(
 //req.body.email
 router.get('/password/sendOtp', forgotPasswordMailSend);
 
-//req.body.email,confirmEmail,userOtp
+
+//matching otp user sent
+//req.body.userOtp and req.body.userEmail required
+router.post("/password/otpCheck", otpMatcher)
+
+//req.body.email,newPassword,confirmPassword
 //reset Password submission
 router.put('/password/resetPassword', newPasswordSubmitted);
 

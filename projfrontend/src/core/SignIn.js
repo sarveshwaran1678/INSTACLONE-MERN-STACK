@@ -244,4 +244,4 @@ const SignIn = (props) => {
     );
 };
 
-export default withRouter(SignIn);
+export default SignIn;

@@ -559,9 +559,12 @@ exports.forgotPasswordMailSend = async (req, res) => {
     });
 };
 
-exports.newPasswordSubmitted = async (req, res) => {
+
+exports.otpMatcher = async (req, res) => {
     let currentTime = Date.now();
-    let { newPassword, confirmNewPassword, userOtp, email } = req.body;
+
+    let userOtp = req.body.userOtp;
+    let email = req.body.userEmail
 
     await User.findOne({ email: email }).exec(async (err, foundUser) => {
         if (err) {
@@ -572,30 +575,7 @@ exports.newPasswordSubmitted = async (req, res) => {
         let { otp, otpTimeout } = foundUser;
         if (currentTime - otpTimeout < 600000) {
             if (userOtp === otp) {
-                if (newPassword === confirmNewPassword) {
-                    //Doing password validation
-                    if (newPassword.length < 5 || newPassword.length > 15) {
-                        return res.json({
-                            msg: 'Password validation failed',
-                        });
-                    } else {
-                        foundUser.password = newPassword;
-                        await foundUser.save((err, user) => {
-                            if (err) {
-                                return res.status(400).json({
-                                    error: 'Updation of password failed',
-                                });
-                            }
-                            return res.status(201).json({
-                                message: 'Password updated succesfully',
-                            });
-                        });
-                    }
-                } else {
-                    return res.status(401).json({
-                        msg: 'newPassword and confirmPassword are not Same',
-                    });
-                }
+                foundUser.otpMatched = true;
             } else {
                 console.log('Otp', otp);
                 return res.status(401).json({
@@ -607,6 +587,45 @@ exports.newPasswordSubmitted = async (req, res) => {
                 msg: 'OTP expired',
             });
         }
-    });
-};
-//Fixed
+    })
+}
+
+
+exports.newPasswordSubmitted = async (req, res) => {
+    let { newPassword, confirmNewPassword, email } = req.body;
+
+    await User.findOne({ email: email }).exec(async (err, foundUser) => {
+        if (err) {
+            return res.status(400).json({
+                error: 'User Not Found',
+            });
+        }
+        // let { otp, otpTimeout } = foundUser;
+        // if (currentTime - otpTimeout < 600000) {
+        //     if (userOtp === otp) {
+        if (newPassword === confirmNewPassword) {
+            //Doing password validation
+            if (newPassword.length < 5 || newPassword.length > 15) {
+                return res.json({
+                    msg: 'Password validation failed',
+                });
+            } else {
+                foundUser.password = newPassword;
+                await foundUser.save((err, user) => {
+                    if (err) {
+                        return res.status(400).json({
+                            error: 'Updation of password failed',
+                        });
+                    }
+                    return res.status(201).json({
+                        message: 'Password updated succesfully',
+                    });
+                });
+            }
+        } else {
+            return res.status(401).json({
+                msg: 'newPassword and confirmPassword are not Same',
+            });
+        }
+    })
+}

@@ -9,18 +9,13 @@ import '../style.css';
 import insta from '../Images/insta.gif';
 import { signIn, authenticate } from './APICalls/signCalls';
 
-const SignIn = () => {
+const SignIn = (props) => {
     const [mode, setMode] = useState('password');
+    const [didRedirect, setDidRedirect] = useState(false)
 
     const initialValues = {
         email: '',
         password: '',
-    };
-
-    const onSubmit = (values, onSubmit) => {
-        console.log('hii');
-        console.log('Form data', values.email);
-        onSubmit.resetForm();
     };
 
     const validationSchema = Yup.object().shape({
@@ -35,8 +30,33 @@ const SignIn = () => {
             ),
     });
 
+    const onSubmit = async (values, onSubmit) => {
+        // console.log('hii');
+        console.log('Form data', values);
+
+        await signIn(values)
+            .then((res) => {
+                authenticate(res, () => {
+                    setDidRedirect(true)
+                })
+            })
+            .catch((err) => {
+                //console.log("Inside Form", err)
+                return (<div>{toast.error('Not authorized')}</div>)
+            });
+
+        onSubmit.resetForm();
+    };
+
+    const performRedirect = () => {
+        if (didRedirect) {
+            return <Redirect to="/" />
+        }
+    }
+
     return (
         <div class='row text-center'>
+            <ToastContainer />
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
                 style={{
@@ -137,16 +157,16 @@ const SignIn = () => {
                                                         )
                                                     }></i>
                                             ) : (
-                                                <i
-                                                    class='fas fa-eye '
-                                                    onClick={() =>
-                                                        setMode(
-                                                            mode === 'text'
-                                                                ? 'password'
-                                                                : 'text'
-                                                        )
-                                                    }></i>
-                                            )}
+                                                    <i
+                                                        class='fas fa-eye '
+                                                        onClick={() =>
+                                                            setMode(
+                                                                mode === 'text'
+                                                                    ? 'password'
+                                                                    : 'text'
+                                                            )
+                                                        }></i>
+                                                )}
                                         </span>
                                     </div>
                                 }
@@ -196,6 +216,7 @@ const SignIn = () => {
                     )}
                 </Formik>
             </div>
+            {performRedirect()}
             <div class=' col-lg-1 col-sm-2 col-1 '></div>
 
             <div class='fixed-bottom' style={{ zIndex: '-1' }}>

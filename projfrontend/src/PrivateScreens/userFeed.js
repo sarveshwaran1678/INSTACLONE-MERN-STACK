@@ -1,13 +1,15 @@
 import React from 'react'
 import { withRouter, Link, Redirect } from 'react-router-dom';
 
-const Home = () => {
+
+
+//will have user feed
+const userFeed = () => {
     return (
         <div>
-            Home Screen
-            <Redirect to="/userFeed" />
+            Feed Screen!!!!!!!!!!!!!!!!!!!!!!!!
         </div>
     )
 }
 
-export default Home
+export default userFeed

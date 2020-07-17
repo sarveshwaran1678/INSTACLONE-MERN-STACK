@@ -6,18 +6,15 @@ import { ToastContainer, toast } from 'react-toastify';
 import * as Yup from 'yup';
 import '../style.css';
 
-import forgotpassword from '../Images/forgotPassword.svg';
+import enterOtp from '../Images/enterOtp.svg';
+
 import insta from '../Images/insta.gif';
-import { signIn, authenticate } from './APICalls/signCalls';
 
 const initialValues = {
-    email: '',
+    otp: '',
 };
-const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Required'),
-});
 
-const ForgotPassword = ({ props }) => {
+const EnterOtp = ({ props }) => {
     const onSubmit = (values, onSubmit) => {
         console.log('Form data', values);
         onsubmit.resetForm();
@@ -65,20 +62,17 @@ const ForgotPassword = ({ props }) => {
                 </h2>
 
                 <img
-                    src={forgotpassword}
+                    src={enterOtp}
                     height={100}
                     style={{ borderRadius: '0 0 50% 50%' }}
                 />
                 <h4 style={{ marginTop: '2vh', fontWeight: 600 }}>
-                    Forgot Password?
+                    Verify Yourself!
                 </h4>
                 <h6 style={{ marginTop: '1vh', marginBottom: '5vh' }}>
-                    Enter Your Registered Email
+                    Enter Your OTP
                 </h6>
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={onSubmit}>
+                <Formik initialValues={initialValues} onSubmit={onSubmit}>
                     {({ errors, touched, values }) => (
                         <Form>
                             <div class='input-group mb-4 '>
@@ -90,9 +84,9 @@ const ForgotPassword = ({ props }) => {
 
                                 <Field
                                     className='form-control'
-                                    type='email'
-                                    name='email'
-                                    placeholder='Enter Your Email'
+                                    type='numeric'
+                                    name='otp'
+                                    placeholder='Enter Your Otp'
                                     style={{
                                         backgroundcolor: 'white',
                                     }}
@@ -102,6 +96,7 @@ const ForgotPassword = ({ props }) => {
                                     <span class='input-group-text post-text'></span>
                                 </div>
                             </div>
+
                             <div
                                 style={{
                                     textAlign: 'center',
@@ -113,7 +108,7 @@ const ForgotPassword = ({ props }) => {
                                         marginTop: '3vh',
                                         textAlign: 'center',
                                     }}>
-                                    Send Otp
+                                    Confirm Otp
                                 </button>
                             </div>
                             <h6
@@ -121,7 +116,7 @@ const ForgotPassword = ({ props }) => {
                                     marginTop: '10vh',
                                     textAlign: 'center',
                                 }}>
-                                Don't have an account?
+                                Didn't received an OTP?
                                 <Link
                                     style={{
                                         color: 'blue',
@@ -130,7 +125,7 @@ const ForgotPassword = ({ props }) => {
                                     className='nav-link'
                                     to='/signup'>
                                     {' '}
-                                    Sign Up
+                                    Resend OTP
                                 </Link>
                             </h6>
                         </Form>
@@ -164,4 +159,4 @@ const ForgotPassword = ({ props }) => {
     );
 };
 
-export default ForgotPassword;
+export default EnterOtp;

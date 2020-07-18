@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import post from '../Images/mayank.jpg';
+import post from '../../Images/mayank.jpg';
 
 function ModalComments() {
     return (
@@ -12,8 +12,11 @@ function ModalComments() {
             <div className='col-9 text-left ml-1'>
                 <span>Naruto Uzumaki weds Hinata Hyuga</span>
                 <br />
-                <span>
-                    34 min <span className='ml-2'>Reply</span>
+                <span style={{ color: '#28a745' }}>
+                    34 min{' '}
+                    <span className='ml-2' style={{ color: 'blue' }}>
+                        Reply
+                    </span>
                 </span>
             </div>
         </div>

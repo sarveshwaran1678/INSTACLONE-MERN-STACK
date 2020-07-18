@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import post from '../Images/mayank.jpg';
+import post from '../../Images/mayank.jpg';
 
 function UserStoriesPhone() {
     return (

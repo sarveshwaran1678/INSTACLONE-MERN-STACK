@@ -1,8 +1,5 @@
 import React from 'react';
 
-import logo from '../Images/cascade.jpg';
-import styled from 'styled-components';
-
 function Navbar() {
     return (
         <div style={{ borderBottom: '1px solid black', borderRadius: '5px' }}>

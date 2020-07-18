@@ -11,7 +11,7 @@ import { signIn, authenticate } from './APICalls/signCalls';
 
 const SignIn = (props) => {
     const [mode, setMode] = useState('password');
-    const [didRedirect, setDidRedirect] = useState(false)
+    const [didRedirect, setDidRedirect] = useState(false);
 
     const initialValues = {
         email: '',
@@ -37,12 +37,12 @@ const SignIn = (props) => {
         await signIn(values)
             .then((res) => {
                 authenticate(res, () => {
-                    setDidRedirect(true)
-                })
+                    setDidRedirect(true);
+                });
             })
             .catch((err) => {
                 //console.log("Inside Form", err)
-                return (<div>{toast.error('Not authorized')}</div>)
+                return <div>{toast.error('Not authorized')}</div>;
             });
 
         onSubmit.resetForm();
@@ -50,9 +50,9 @@ const SignIn = (props) => {
 
     const performRedirect = () => {
         if (didRedirect) {
-            return <Redirect to="/" />
+            return <Redirect to='/' />;
         }
-    }
+    };
 
     return (
         <div class='row text-center'>
@@ -157,16 +157,16 @@ const SignIn = (props) => {
                                                         )
                                                     }></i>
                                             ) : (
-                                                    <i
-                                                        class='fas fa-eye '
-                                                        onClick={() =>
-                                                            setMode(
-                                                                mode === 'text'
-                                                                    ? 'password'
-                                                                    : 'text'
-                                                            )
-                                                        }></i>
-                                                )}
+                                                <i
+                                                    class='fas fa-eye '
+                                                    onClick={() =>
+                                                        setMode(
+                                                            mode === 'text'
+                                                                ? 'password'
+                                                                : 'text'
+                                                        )
+                                                    }></i>
+                                            )}
                                         </span>
                                     </div>
                                 }
@@ -244,4 +244,4 @@ const SignIn = (props) => {
     );
 };
 
-export default withRouter(SignIn);
+export default SignIn;

@@ -7,7 +7,12 @@ import ForgotPassword from './core/ForgotPassword';
 import Home from './core/Home';
 import EnterOtp from './core/EnterOtp';
 import ResetPassword from './core/ResetPassword';
-import userFeed from './PrivateScreens/userFeed';
+import UserFeed from './core/UserFeed';
+import Navbar from './core/Navbar';
+import Card from './core/Card';
+import UserStories from './core/UserStories';
+import UserStoriesPhone from './core/UserStoriesPhone';
+import Modal from './core/Modal';
 
 const Routes = () => {
     return (
@@ -23,7 +28,16 @@ const Routes = () => {
                     exact
                     component={ForgotPassword}
                 />
-                <PrivateRoutes path='/userFeed' exact component={userFeed} />
+                <Route path='/navbar' exact component={Navbar} />
+                <Route path='/card' exact component={Card} />
+                <Route path='/userfeed' exact component={UserFeed} />
+                <Route path='/userstories' exact component={UserStories} />
+                <Route path='/modal' exact component={Modal} />
+                <Route
+                    path='/userstoriesphone'
+                    exact
+                    component={UserStoriesPhone}
+                />
             </Switch>
         </BrowserRouter>
     );

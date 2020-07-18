@@ -17,6 +17,9 @@ const initialValues = {
 const EnterOtp = ({ props }) => {
     const onSubmit = (values, onSubmit) => {
         console.log('Form data', values);
+
+
+
         onsubmit.resetForm();
     };
 

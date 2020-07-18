@@ -603,29 +603,37 @@ exports.newPasswordSubmitted = async (req, res) => {
         // let { otp, otpTimeout } = foundUser;
         // if (currentTime - otpTimeout < 600000) {
         //     if (userOtp === otp) {
-        if (newPassword === confirmNewPassword) {
-            //Doing password validation
-            if (newPassword.length < 5 || newPassword.length > 15) {
-                return res.json({
-                    msg: 'Password validation failed',
-                });
-            } else {
-                foundUser.password = newPassword;
-                await foundUser.save((err, user) => {
-                    if (err) {
-                        return res.status(400).json({
-                            error: 'Updation of password failed',
-                        });
-                    }
-                    return res.status(201).json({
-                        message: 'Password updated succesfully',
+        if (foundUser.otpMatcher) {
+            if (newPassword === confirmNewPassword) {
+                //Doing password validation
+                if (newPassword.length < 5 || newPassword.length > 15) {
+                    return res.json({
+                        msg: 'Password validation failed',
                     });
+                } else {
+                    foundUser.password = newPassword;
+                    await foundUser.save((err, user) => {
+                        if (err) {
+                            return res.status(400).json({
+                                error: 'Updation of password failed',
+                            });
+                        }
+                        foundUser.otpMatched = false
+                        return res.status(201).json({
+                            message: 'Password updated succesfully',
+                        });
+                    });
+                }
+            } else {
+                return res.status(401).json({
+                    msg: 'newPassword and confirmPassword are not Same',
                 });
             }
-        } else {
-            return res.status(401).json({
-                msg: 'newPassword and confirmPassword are not Same',
-            });
+        }
+        else {
+            return res.status(500).json({
+                error: "Unauthorized access"
+            })
         }
     })
 }

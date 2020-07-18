@@ -23,7 +23,7 @@ const Routes = () => {
                     exact
                     component={ForgotPassword}
                 />
-                <PrivateRoutes path='/userfeed' exact component={UserFeed} />
+                <Route path='/userfeed' exact component={UserFeed} />
             </Switch>
         </BrowserRouter>
     );

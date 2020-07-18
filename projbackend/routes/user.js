@@ -82,7 +82,7 @@ router.put(
 
 //For sending otp to reset password
 //req.body.email
-router.get('/password/sendOtp', forgotPasswordMailSend);
+router.post('/password/sendOtp', forgotPasswordMailSend);
 
 
 //matching otp user sent

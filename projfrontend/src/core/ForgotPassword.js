@@ -9,18 +9,41 @@ import '../style.css';
 import forgotpassword from '../Images/forgotPassword.svg';
 import insta from '../Images/insta.gif';
 import { signIn, authenticate } from './APICalls/signCalls';
+import { forgetPassEmail } from './APICalls/passwordCalls';
 
-const initialValues = {
-    email: '',
-};
-const validationSchema = Yup.object().shape({
-    email: Yup.string().email('Invalid email').required('Required'),
-});
 
 const ForgotPassword = ({ props }) => {
-    const onSubmit = (values, onSubmit) => {
+
+    const [didRedirect, setDidRedirect] = useState(false)
+
+    const initialValues = {
+        email: '',
+    };
+    const validationSchema = Yup.object().shape({
+        email: Yup.string().email('Invalid email').required('Required'),
+    });
+
+    const onSubmit = async (values, onSubmit) => {
         console.log('Form data', values);
+
+        await forgetPassEmail(values)
+            .then((res) => {
+                setDidRedirect(true)
+            })
+            .catch((err) => {
+                return <div>{toast.error('Not authorized')}</div>;
+            })
+
         onsubmit.resetForm();
+    };
+
+    const performRedirect = () => {
+        if (didRedirect) {
+            return <Redirect to={{
+                pathname: '/enterotp',
+                state: { showToast: true }
+            }} />;
+        }
     };
 
     return (
@@ -137,6 +160,7 @@ const ForgotPassword = ({ props }) => {
                     )}
                 </Formik>
             </div>
+            {performRedirect()}
             <div class=' col-lg-1 col-sm-2 col-1 '></div>
 
             <div class='fixed-bottom' style={{ zIndex: '-1' }}>

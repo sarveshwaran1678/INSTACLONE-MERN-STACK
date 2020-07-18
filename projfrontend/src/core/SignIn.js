@@ -157,29 +157,32 @@ const SignIn = (props) => {
                                                         )
                                                     }></i>
                                             ) : (
-                                                <i
-                                                    class='fas fa-eye '
-                                                    onClick={() =>
-                                                        setMode(
-                                                            mode === 'text'
-                                                                ? 'password'
-                                                                : 'text'
-                                                        )
-                                                    }></i>
-                                            )}
+                                                    <i
+                                                        class='fas fa-eye '
+                                                        onClick={() =>
+                                                            setMode(
+                                                                mode === 'text'
+                                                                    ? 'password'
+                                                                    : 'text'
+                                                            )
+                                                        }></i>
+                                                )}
                                         </span>
                                     </div>
                                 }
                             </div>
-
-                            <h6
-                                class='text-right'
-                                style={{
-                                    marginTop: '2vh',
-                                    color: 'blue',
-                                }}>
-                                Forgot Password?
+                            <Link
+                                to='/forgotpassword'
+                            >
+                                <h6
+                                    class='text-right'
+                                    style={{
+                                        marginTop: '2vh',
+                                        color: 'blue',
+                                    }}>
+                                    Forgot Password?
                             </h6>
+                            </Link>
                             <div
                                 style={{
                                     textAlign: 'center',

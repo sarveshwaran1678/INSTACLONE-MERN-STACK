@@ -503,20 +503,20 @@ exports.forgotPasswordMailSend = async (req, res) => {
                     service: 'gmail',
                     host: 'smtp.gmail.com',
                     auth: {
-                        user: 'gfreaks303@gmail.com',
+                        user: process.env.EMAIL,
                         pass: process.env.EMAILPASSWORD,
                     },
                 })
             );
 
-            console.log(receiverEmail);
+            //console.log(receiverEmail);
             var mailOptions = {
-                from: 'gfreaks303@gmail.com',
+                from: process.env.EMAIL,
                 to: receiverEmail,
                 subject: 'Reset Password',
                 text: otp,
             };
-            console.log(otp);
+            //console.log(otp);
             await transporter.sendMail(mailOptions, async function (
                 error,
                 info
@@ -526,7 +526,7 @@ exports.forgotPasswordMailSend = async (req, res) => {
                         error: 'Email not sent',
                     });
                 } else {
-                    console.log('Email sent: ' + info.response);
+                    //console.log('Email sent: ' + info.response);
                     await User.findOne({ email: email }).exec(
                         async (err, foundUser) => {
                             if (err) {

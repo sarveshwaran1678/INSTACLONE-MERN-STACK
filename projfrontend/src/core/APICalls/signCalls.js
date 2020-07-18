@@ -1,15 +1,6 @@
 const axios = require('axios');
 const BackendUrl = process.env.REACT_APP_BACKEND;
 
-
-// const apiClient = create({
-//     baseURL: BackendUrl,
-//     headers: {
-//         Accept: 'application/json',
-//         'Content-Type': 'application/json',
-//     },
-// });
-
 export const signIn = ({ email, password }) => {
     return axios({
         method: "post",

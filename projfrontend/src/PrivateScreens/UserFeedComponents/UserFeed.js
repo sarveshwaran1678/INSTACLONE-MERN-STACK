@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
-import Navbar from './Navbar';
-import Card from './Card';
+import Navbar from '../../core/Navbar';
 import UserStoriesPhone from './UserStoriesPhone';
-import '../userfeed.css';
 import UserStories from './UserStories';
+import Card from './Card';
+
 function UserFeed() {
     return (
         <div>
             <Navbar />
             <UserStoriesPhone />
-            <div className='row'>
+            <div className='row' style={{ margin: '0 0' }}>
                 <div className='col-md-1 col-lg-2 col-xl-2' />
-                <div className='col-md-6 col-lg-5 col-xl-5'>
+                <div
+                    className='col-md-6 col-lg-5 col-xl-5'
+                    style={{ paddingRight: '0', paddingLeft: '0' }}>
                     <Card />
                 </div>
                 <div

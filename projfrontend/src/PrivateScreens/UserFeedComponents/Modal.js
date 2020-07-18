@@ -1,24 +1,31 @@
 import React, { Component } from 'react';
-import post from '../Images/mayank.jpg';
-import UserStories from './UserStories';
+import post from '../../Images/mayankPost.jpg';
+import user from '../../Images/sarvesh.jpg';
 import ModalComments from './ModalComments';
+import { Image, Transformation } from 'cloudinary-react';
 
 function Modal() {
     return (
         <div>
             <div className='row '>
-                <div className='col-7'>
-                    <img
-                        class='card-img-top'
-                        src={post}
-                        alt='Card image cap'
-                        style={{ width: '100%' }}
-                    />
+                <div className='col-md-7 col-lg-7 col-xl-7 col-sm-12'>
+                    <Image
+                        cloudName='gonfreak'
+                        publicId='https://res.cloudinary.com/gonfreak/image/fetch/https://res.cloudinary.com/gonfreak/image/upload/v1594631508/InstaClone/36b6cd4b-0d49-48d8-9bb7-f3aa3c95bdbf.jpg'
+                        type='fetch'>
+                        <Transformation
+                            width='430'
+                            height='400'
+                            gravity='face'
+                            crop='fill'
+                            fetchFormat='auto'
+                        />
+                    </Image>
                     <div style={{ marginTop: '38px' }}>
                         Naruto Uzumaki...........
                     </div>
                 </div>
-                <div className='col-5'>
+                <div className='col-md-5 col-lg-5 col-xl-5 col-sm-12'>
                     <div class='text-right'>
                         <i
                             class='fas fa-times fa-lg mr-4 '
@@ -27,9 +34,10 @@ function Modal() {
                     </div>
 
                     <img
-                        src={post}
+                        src={user}
                         style={{ borderRadius: '50%' }}
                         height={50}
+                        width={50}
                     />
 
                     <span style={{ fontWeight: '500' }}> Sasuke Uchiha</span>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import post from '../Images/mayank.jpg';
-import { Fragment } from 'react';
+import post from '../../Images/mayankPost.jpg';
 import Modal from './Modal';
+
 function Card() {
     return (
         <div style={{ fontWeight: '500' }}>
@@ -51,10 +51,7 @@ function Card() {
                                 maxWidth: '800px',
                             }}>
                             <div class='modal-content '>
-                                <div class='modal-body d-md-block d-lg-block d-xl-block d-none'>
-                                    <Modal className='' />
-                                </div>
-                                <div class='modal-body d-md-none d-lg-none d-xl-none '>
+                                <div class='modal-body '>
                                     <Modal className='' />
                                 </div>
                             </div>

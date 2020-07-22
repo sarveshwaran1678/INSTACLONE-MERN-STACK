@@ -16,13 +16,15 @@ const Routes = () => {
                 <Route path='/' exact component={Home} />
                 <Route path='/signup' exact component={SignUp} />
                 <Route path='/signin' exact component={SignIn} />
-                <Route path='/resetpassword' exact component={ResetPassword} />
-                <Route path='/enterotp' exact component={EnterOtp} />
                 <Route
                     path='/forgotpassword'
                     exact
                     component={ForgotPassword}
                 />
+                <Route path='/enterotp' exact component={EnterOtp} />
+
+                <Route path='/resetpassword' exact component={ResetPassword} />
+
                 <Route path='/userfeed' exact component={UserFeed} />
             </Switch>
         </BrowserRouter>

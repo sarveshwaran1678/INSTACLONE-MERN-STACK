@@ -89,7 +89,7 @@ router.post('/password/sendOtp', forgotPasswordMailSend);
 //req.body.userOtp and req.body.userEmail required
 router.post("/password/otpCheck", otpMatcher)
 
-//req.body.email,newPassword,confirmPassword
+//req.body.email,newPassword,confirmNewPassword
 //reset Password submission
 router.put('/password/resetPassword', newPasswordSubmitted);
 

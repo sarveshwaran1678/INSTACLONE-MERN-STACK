@@ -9,9 +9,13 @@ import '../style.css';
 import insta from '../Images/insta.gif';
 import { signIn, authenticate } from './APICalls/signCalls';
 
-const SignIn = (props) => {
+const SignIn = ({ location }) => {
     const [mode, setMode] = useState('password');
     const [didRedirect, setDidRedirect] = useState(false);
+
+    //const [Msg, setMsg] = useState(location.state.text || "")
+    const [errMsg, setErrMsg] = useState("")
+    const [showToast, setShowToast] = useState(false)
 
     const initialValues = {
         email: '',
@@ -42,7 +46,9 @@ const SignIn = (props) => {
             })
             .catch((err) => {
                 //console.log("Inside Form", err)
-                return <div>{toast.error('Not authorized')}</div>;
+                //return <div>{toast.error('Not authorized')}</div>;
+                setShowToast(true);
+                setErrMsg({ ...err }.response.data.msg)
             });
 
         onSubmit.resetForm();
@@ -57,6 +63,9 @@ const SignIn = (props) => {
     return (
         <div class='row text-center'>
             <ToastContainer />
+            {//toast.success(Msg)
+            }
+            {showToast ? toast.error(errMsg) : null}
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
                 style={{

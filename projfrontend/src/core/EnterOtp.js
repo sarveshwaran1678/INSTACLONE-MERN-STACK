@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { withRouter, Link, Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
 import * as Yup from 'yup';
@@ -9,23 +9,52 @@ import '../style.css';
 import enterOtp from '../Images/enterOtp.svg';
 
 import insta from '../Images/insta.gif';
+import { optChecker } from './APICalls/passwordCalls';
 
-const initialValues = {
-    otp: '',
-};
+const EnterOtp = ({ location }) => {
 
-const EnterOtp = ({ props }) => {
-    const onSubmit = (values, onSubmit) => {
-        console.log('Form data', values);
+    const [didRedirect, setDidRedirect] = useState(false)
+    const [otpMatchedStatus, setOtpMatchedStatus] = useState(true)
+    const [errMsg, setErrMsg] = useState("")
 
+    const initialValues = {
+        otp: '',
+    };
 
+    const onSubmit = async (values, onSubmit) => {
+        console.log('Form data', values.otp);
+        let userEmail = location.state.userEmail;
+        let userOtp = values.otp
+        await optChecker({ userOtp, userEmail })
+            .then((res) => {
+                console.log("RES:", res);
+                setDidRedirect(true)
+            })
+            .catch((err) => {
+                //console.log("STATUS", { ...err }.response.status);
+                setErrMsg({ ...err }.response.data.msg)
+                //console.log("MSG", { ...err }.response.data.msg);
+                //console.log("ERR:", { ...err });
+                setOtpMatchedStatus(false)
+
+            })
 
         onsubmit.resetForm();
+    };
+
+    const performRedirect = () => {
+        if (didRedirect) {
+            return <Redirect to={{
+                pathname: '/resetpassword',
+                state: { userEmail: location.state.userEmail }
+            }} />;
+        }
     };
 
     return (
         <div class='row text-center'>
             <ToastContainer />
+            {otpMatchedStatus ? null : toast.error(errMsg)}
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
                 style={{
@@ -126,7 +155,7 @@ const EnterOtp = ({ props }) => {
                                         display: 'inline-block',
                                     }}
                                     className='nav-link'
-                                    to='/signup'>
+                                    to='/forgotpassword'>
                                     {' '}
                                     Resend OTP
                                 </Link>
@@ -135,6 +164,7 @@ const EnterOtp = ({ props }) => {
                     )}
                 </Formik>
             </div>
+            {performRedirect()}
             <div class=' col-lg-1 col-sm-2 col-1 '></div>
 
             <div class='fixed-bottom' style={{ zIndex: '-1' }}>

@@ -13,6 +13,10 @@ const SignUp = () => {
     const [mode, setMode] = useState('password');
     const [didRedirect, setDidRedirect] = useState(false);
 
+    const [errMsg, setErrMsg] = useState("")
+    const [showToast, setShowToast] = useState(false)
+
+
     const initialValues = {
         fullname: '',
         username: '',
@@ -51,7 +55,9 @@ const SignUp = () => {
             })
             .catch((err) => {
                 //console.log("Inside Form", err)
-                return <div>{toast.error('Not able to save in DB')}</div>;
+                //return <div>{toast.error('Not able to save in DB')}</div>;
+                setErrMsg("Not able to save in DB")
+                setShowToast(true);
             });
 
         onSubmit.resetForm();
@@ -59,13 +65,18 @@ const SignUp = () => {
 
     const performRedirect = () => {
         if (didRedirect) {
-            return <Redirect to='/signin' />;
+            //return <Redirect to='/signin' />;
+            return <Redirect to={{
+                pathname: '/signin',
+                state: { text: "SignUp Succesful Please SignIn to continue" }
+            }} />;
         }
     };
 
     return (
         <div class='row' style={{ maxHeight: '100vh' }}>
             <ToastContainer />
+            {showToast ? toast.error(errMsg) : null}
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
                 style={{
@@ -124,12 +135,12 @@ const SignUp = () => {
                                         </span>
                                     </div>
                                 ) : (
-                                    <div class='input-group-prepend'>
-                                        <span class='input-group-text text-success '>
-                                            <i class='fas fa-user-tag text-success'></i>
-                                        </span>
-                                    </div>
-                                )}
+                                        <div class='input-group-prepend'>
+                                            <span class='input-group-text text-success '>
+                                                <i class='fas fa-user-tag text-success'></i>
+                                            </span>
+                                        </div>
+                                    )}
 
                                 <Field
                                     className='form-control'
@@ -146,19 +157,19 @@ const SignUp = () => {
                                         <span class='input-group-text'></span>
                                     </div>
                                 ) : values.username.length > 0 &&
-                                  errors.username ? (
-                                    <div class='input-group-append '>
-                                        <span class='input-group-text text-danger'>
-                                            <i class='fas fa-times  '></i>
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <div class='input-group-append '>
-                                        <span class='input-group-text text-success '>
-                                            <i class='fas fa-check'></i>
-                                        </span>
-                                    </div>
-                                )}
+                                    errors.username ? (
+                                            <div class='input-group-append '>
+                                                <span class='input-group-text text-danger'>
+                                                    <i class='fas fa-times  '></i>
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div class='input-group-append '>
+                                                <span class='input-group-text text-success '>
+                                                    <i class='fas fa-check'></i>
+                                                </span>
+                                            </div>
+                                        )}
                             </div>
                             {/*FullName*/}
                             <div class='input-group mb-3 '>
@@ -169,12 +180,12 @@ const SignUp = () => {
                                         </span>
                                     </div>
                                 ) : (
-                                    <div class='input-group-prepend'>
-                                        <span class='input-group-text text-success '>
-                                            <i class='far fa-user text-success'></i>
-                                        </span>
-                                    </div>
-                                )}
+                                        <div class='input-group-prepend'>
+                                            <span class='input-group-text text-success '>
+                                                <i class='far fa-user text-success'></i>
+                                            </span>
+                                        </div>
+                                    )}
 
                                 <Field
                                     className='form-control'
@@ -191,19 +202,19 @@ const SignUp = () => {
                                         <span class='input-group-text '></span>
                                     </div>
                                 ) : values.fullname.length > 0 &&
-                                  errors.fullname ? (
-                                    <div class='input-group-append '>
-                                        <span class='input-group-text text-danger'>
-                                            <i class='fas fa-times  '></i>
-                                        </span>
-                                    </div>
-                                ) : (
-                                    <div class='input-group-append '>
-                                        <span class='input-group-text text-success '>
-                                            <i class='fas fa-check'></i>
-                                        </span>
-                                    </div>
-                                )}
+                                    errors.fullname ? (
+                                            <div class='input-group-append '>
+                                                <span class='input-group-text text-danger'>
+                                                    <i class='fas fa-times  '></i>
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <div class='input-group-append '>
+                                                <span class='input-group-text text-success '>
+                                                    <i class='fas fa-check'></i>
+                                                </span>
+                                            </div>
+                                        )}
                             </div>
                             {/*Email*/}
 
@@ -215,12 +226,12 @@ const SignUp = () => {
                                         </span>
                                     </div>
                                 ) : (
-                                    <div class='input-group-prepend'>
-                                        <span class='input-group-text text-success '>
-                                            <i class='far fa-envelope-open text-success'></i>
-                                        </span>
-                                    </div>
-                                )}
+                                        <div class='input-group-prepend'>
+                                            <span class='input-group-text text-success '>
+                                                <i class='far fa-envelope-open text-success'></i>
+                                            </span>
+                                        </div>
+                                    )}
 
                                 <Field
                                     className='form-control'
@@ -243,12 +254,12 @@ const SignUp = () => {
                                         </span>
                                     </div>
                                 ) : (
-                                    <div class='input-group-append '>
-                                        <span class='input-group-text text-success '>
-                                            <i class='fas fa-check'></i>
-                                        </span>
-                                    </div>
-                                )}
+                                            <div class='input-group-append '>
+                                                <span class='input-group-text text-success '>
+                                                    <i class='fas fa-check'></i>
+                                                </span>
+                                            </div>
+                                        )}
                             </div>
 
                             {/* Password */}
@@ -261,12 +272,12 @@ const SignUp = () => {
                                         </span>
                                     </div>
                                 ) : (
-                                    <div class='input-group-prepend'>
-                                        <span class='input-group-text  '>
-                                            <i class='fas fa-lock-open text-success'></i>
-                                        </span>
-                                    </div>
-                                )}
+                                        <div class='input-group-prepend'>
+                                            <span class='input-group-text  '>
+                                                <i class='fas fa-lock-open text-success'></i>
+                                            </span>
+                                        </div>
+                                    )}
 
                                 <Field
                                     className='form-control'
@@ -289,16 +300,16 @@ const SignUp = () => {
                                                         )
                                                     }></i>
                                             ) : (
-                                                <i
-                                                    class='fas fa-eye '
-                                                    onClick={() =>
-                                                        setMode(
-                                                            mode === 'text'
-                                                                ? 'password'
-                                                                : 'text'
-                                                        )
-                                                    }></i>
-                                            )}
+                                                    <i
+                                                        class='fas fa-eye '
+                                                        onClick={() =>
+                                                            setMode(
+                                                                mode === 'text'
+                                                                    ? 'password'
+                                                                    : 'text'
+                                                            )
+                                                        }></i>
+                                                )}
                                         </span>
                                     </div>
                                 }
@@ -330,33 +341,33 @@ const SignUp = () => {
                                     textAlign: 'center',
                                 }}>
                                 {values.password.length !== 0 &&
-                                values.username.length !== 0 &&
-                                values.fullname.length !== 0 &&
-                                values.email.length !== 0 &&
-                                !errors.password &&
-                                !errors.username &&
-                                !errors.fullname &&
-                                !errors.email ? (
-                                    <button
-                                        class='signIn '
-                                        type='submit'
-                                        style={{
-                                            marginTop: '3vh',
-                                            opacity: '1',
-                                        }}>
-                                        Create Account
-                                    </button>
-                                ) : (
-                                    <button
-                                        class='signIn '
-                                        type='submit'
-                                        style={{
-                                            marginTop: '3vh',
-                                            opacity: '0.5',
-                                        }}>
-                                        Create Account
-                                    </button>
-                                )}
+                                    values.username.length !== 0 &&
+                                    values.fullname.length !== 0 &&
+                                    values.email.length !== 0 &&
+                                    !errors.password &&
+                                    !errors.username &&
+                                    !errors.fullname &&
+                                    !errors.email ? (
+                                        <button
+                                            class='signIn '
+                                            type='submit'
+                                            style={{
+                                                marginTop: '3vh',
+                                                opacity: '1',
+                                            }}>
+                                            Create Account
+                                        </button>
+                                    ) : (
+                                        <button
+                                            class='signIn '
+                                            type='submit'
+                                            style={{
+                                                marginTop: '3vh',
+                                                opacity: '0.5',
+                                            }}>
+                                            Create Account
+                                        </button>
+                                    )}
                             </div>
                             <h6
                                 style={{

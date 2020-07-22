@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { withRouter, Link, Redirect } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
 import * as Yup from 'yup';
@@ -8,13 +8,18 @@ import '../style.css';
 
 import forgotpassword from '../Images/forgotPassword.svg';
 import insta from '../Images/insta.gif';
-import { signIn, authenticate } from './APICalls/signCalls';
+
 import { forgetPassEmail } from './APICalls/passwordCalls';
 
 
-const ForgotPassword = ({ props }) => {
+const ForgotPassword = () => {
 
     const [didRedirect, setDidRedirect] = useState(false)
+    const [email, setEmail] = useState("")
+    const [errMsg, setErrMsg] = useState("")
+    const [showToast, setShowToast] = useState(false)
+
+
 
     const initialValues = {
         email: '',
@@ -25,13 +30,17 @@ const ForgotPassword = ({ props }) => {
 
     const onSubmit = async (values, onSubmit) => {
         console.log('Form data', values);
+        setEmail(values.email)
 
         await forgetPassEmail(values)
             .then((res) => {
                 setDidRedirect(true)
             })
             .catch((err) => {
-                return <div>{toast.error('Not authorized')}</div>;
+                //console.log(err);
+                //return <div>{toast.error('Not authorized')}</div>;
+                setShowToast(true);
+                setErrMsg({ ...err }.response.data.msg)
             })
 
         onsubmit.resetForm();
@@ -41,7 +50,7 @@ const ForgotPassword = ({ props }) => {
         if (didRedirect) {
             return <Redirect to={{
                 pathname: '/enterotp',
-                state: { showToast: true }
+                state: { userEmail: email }
             }} />;
         }
     };
@@ -49,6 +58,7 @@ const ForgotPassword = ({ props }) => {
     return (
         <div class='row text-center'>
             <ToastContainer />
+            {showToast ? toast.error(errMsg) : null}
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
                 style={{

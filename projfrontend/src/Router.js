@@ -1,19 +1,19 @@
 import React from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import PrivateRoutes from './core/APICalls/PrivateRoutes';
-import SignUp from './core/SignUp';
-import SignIn from './core/SignIn';
-import ForgotPassword from './core/ForgotPassword';
-import Home from './core/Home';
-import EnterOtp from './core/EnterOtp';
-import ResetPassword from './core/ResetPassword';
-import UserFeed from './PrivateScreens/UserFeedComponents/UserFeed';
+import PrivateRoutes from './AuthScreens/APICalls/PrivateRoutes';
+import SignUp from './AuthScreens/SignUp';
+import SignIn from './AuthScreens/SignIn';
+import ForgotPassword from './AuthScreens/ForgotPassword';
+import Home from './AuthScreens/Home';
+import EnterOtp from './AuthScreens/EnterOtp';
+import ResetPassword from './AuthScreens/ResetPassword';
+import UserFeed from './PrivateScreens/UserFeed';
 
 const Routes = () => {
     return (
         <BrowserRouter>
             <Switch>
-                <Route path='/' exact component={Home} />
+                <PrivateRoutes path='/' exact component={Home} />
                 <Route path='/signup' exact component={SignUp} />
                 <Route path='/signin' exact component={SignIn} />
                 <Route
@@ -25,7 +25,7 @@ const Routes = () => {
 
                 <Route path='/resetpassword' exact component={ResetPassword} />
 
-                <Route path='/userfeed' exact component={UserFeed} />
+                <PrivateRoutes path='/userfeed' exact component={UserFeed} />
             </Switch>
         </BrowserRouter>
     );

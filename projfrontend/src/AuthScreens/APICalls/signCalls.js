@@ -33,6 +33,18 @@ export const signUp = ({ name, username, email, password }) => {
     })
 };
 
+export const signout = (next) => {
+    if (typeof window !== "undefined") {
+        localStorage.removeItem("jwt")
+        next();
+
+        return axios({
+            method: "get",
+            url: `${BackendUrl}/signout`,
+        })
+    }
+}
+
 export const authenticate = (data, next) => {
     if (typeof window !== 'undefined') {
         localStorage.setItem('jwt', JSON.stringify(data));

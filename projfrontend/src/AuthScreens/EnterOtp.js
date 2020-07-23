@@ -3,7 +3,6 @@ import { Formik, Form, Field } from 'formik';
 import { Link, Redirect } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
-import * as Yup from 'yup';
 import '../style.css';
 
 import enterOtp from '../Images/enterOtp.svg';

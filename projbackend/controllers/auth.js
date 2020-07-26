@@ -43,20 +43,20 @@ exports.signin = (req, res) => {
     User.findOne({ email }, (err, user) => {
         if (err) {
             return res.status(400).json({
-                error: 'DB Error',
+                msg: 'DB Error',
             });
         }
 
         if (!user) {
             return res.status(400).json({
-                error: 'User email not found',
+                msg: 'User email not found',
             });
         }
 
         //checking for password from DB
         if (!user.authenticate(password)) {
             return res.status(401).json({
-                error: 'Email and Password do not match',
+                msg: 'Email and Password do not match',
             });
         }
 

@@ -47,11 +47,13 @@ const SignIn = ({ location }) => {
             .catch((err) => {
                 //console.log("Inside Form", err)
                 //return <div>{toast.error('Not authorized')}</div>;
-                setShowToast(true);
                 setErrMsg({ ...err }.response.data.msg)
+                setShowToast(true);
+
             });
 
         onSubmit.resetForm();
+        setShowToast(false)
     };
 
     const performRedirect = () => {
@@ -63,9 +65,7 @@ const SignIn = ({ location }) => {
     return (
         <div class='row text-center'>
             <ToastContainer />
-            {//toast.success(Msg)
-            }
-            {showToast ? toast.error(errMsg) : null}
+
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
                 style={{
@@ -229,6 +229,7 @@ const SignIn = ({ location }) => {
                 </Formik>
             </div>
             {performRedirect()}
+            {showToast ? toast.error(errMsg) : null}
             <div class=' col-lg-1 col-sm-2 col-1 '></div>
 
             <div class='fixed-bottom' style={{ zIndex: '-1' }}>

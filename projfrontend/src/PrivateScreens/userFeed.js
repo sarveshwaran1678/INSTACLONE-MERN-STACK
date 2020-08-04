@@ -56,7 +56,6 @@ function UserFeed() {
             <UserStories />
             <UserStories />
             <UserStories />
-            <UserStories />
           </div>
         </div>
         <div className="col-lg-2" />

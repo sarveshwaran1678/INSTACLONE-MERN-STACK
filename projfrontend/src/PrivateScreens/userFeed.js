@@ -9,7 +9,20 @@ function UserFeed() {
   return (
     <div>
       <Navbar />
-      <UserStoriesPhone />
+      <div
+        className="container d-sm-block d-md-none d-lg-none"
+        style={{
+          display: "flex",
+          scrollBehavior: "smooth",
+          overflowX: "scroll",
+          whiteSpace: "nowrap",
+        }}
+      >
+        <UserStoriesPhone />
+        <UserStoriesPhone />
+        <UserStoriesPhone />
+        <UserStoriesPhone />
+      </div>
       <div className="row" style={{ margin: "0 0" }}>
         <div className="col-md-1 col-lg-2 col-xl-2" />
         <div
@@ -26,8 +39,11 @@ function UserFeed() {
             <ProfileDetails />
           </div>
 
+          <div className="mt-5 ml-3" style={{ fontWeight: "500" }}>
+            Stories
+          </div>
           <div
-            className="Stories mt-5"
+            className="Stories mt-1"
             style={{
               height: "50vh",
               border: "1px solid black",
@@ -36,9 +52,6 @@ function UserFeed() {
               borderRadius: "10px",
             }}
           >
-            <span className="m-4" style={{ fontWeight: "500" }}>
-              STORIES
-            </span>
             <UserStories />
             <UserStories />
             <UserStories />

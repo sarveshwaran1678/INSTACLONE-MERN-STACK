@@ -1,7 +1,7 @@
 import React from "react";
-import post from "../../Images/mayank.jpg";
+import post from "../../Images/sarvesh.jpg";
 
-function UserStories() {
+function ProfileDetails() {
   return (
     <div
       className="row ml-2 mb-3 "
@@ -19,4 +19,4 @@ function UserStories() {
   );
 }
 
-export default UserStories;
+export default ProfileDetails;

@@ -52,3 +52,31 @@ h1 {
 button:focus {
     outline: none;
 }
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    z-index: 1000;
+    display: none;
+    float: left;
+    min-width: 15rem;
+    padding: 0.5rem 0;
+    margin: 0.125rem 0 0;
+    font-size: 1rem;
+    color: #212529;
+    text-align: left;
+    list-style: none;
+    background-color: white;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-top: none;
+    border-radius: 0.5rem;
+}
+.dropleft .dropdown-menu {
+    top: 20px;
+    right: 50%;
+    left: auto;
+    margin-top: 0;
+    margin-right: 0.125rem;
+}

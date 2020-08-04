@@ -1,46 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Formik, Form, Field } from 'formik';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, useLocation } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
 import * as Yup from 'yup';
 import '../style.css';
 
-import forgotpassword from '../Images/forgotPassword.svg';
 import insta from '../Images/insta.gif';
+import { signIn, authenticate } from './APICalls/signCalls';
 
-import { forgetPassEmail } from './APICalls/passwordCalls';
-
-const ForgotPassword = () => {
-    const [didRedirect, setDidRedirect] = useState('');
-    const [email, setEmail] = useState('');
-    const [errMsg, setErrMsg] = useState('');
-    const [showToast, setShowToast] = useState(false);
-
-    const initialValues = {
-        email: '',
-    };
-
-    const validationSchema = Yup.object().shape({
-        email: Yup.string().email('Invalid email').required('Required'),
-    });
-
-    const SendingOtp = () => (
+const SignInBySignUp = () => {
+    const SuccessMessage = () => (
         <div>
+            <i className='fas fa-check text-success'></i>
             <span
                 style={{
                     fontFamily: 'Montserrat',
                     fontWeight: '500',
                     color: '#a2acba',
                 }}>
-                Sending OTP.........
+                Signed Up Successfully.... Sign In to continue
             </span>
-            <i className='fas fa-spinner fa-spin fa-lg  ml-3 text-success'></i>
         </div>
     );
+    useEffect(() => {
+        toast(<SuccessMessage />);
+    }, []);
+    const [mode, setMode] = useState('password');
+    const [didRedirect, setDidRedirect] = useState(false);
+    const [errMsg, setErrMsg] = useState('');
+    const [showToast, setShowToast] = useState(false);
+
+    const initialValues = {
+        email: '',
+        password: '',
+    };
+
     const ShowError = () => (
         <div>
-            <i className='fas fa-times fa-lg mr-3 text-danger'></i>
+            <i className='fas fa-times fa-lg ml-3 mr-3 text-danger'></i>
             <span
                 style={{
                     fontFamily: 'Montserrat',
@@ -52,48 +50,37 @@ const ForgotPassword = () => {
         </div>
     );
 
-    const Notify = (didRedirect) => {
-        if (didRedirect === 'sending') {
-            toast(<SendingOtp />);
-        }
-        if (didRedirect === 'failed' && errMsg.length !== 0) {
+    const Notify = () => {
+        if (showToast === true) {
             toast(<ShowError />);
         }
     };
-
     const onSubmit = async (values, onSubmit) => {
-        setEmail(values.email);
-        setDidRedirect('sending');
-        await forgetPassEmail(values)
+        await signIn(values)
             .then((res) => {
-                setDidRedirect('sent');
+                authenticate(res.data, () => {
+                    setDidRedirect(true);
+                });
             })
             .catch((err) => {
-                setDidRedirect('failed');
                 setErrMsg({ ...err }.response.data.msg);
+                setShowToast(true);
             });
 
         onSubmit.resetForm();
-        setDidRedirect('');
+        setShowToast(false);
     };
 
     const performRedirect = () => {
-        if (didRedirect === 'sent') {
-            return (
-                <Redirect
-                    to={{
-                        pathname: '/enterotp',
-                        state: { userEmail: email },
-                    }}
-                />
-            );
+        if (didRedirect) {
+            return <Redirect to='/' />;
         }
     };
 
     return (
         <div class='row text-center'>
-            <ToastContainer closeOnClick={false} limit={1} />
-            {Notify(didRedirect)}
+            <ToastContainer />
+            {Notify()}
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
                 style={{
@@ -131,23 +118,14 @@ const ForgotPassword = () => {
                         lone
                     </h4>
                 </h2>
-
-                <img
-                    src={forgotpassword}
-                    height={100}
-                    style={{ borderRadius: '0 0 50% 50%' }}
-                />
-                <h4 style={{ marginTop: '2vh', fontWeight: 600 }}>
-                    Forgot Password?
+                <h4 style={{ marginTop: '5vh', fontWeight: 600 }}>
+                    Welcome Back!
                 </h4>
-                <h6 style={{ marginTop: '1vh', marginBottom: '5vh' }}>
-                    Enter Your Registered Email
+                <h6 style={{ marginTop: '1vh', marginBottom: '7.5vh' }}>
+                    Log in to your existing account
                 </h6>
-                <Formik
-                    initialValues={initialValues}
-                    validationSchema={validationSchema}
-                    onSubmit={onSubmit}>
-                    {({ errors, touched, values }) => (
+                <Formik initialValues={initialValues} onSubmit={onSubmit}>
+                    {() => (
                         <Form>
                             <div class='input-group mb-4 '>
                                 <div class='input-group-prepend'>
@@ -170,6 +148,60 @@ const ForgotPassword = () => {
                                     <span class='input-group-text post-text'></span>
                                 </div>
                             </div>
+
+                            {/* Password */}
+
+                            <div class='input-group mb-3'>
+                                <div class='input-group-prepend'>
+                                    <span class='input-group-text'>
+                                        <i class='fas fa-lock text-primary'></i>
+                                    </span>
+                                </div>
+
+                                <Field
+                                    className='form-control'
+                                    type={mode}
+                                    name='password'
+                                    placeholder='Enter Your Password'
+                                />
+                                {
+                                    <div class='input-group-append'>
+                                        <span class='input-group-text'>
+                                            {mode === 'text' ? (
+                                                <i
+                                                    class='fas fa-eye-slash '
+                                                    onClick={() =>
+                                                        setMode(
+                                                            mode === 'text'
+                                                                ? 'password'
+                                                                : 'text'
+                                                        )
+                                                    }></i>
+                                            ) : (
+                                                <i
+                                                    class='fas fa-eye '
+                                                    onClick={() =>
+                                                        setMode(
+                                                            mode === 'text'
+                                                                ? 'password'
+                                                                : 'text'
+                                                        )
+                                                    }></i>
+                                            )}
+                                        </span>
+                                    </div>
+                                }
+                            </div>
+                            <Link to='/forgotpassword'>
+                                <h6
+                                    class='text-right'
+                                    style={{
+                                        marginTop: '2vh',
+                                        color: 'blue',
+                                    }}>
+                                    Forgot Password?
+                                </h6>
+                            </Link>
                             <div
                                 style={{
                                     textAlign: 'center',
@@ -181,7 +213,7 @@ const ForgotPassword = () => {
                                         marginTop: '3vh',
                                         textAlign: 'center',
                                     }}>
-                                    Send Otp
+                                    Login
                                 </button>
                             </div>
                             <h6
@@ -206,6 +238,7 @@ const ForgotPassword = () => {
                 </Formik>
             </div>
             {performRedirect()}
+
             <div class=' col-lg-1 col-sm-2 col-1 '></div>
 
             <div class='fixed-bottom' style={{ zIndex: '-1' }}>
@@ -233,4 +266,4 @@ const ForgotPassword = () => {
     );
 };
 
-export default ForgotPassword;
+export default SignInBySignUp;

@@ -17,7 +17,7 @@ exports.signup = (req, res) => {
     user.save((err, user) => {
         if (err) {
             return res.status(400).json({
-                err: 'NOT able to save user in DB',
+                err: 'NOT able to save user in DB !',
             });
         }
         res.json({
@@ -32,10 +32,16 @@ exports.signup = (req, res) => {
 exports.signin = (req, res) => {
     const { email, password } = req.body;
     const errors = validationResult(req);
+    if (email.length === 0) {
+        return res.status(401).json({
+            msg: 'Enter Your Email',
+        });
+    }
 
     if (!errors.isEmpty()) {
+        console.log(errors);
         return res.status(422).json({
-            error: errors.array()[0].msg,
+            msg: errors.array()[0].msg,
             param: errors.array()[0].param,
         });
     }
@@ -43,21 +49,27 @@ exports.signin = (req, res) => {
     User.findOne({ email }, (err, user) => {
         if (err) {
             return res.status(400).json({
-                msg: 'DB Error',
+                msg: 'DB Error !',
             });
         }
 
         if (!user) {
             return res.status(400).json({
-                msg: 'User email not found',
+                msg: 'User email not found !',
             });
         }
 
         //checking for password from DB
         if (!user.authenticate(password)) {
-            return res.status(401).json({
-                msg: 'Email and Password do not match',
-            });
+            if (password.length === 0) {
+                return res.status(401).json({
+                    msg: 'Enter Your Password !',
+                });
+            } else {
+                return res.status(401).json({
+                    msg: 'Email and Password does not match !',
+                });
+            }
         }
 
         //Signin the user by

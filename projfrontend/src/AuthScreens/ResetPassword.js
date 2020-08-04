@@ -11,20 +11,50 @@ import happy from '../Images/happy.svg';
 import insta from '../Images/insta.gif';
 import { confirmNewPass } from './APICalls/passwordCalls';
 
-
 const ResetPassword = ({ location }) => {
-
     const [mode, setMode] = useState('password');
-    const [errMsg, setErrMsg] = useState("")
-    const [showToast, setShowToast] = useState(false)
-    const [didRedirect, setDidRedirect] = useState(false)
-
+    const [errMsg, setErrMsg] = useState('');
+    const [showToast, setShowToast] = useState(false);
+    const [didRedirect, setDidRedirect] = useState(false);
 
     const initialValues = {
         newPassword: '',
         confirmNewPassword: '',
     };
+    const ShowError = () => (
+        <div>
+            <i className='fas fa-times fa-lg ml-3 mr-3 text-danger'></i>
+            <span
+                style={{
+                    fontFamily: 'Montserrat',
+                    fontWeight: '500',
+                    color: '#a2acba',
+                }}>
+                {errMsg}
+            </span>
+        </div>
+    );
 
+    const PasswordValidator = () =>
+        toast(
+            <div>
+                <span
+                    style={{
+                        fontFamily: 'Montserrat',
+                        fontWeight: '500',
+                        color: '#a2acba',
+                        fontSize: '13px',
+                    }}>
+                    Password must contain 1 Uppercase, 1 Lowercase,1 Numeric & 1
+                    SpecialChar
+                </span>
+            </div>
+        );
+    const Notify = () => {
+        if (showToast === true) {
+            toast(<ShowError />);
+        }
+    };
     const validationSchema = Yup.object().shape({
         newPassword: Yup.string()
             .min(5, 'Too Short!')
@@ -45,38 +75,29 @@ const ResetPassword = ({ location }) => {
     });
 
     const onSubmit = async (values, onSubmit) => {
-        console.log('Form data', values);
-        let { newPassword, confirmNewPassword } = values
-        let email = location.state.userEmail
+        let { newPassword, confirmNewPassword } = values;
+        let email = location.state.userEmail;
         await confirmNewPass({ newPassword, confirmNewPassword, email })
             .then((res) => {
-                console.log("RES Reset Pass:", res);
-                setDidRedirect(true)
+                setDidRedirect(true);
             })
             .catch((err) => {
-                console.log("ERR:", { ...err });
-                setErrMsg({ ...err }.response.data.msg)
-                setShowToast(true)
-            })
-        onsubmit.resetForm();
+                setErrMsg({ ...err }.response.data.msg);
+                setShowToast(true);
+            });
+        onSubmit.resetForm();
     };
 
     const performRedirect = () => {
         if (didRedirect) {
             return <Redirect to='/signin' />;
-            /*return <Redirect to={{
-            pathname: '/signin',
-            state: { text: "SignUp Succesful Please SignIn to continue" }
-        }} />;*/
         }
     };
-
-
 
     return (
         <div class='row text-center'>
             <ToastContainer />
-            {showToast ? toast.error(errMsg) : null}
+            {Notify()}
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
                 style={{
@@ -140,12 +161,12 @@ const ResetPassword = ({ location }) => {
                                         </span>
                                     </div>
                                 ) : (
-                                        <div class='input-group-prepend'>
-                                            <span class='input-group-text  '>
-                                                <i class='fas fa-lock-open text-success'></i>
-                                            </span>
-                                        </div>
-                                    )}
+                                    <div class='input-group-prepend'>
+                                        <span class='input-group-text  '>
+                                            <i class='fas fa-lock-open text-success'></i>
+                                        </span>
+                                    </div>
+                                )}
 
                                 <Field
                                     className='form-control'
@@ -159,38 +180,25 @@ const ResetPassword = ({ location }) => {
                                         <span class='input-group-text'></span>
                                     </div>
                                 ) : values.newPassword.length > 0 &&
-                                    errors.newPassword ? (
-                                            <div class='input-group-append '>
-                                                <span class='input-group-text text-danger'>
-                                                    <i class='fas fa-times  '></i>
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            <div class='input-group-append '>
-                                                <span class='input-group-text text-success '>
-                                                    <i class='fas fa-check'></i>
-                                                </span>
-                                            </div>
-                                        )}
+                                  errors.newPassword ? (
+                                    <div class='input-group-append '>
+                                        <span class='input-group-text text-danger'>
+                                            <i class='fas fa-times  '></i>
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div class='input-group-append '>
+                                        <span class='input-group-text text-success '>
+                                            <i class='fas fa-check'></i>
+                                        </span>
+                                    </div>
+                                )}
                                 <div class='input-group-append'>
                                     <span class='input-group-text border-left-0'>
                                         <i
                                             class='far fa-question-circle'
                                             onClick={() => {
-                                                console.log('Raju');
-                                                toast.error(
-                                                    'Password must contain 1 Uppercase, 1 Lowercase,1 Numeric & 1 SpecialChar',
-                                                    {
-                                                        position:
-                                                            'bottom-right',
-                                                        autoClose: 5000,
-                                                        hideProgressBar: false,
-                                                        closeOnClick: true,
-                                                        pauseOnHover: true,
-                                                        draggable: true,
-                                                        progress: undefined,
-                                                    }
-                                                );
+                                                PasswordValidator();
                                             }}></i>
                                     </span>
                                 </div>
@@ -198,19 +206,19 @@ const ResetPassword = ({ location }) => {
 
                             <div class='input-group mb-3'>
                                 {errors.confirmNewPassword ||
-                                    !values.confirmNewPassword ? (
-                                        <div class='input-group-prepend'>
-                                            <span class='input-group-text'>
-                                                <i class='fas fa-lock text-primary'></i>
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <div class='input-group-prepend'>
-                                            <span class='input-group-text  '>
-                                                <i class='fas fa-lock-open text-success'></i>
-                                            </span>
-                                        </div>
-                                    )}
+                                !values.confirmNewPassword ? (
+                                    <div class='input-group-prepend'>
+                                        <span class='input-group-text'>
+                                            <i class='fas fa-lock text-primary'></i>
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <div class='input-group-prepend'>
+                                        <span class='input-group-text  '>
+                                            <i class='fas fa-lock-open text-success'></i>
+                                        </span>
+                                    </div>
+                                )}
 
                                 <Field
                                     className='form-control'
@@ -233,16 +241,16 @@ const ResetPassword = ({ location }) => {
                                                         )
                                                     }></i>
                                             ) : (
-                                                    <i
-                                                        class='fas fa-eye '
-                                                        onClick={() =>
-                                                            setMode(
-                                                                mode === 'text'
-                                                                    ? 'password'
-                                                                    : 'text'
-                                                            )
-                                                        }></i>
-                                                )}
+                                                <i
+                                                    class='fas fa-eye '
+                                                    onClick={() =>
+                                                        setMode(
+                                                            mode === 'text'
+                                                                ? 'password'
+                                                                : 'text'
+                                                        )
+                                                    }></i>
+                                            )}
                                         </span>
                                     </div>
                                 }

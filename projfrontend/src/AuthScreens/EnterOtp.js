@@ -11,49 +11,65 @@ import insta from '../Images/insta.gif';
 import { optChecker } from './APICalls/passwordCalls';
 
 const EnterOtp = ({ location }) => {
-
-    const [didRedirect, setDidRedirect] = useState(false)
-    const [otpMatchedStatus, setOtpMatchedStatus] = useState(true)
-    const [errMsg, setErrMsg] = useState("")
+    const [didRedirect, setDidRedirect] = useState(false);
+    const [otpMatchedStatus, setOtpMatchedStatus] = useState(true);
+    const [errMsg, setErrMsg] = useState('');
 
     const initialValues = {
         otp: '',
     };
 
+    const ShowError = () => (
+        <div>
+            <i className='fas fa-times fa-lg ml-3 mr-3 text-danger'></i>
+            <span
+                style={{
+                    fontFamily: 'Montserrat',
+                    fontWeight: '500',
+                    color: '#a2acba',
+                }}>
+                {errMsg}
+            </span>
+        </div>
+    );
+
+    const Notify = () => {
+        if (otpMatchedStatus === false) {
+            toast(<ShowError />);
+        }
+    };
     const onSubmit = async (values, onSubmit) => {
-        console.log('Form data', values.otp);
         let userEmail = location.state.userEmail;
-        let userOtp = values.otp
+        let userOtp = values.otp;
         await optChecker({ userOtp, userEmail })
             .then((res) => {
-                console.log("RES:", res);
-                setDidRedirect(true)
+                setDidRedirect(true);
             })
             .catch((err) => {
-                //console.log("STATUS", { ...err }.response.status);
-                setErrMsg({ ...err }.response.data.msg)
-                //console.log("MSG", { ...err }.response.data.msg);
-                //console.log("ERR:", { ...err });
-                setOtpMatchedStatus(false)
+                setErrMsg({ ...err }.response.data.msg);
+                setOtpMatchedStatus(false);
+            });
 
-            })
-
-        onsubmit.resetForm();
+        onSubmit.resetForm();
     };
 
     const performRedirect = () => {
         if (didRedirect) {
-            return <Redirect to={{
-                pathname: '/resetpassword',
-                state: { userEmail: location.state.userEmail }
-            }} />;
+            return (
+                <Redirect
+                    to={{
+                        pathname: '/resetpassword',
+                        state: { userEmail: location.state.userEmail },
+                    }}
+                />
+            );
         }
     };
 
     return (
         <div class='row text-center'>
             <ToastContainer />
-            {otpMatchedStatus ? null : toast.error(errMsg)}
+            {Notify()}
             <div
                 class='col-md-5 col-lg-6 d-none d-md-block d-lg-block text-lg-right'
                 style={{

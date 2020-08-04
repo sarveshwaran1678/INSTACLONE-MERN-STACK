@@ -22,12 +22,7 @@ router.post(
 
 router.post(
     '/signin',
-    [
-        check('email').isEmail().withMessage('Email is Required'),
-        check('password')
-            .isLength({ min: 5, max: 15 })
-            .withMessage('Password is Required'),
-    ],
+    [check('email').isEmail().withMessage('Enter a Valid Email')],
     signin
 );
 

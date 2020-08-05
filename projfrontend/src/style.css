@@ -1,82 +1,100 @@
 body {
-    background: white;
-    margin: 0;
-    padding: 0;
-    font-family: 'Montserrat', sans-serif;
-    color: black;
-    overflow-x: auto;
+  background: white;
+  margin: 0;
+  padding: 0;
+  font-family: "Montserrat", sans-serif;
+  color: black;
+  overflow-x: auto;
 }
 
 h1 {
-    color: #ffffff;
+  color: #ffffff;
 }
 
 .form-control {
-    box-shadow: none;
-    outline: none;
-    border: none;
-    border: 1px solid rgba(0, 0, 255, 0.815);
-    border-right: none;
-    border-left: none;
-    font-weight: 500;
-    background-color: white;
-    color: black;
+  box-shadow: none;
+  outline: none;
+  border: none;
+  border: 1px solid rgba(0, 0, 255, 0.815);
+  border-right: none;
+  border-left: none;
+  font-weight: 500;
+  background-color: white;
+  color: black;
 }
 
 .form-control:focus {
-    box-shadow: none;
-    outline: none;
-    border: 1px solid rgba(0, 0, 255, 0.815);
-    border-right: none;
-    border-left: none;
-    background-color: white;
-    border-radius: 0 10px 0 10px;
-    color: black;
+  box-shadow: none;
+  outline: none;
+  border: 1px solid rgba(0, 0, 255, 0.815);
+  border-right: none;
+  border-left: none;
+  background-color: white;
+  border-radius: 0 10px 0 10px;
+  color: black;
 }
 .input-group-text {
-    border: 1px solid rgba(0, 0, 255, 0.815);
-    background-color: white;
-    border-radius: 25px;
+  border: 1px solid rgba(0, 0, 255, 0.815);
+  background-color: white;
+  border-radius: 25px;
 }
 
 .signIn {
-    margin-top: 20px;
-    border-radius: 25px;
-    border: none;
-    background-color: rgba(0, 0, 255, 0.815);
-    color: white;
-    text-transform: uppercase;
-    font-weight: 600;
-    padding: 7px 50px;
+  margin-top: 20px;
+  border-radius: 25px;
+  border: none;
+  background-color: rgba(0, 0, 255, 0.815);
+  color: white;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 7px 50px;
 }
 button:focus {
-    outline: none;
+  outline: none;
 }
 
 .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    left: 50%;
-    z-index: 1000;
-    display: none;
-    float: left;
-    min-width: 15rem;
-    padding: 0.5rem 0;
-    margin: 0.125rem 0 0;
-    font-size: 1rem;
-    color: #212529;
-    text-align: left;
-    list-style: none;
-    background-color: white;
-    background-clip: padding-box;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    border-top: none;
-    border-radius: 0.5rem;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  z-index: 1000;
+  display: none;
+  float: left;
+  min-width: 15rem;
+  padding: 0.5rem 0;
+  margin: 0.125rem 0 0;
+  font-size: 1rem;
+  color: #212529;
+  text-align: left;
+  list-style: none;
+  background-color: white;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-top: none;
+  border-radius: 0.5rem;
 }
 .dropleft .dropdown-menu {
-    top: 20px;
-    right: 50%;
-    left: auto;
-    margin-top: 0;
-    margin-right: 0.125rem;
+  top: 20px;
+  right: 50%;
+  left: auto;
+  margin-top: 0;
+  margin-right: 0.125rem;
+}
+.carousel-control-next,
+.carousel-control-prev {
+  position: absolute;
+  top: 30px;
+  bottom: 0;
+  z-index: 1;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 15%;
+  color: #fff;
+  text-align: center;
+  opacity: 0.5;
+  transition: opacity 0.15s ease;
 }

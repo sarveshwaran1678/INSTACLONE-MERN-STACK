@@ -11,6 +11,16 @@ export const getOwnUser = (userId, token) => {
   });
 };
 
+export const getAnotherUserDetails = (anotherUserId) => {
+  return axios({
+    method: "get",
+    url: `${BackendUrl}/anotherUser/${anotherUserId}`,
+    // headers: {
+    //   Authorization: `Bearer ${token}`,
+    // },
+  });
+};
+
 export const getAllFollowingStories = (userId, token) => {
   return axios({
     method: "get",

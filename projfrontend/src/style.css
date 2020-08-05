@@ -98,3 +98,13 @@ button:focus {
   opacity: 0.5;
   transition: opacity 0.15s ease;
 }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+  width: 10px;
+}

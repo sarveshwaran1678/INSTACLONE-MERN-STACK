@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import { signout } from "./APICalls/signCalls";
 
 function Navbar() {
@@ -7,15 +9,22 @@ function Navbar() {
       <div class="container " style={{ paddingRight: "0" }}>
         <nav class="navbar navbar-expand-lg ">
           <span class="navbar-brand" href="#">
-            <i class="fab fa-instagram fa-lg mr-2 d-none d-md-inline"> </i>
-
-            <i class="far fas fa-user-astronaut fa-lg  mr-2 d-md-none"></i>
-            <span
-              style={{ fontWeight: "500" }}
-              class="d-none d-md-inline-block d-lg-inline-block"
-            >
-              InstaClone
-            </span>
+            <Link to="/userfeed">
+              <i class="fab fa-instagram fa-lg mr-2 d-none d-md-inline text-dark">
+                {" "}
+              </i>
+            </Link>
+            <Link to="/profile">
+              <i class="far fas fa-user-astronaut fa-lg  mr-2 d-md-none text-dark"></i>
+            </Link>
+            <Link to="/userfeed">
+              <span
+                style={{ fontWeight: "500" }}
+                class="d-none d-md-inline-block d-lg-inline-block text-dark"
+              >
+                InstaClone
+              </span>
+            </Link>
           </span>
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active ">
@@ -36,7 +45,16 @@ function Navbar() {
           </ul>
           <span>
             <i class="far fa-bell fa-lg ml-2 mr-3"></i>
-            <i class="far fas fa-sign-out-alt fa-lg d-md-none mr-1"></i>
+            <Link to="/signin">
+              <i
+                class="far fas fa-sign-out-alt fa-lg d-md-none mr-1"
+                onClick={() =>
+                  signout(() => {
+                    console.log("Signed out Successfully");
+                  })
+                }
+              ></i>
+            </Link>
             <span class="dropleft d-none d-md-inline mt-5">
               <span
                 class=" dropdown-toggle"
@@ -52,17 +70,19 @@ function Navbar() {
                 class="dropdown-menu  mt-3"
                 aria-labelledby="dropdownMenuButton"
               >
-                <a
-                  class="dropdown-item"
-                  href="#"
-                  style={{
-                    fontWeight: "500",
-                    letterSpacing: "0.75px",
-                  }}
-                >
-                  <i class="fas fa-user-circle mr-2"></i>
-                  Profile
-                </a>
+                <Link to="/profile">
+                  <a
+                    class="dropdown-item text-dark"
+                    href="#"
+                    style={{
+                      fontWeight: "500",
+                      letterSpacing: "0.75px",
+                    }}
+                  >
+                    <i class="fas fa-user-circle mr-2 text-dark"></i>
+                    Profile
+                  </a>
+                </Link>
                 <a
                   class="dropdown-item"
                   href="#"

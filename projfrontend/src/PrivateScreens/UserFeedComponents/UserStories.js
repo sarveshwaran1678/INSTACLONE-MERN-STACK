@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Image, Transformation, Placeholder } from "cloudinary-react";
-import { ToastContainer, toast, style } from "react-toastify";
 
-import StoryModal from "./StoryModal";
 import { getAnotherUserDetails } from "./APICalls";
-
-import post from "../../Images/mayankPost.jpg";
+import { isAuthenticated } from "../../AuthScreens/APICalls/signCalls";
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
-function UserStories({ story }) {
+function UserStories({ story, index }) {
   const [userName, setUserName] = useState("");
   const [timeBefore, setTimeBefore] = useState("");
+  const [picPath, setPicPath] = useState(story.picturePath);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     getDetails();
@@ -33,55 +32,48 @@ function UserStories({ story }) {
 
   const getDetails = async () => {
     const anotherUserId = story.UserId;
-    await getAnotherUserDetails(anotherUserId)
+    const id = isAuthenticated().user._id;
+    const token = isAuthenticated().token;
+
+    await getAnotherUserDetails(anotherUserId, id, token)
       .then((res) => {
         setUserName(res.data.username);
       })
-      .catch(() => {
+      .catch((err) => {
         console.log("Not able to get Username for stories");
+        console.log("ERR:", { ...err }.response);
       });
   };
 
-  const ShowModal = () => (
-    <div class="d-none d-md-block w-100">
+  const StoryModal = ({ picPath }) => {
+    return (
       <Image
-        className="m-1"
+        className="m-1 d-block w-100"
         cloudName={CloudName}
         loading="lazy"
-        publicId={story.picturePath}
+        publicId={picPath}
       >
-        <Transformation crop="scale" gravity="center" />
+        <Transformation gravity="face" crop="fill" />
         <Placeholder type="pixelate" />
       </Image>
-    </div>
-  );
-
-  const notify = () => {
-    toast(<ShowModal />);
+    );
   };
 
   return (
-    <div>
-      <ToastContainer
-        limit={1}
-        position="top-center"
-        autoClose={10000}
-        pauseOnHover
-        style={{
-          width: "50vw",
-        }}
-      />
+    <React.Fragment>
       <div
         className="row ml-0 mt-2 "
+        data-toggle="modal"
+        data-target={`#exampleModal${index}`}
         style={{ overflowY: "visible", fontWeight: "500" }}
-        onClick={() => notify()}
+        onClick={() => setShowModal(true)}
       >
         <div className="col-3 text-right" style={{ paddingRight: "0" }}>
           <Image
             className="m-1"
             cloudName={CloudName}
             loading="lazy"
-            publicId={story.picturePath}
+            publicId={picPath}
           >
             <Transformation
               height="70"
@@ -99,7 +91,36 @@ function UserStories({ story }) {
           <span>{timeBefore}</span>
         </div>
       </div>
-    </div>
+      <div
+        class="modal fade bd-example-modal-lg"
+        id={`exampleModal${index}`}
+        tabindex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div
+          class="modal-dialog modal-lg"
+          role="document"
+          style={{
+            width: "100%",
+            maxWidth: "800px",
+          }}
+        >
+          <div class="modal-content ">
+            <div class="modal-body ">
+              <div
+                class="d-none d-md-block"
+                data-dismiss="modal"
+                onClick={() => setShowModal(false)}
+              >
+                {showModal ? <StoryModal picPath={picPath} /> : null}
+              </div>{" "}
+            </div>
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
   );
 }
 

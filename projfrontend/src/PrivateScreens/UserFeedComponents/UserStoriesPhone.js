@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { Image, Transformation, Placeholder } from "cloudinary-react";
 
 import { getAnotherUserDetails } from "./APICalls";
-import StoryModalPhone from "./StoryModalPhone";
+import { isAuthenticated } from "../../AuthScreens/APICalls/signCalls";
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
-function UserStoriesPhone({ story }) {
+function UserStoriesPhone({ story, index }) {
   const [userName, setUserName] = useState("");
+  const [picPath, setPicPath] = useState(story.picturePath);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     getDetails();
@@ -15,7 +17,9 @@ function UserStoriesPhone({ story }) {
 
   const getDetails = async () => {
     const anotherUserId = story.UserId;
-    await getAnotherUserDetails(anotherUserId)
+    const id = isAuthenticated().user._id;
+    const token = isAuthenticated().token;
+    await getAnotherUserDetails(anotherUserId, id, token)
       .then((res) => {
         setUserName(res.data.username);
       })
@@ -24,29 +28,51 @@ function UserStoriesPhone({ story }) {
       });
   };
 
+  const StoryModal = ({ picPath }) => {
+    return (
+      <Image
+        className="m-1 d-block w-100"
+        cloudName={CloudName}
+        loading="lazy"
+        publicId={picPath}
+      >
+        <Transformation gravity="face" crop="fill" />
+        <Placeholder type="pixelate" />
+      </Image>
+    );
+  };
+
   return (
-    <div className="d-md-none d-lg-none">
-      <div data-toggle="modal" data-target="#exampleModal2">
-        <Image
-          className="m-2"
-          cloudName={CloudName}
-          loading="lazy"
-          publicId={story.picturePath}
+    <React.Fragment>
+      <div className="d-md-none d-lg-none justify-content-center align-items-center">
+        <div
+          data-toggle="modal"
+          data-target={`#exampleModalPhone${index}`}
+          onClick={() => setShowModal(true)}
         >
-          <Transformation
-            height="65"
-            width="65"
-            gravity="face"
-            crop="fill"
-            radius="max"
-          />
-          <Placeholder type="pixelate" />
-        </Image>
-        <div>{userName}</div>
+          <figure className="text-center">
+            <Image
+              className="m-2"
+              cloudName={CloudName}
+              loading="lazy"
+              publicId={picPath}
+            >
+              <Transformation
+                height="65"
+                width="65"
+                gravity="face"
+                crop="fill"
+                radius="max"
+              />
+              <Placeholder type="pixelate" />
+            </Image>
+            <figcaption>{userName}</figcaption>
+          </figure>
+        </div>
       </div>
       <div
-        class="modal fade bd-example-modal-lg "
-        id="exampleModal2"
+        class="modal fade bd-example-modal-lg"
+        id={`exampleModalPhone${index}`}
         tabindex="-1"
         role="dialog"
         aria-labelledby="exampleModalLabel"
@@ -62,13 +88,33 @@ function UserStoriesPhone({ story }) {
         >
           <div class="modal-content ">
             <div class="modal-body ">
-              <StoryModalPhone />
+              <div
+                class=" d-md-none"
+                data-dismiss="modal"
+                onClick={() => setShowModal(false)}
+              >
+                {showModal ? <StoryModal picPath={picPath} /> : null}
+              </div>{" "}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 
 export default UserStoriesPhone;
+
+// <div className='justify-content-center align-items-center'>
+//   <figure className='text-center'>
+//     <img
+//       className='profile mt-3 mr-3'
+//       src={post}
+//       style={{
+//         borderRadius: '50% ',
+//         height: '70px',
+//         width: '70px',
+//       }}
+//     />
+//   </figure>
+// </div>

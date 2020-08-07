@@ -148,10 +148,10 @@ exports.likePicture = (req, res) => {
             error: err,
           });
         }
-        res.json({
-          message: "Post wad unliked by: " + username,
-          picture: picture,
-        });
+        res.json(
+          //message: "Post was unliked by: " + username,
+          picture
+        );
       }
     );
   } else {
@@ -182,13 +182,13 @@ exports.likePicture = (req, res) => {
                 msg: "error",
               });
             }
-            console.log("Done");
+            //console.log("Done");
           }
         );
-        res.json({
-          message: "Post wad liked by: " + username,
-          picture: picture,
-        });
+        res.json(
+          //message: "Post was liked by: " + username,
+          picture
+        );
       }
     );
   }
@@ -292,7 +292,7 @@ exports.getAllAnotherStory = async (req, res) => {
                 cloudinary.uploader.destroy(
                   deletedpicture.picturePath,
                   function (result) {
-                    console.log("deleted from cloud");
+                    //console.log("deleted from cloud");
                   }
                 );
               });
@@ -326,11 +326,11 @@ exports.getAllAnotherStory = async (req, res) => {
               if (err) {
                 console.log("failed");
               }
-              console.log(deletedpicture);
+              //console.log(deletedpicture);
               cloudinary.uploader.destroy(deletedpicture.picturePath, function (
                 result
               ) {
-                console.log("deleted from cloud");
+                //console.log("deleted from cloud");
               });
             });
           }
@@ -367,7 +367,7 @@ exports.getAllFollowingStory = async (req, res) => {
             if (err) {
               console.log("failed");
             }
-            console.log(deletedpicture);
+            //console.log(deletedpicture);
             cloudinary.uploader.destroy(deletedpicture.picturePath, function (
               result
             ) {

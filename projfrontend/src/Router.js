@@ -9,6 +9,8 @@ import EnterOtp from './AuthScreens/EnterOtp';
 import ResetPassword from './AuthScreens/ResetPassword';
 import UserFeed from './PrivateScreens/userFeed';
 import SignInBySignUp from './AuthScreens/SignInBySignUp';
+import userProfile from './PrivateScreens/userProfile';
+import UserSettings from './PrivateScreens/UserProfileComponents/UserSettings';
 
 const Routes = () => {
     return (
@@ -32,6 +34,12 @@ const Routes = () => {
                 <Route path='/resetpassword' exact component={ResetPassword} />
 
                 <PrivateRoutes path='/userfeed' exact component={UserFeed} />
+                <PrivateRoutes path='/profile' exact component={userProfile} />
+                <PrivateRoutes
+                    path='/settings'
+                    exact
+                    component={UserSettings}
+                />
             </Switch>
         </BrowserRouter>
     );

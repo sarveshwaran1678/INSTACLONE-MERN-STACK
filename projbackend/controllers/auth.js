@@ -12,7 +12,6 @@ exports.signup = (req, res) => {
             param: errors.array()[0].param,
         });
     }
-
     const user = new User(req.body);
     user.save((err, user) => {
         if (err) {

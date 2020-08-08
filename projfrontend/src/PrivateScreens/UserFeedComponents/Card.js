@@ -2,20 +2,28 @@ import React, { useEffect, useState } from "react";
 
 import { Image, Transformation, Placeholder } from "cloudinary-react";
 
-import { getAnotherUserDetails, getAllComments, postLike } from "./APICalls";
+import {
+  getAnotherUserDetails,
+  getAllComments,
+  postLike,
+  postComment,
+} from "./APICalls";
 import { isAuthenticated } from "../../AuthScreens/APICalls/signCalls";
 
 //import post from "../../Images/mayankPost.jpg";
 import Modal from "./Modal";
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
-const userId = isAuthenticated().user._id;
-const token = isAuthenticated().token;
 
 function Card({ feed }) {
+  const userId = isAuthenticated().user._id;
+  const token = isAuthenticated().token;
+
   const [feedDetails, setFeedDetails] = useState({
+    id: feed._id,
     ImgPath: feed.picturePath,
     caption: feed.caption,
+    ImgURL: feed.pictureUrl,
     //likeCount: feed.likesFromUserId.length,
     comments: [],
     commentCount: 0,
@@ -31,7 +39,9 @@ function Card({ feed }) {
     profilePic: "",
   });
 
+  const [newComment, setNewComment] = useState("");
   const [timeBefore, setTimeBefore] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     getDetails();
@@ -40,16 +50,23 @@ function Card({ feed }) {
   }, []);
 
   const getTimeDiff = () => {
-    var milliseconds = new Date() - new Date(feed.createdAt);
+    let milliseconds = new Date() - new Date(feed.createdAt);
 
-    var hour, minute, seconds;
+    let hour, minute, seconds, days;
     seconds = Math.floor(milliseconds / 1000);
     minute = Math.floor(seconds / 60);
     seconds = seconds % 60;
     hour = Math.floor(minute / 60);
     minute = minute % 60;
+    days = hour / 24;
 
-    setTimeBefore(hour < 1 ? `${minute} minutes ago` : `${hour} hours ago`);
+    setTimeBefore(
+      hour >= 24
+        ? `${Math.trunc(days)} day(s) ago`
+        : hour < 1
+        ? `${minute} minutes ago`
+        : `${hour} hours ago`
+    );
   };
 
   const getDetails = async () => {
@@ -102,19 +119,39 @@ function Card({ feed }) {
       });
   };
 
+  const sendComment = async () => {
+    //if (newComment.length == 0) return;
+
+    const postId = feed._id;
+    await postComment(userId, postId, token, newComment)
+      .then((res) => {
+        setNewComment("");
+      })
+      .catch((err) => {
+        console.log("Not able to post comment");
+        console.log("ERR:", { ...err }.response);
+      });
+
+    await getComments();
+  };
+
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   return (
     <div className="mt-5" style={{ fontWeight: "500" }}>
       <div class="card">
         <div>
           <Image
-            className="m-3"
+            className="m-2"
             cloudName={CloudName}
             loading="lazy"
             publicId={otherUserDetails.profilePic}
           >
             <Transformation
-              width="45"
-              height="45"
+              width="40"
+              height="40"
               radius="max"
               gravity="face"
               crop="fill"
@@ -132,7 +169,8 @@ function Card({ feed }) {
           loading="lazy"
           publicId={feedDetails.ImgPath}
           data-toggle="modal"
-          data-target="#exampleModal"
+          data-target={`#exampleModal${feedDetails.id}`}
+          onClick={() => setShowModal(true)}
         >
           <Transformation gravity="face" crop="fill" />
           <Placeholder type="pixelate" />
@@ -153,6 +191,8 @@ function Card({ feed }) {
               style={{
                 color: "#28a745",
               }}
+              data-toggle="modal"
+              data-target={`#exampleModal${feedDetails.id}`}
             ></i>
           </h5>
 
@@ -164,7 +204,7 @@ function Card({ feed }) {
                 class="card-text"
                 href=""
                 data-toggle="modal"
-                data-target="#exampleModal"
+                data-target={`#exampleModal${feedDetails.id}`}
                 style={{ textDecoration: "none" }}
               >
                 View all {feedDetails.commentCount} comments
@@ -176,7 +216,7 @@ function Card({ feed }) {
           {/* Modal */}
           <div
             class="modal fade bd-example-modal-lg "
-            id="exampleModal"
+            id={`exampleModal${feedDetails.id}`}
             tabindex="-1"
             role="dialog"
             aria-labelledby="exampleModalLabel"
@@ -192,7 +232,20 @@ function Card({ feed }) {
             >
               <div class="modal-content ">
                 <div class="modal-body py-0">
-                  <Modal className="" />
+                  {showModal ? (
+                    <Modal
+                      toggleModal={toggleModal}
+                      //ImgId={fe}
+                      ImgURL={feedDetails.ImgURL}
+                      profilePic={otherUserDetails.profilePic}
+                      picUsername={otherUserDetails.userName}
+                      comments={feedDetails.comments}
+                      getComments={getComments}
+                      postId={feedDetails.id}
+                      //sendComment={sendComment}
+                      //setModalComment={setModalComment}
+                    />
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -202,7 +255,12 @@ function Card({ feed }) {
               type="text"
               class="form-control"
               placeholder="Add a Comment"
+              value={newComment}
               style={{ border: "1px solid grey" }}
+              onChange={(e) => {
+                e.preventDefault();
+                setNewComment(e.target.value);
+              }}
             />
             <div class="input-group-append" style={{ border: "none" }}>
               <span
@@ -212,7 +270,9 @@ function Card({ feed }) {
                   border: "none",
                   fontWeight: "500",
                   color: "blue",
+                  cursor: "pointer",
                 }}
+                onClick={() => (newComment.length == 0 ? null : sendComment())}
               >
                 Post
               </span>

@@ -18,18 +18,28 @@ function UserStories({ story, index }) {
   }, []);
 
   const getTimeDiff = () => {
-    var milliseconds = new Date() - new Date(story.createdAt);
+    let milliseconds = new Date() - new Date(story.createdAt);
 
-    var hour, minute, seconds;
+    let hour, minute, seconds, days;
     seconds = Math.floor(milliseconds / 1000);
     minute = Math.floor(seconds / 60);
     seconds = seconds % 60;
     hour = Math.floor(minute / 60);
     minute = minute % 60;
+    days = hour / 24;
 
-    setTimeBefore(hour < 1 ? `${minute} minutes ago` : `${hour} hours ago`);
+    // if (days > 0) setTimeBefore(`${days.toFixed(0)} days ago`);
+    // else if (hour >= 1) setTimeBefore(`${hour} hours ago`);
+    // else setTimeBefore(`${minute} minutes ago`);
+
+    setTimeBefore(
+      hour >= 24
+        ? `${Math.trunc(days)} day(s) ago`
+        : hour < 1
+        ? `${minute} minutes ago`
+        : `${hour} hours ago`
+    );
   };
-
   const getDetails = async () => {
     const anotherUserId = story.UserId;
     const id = isAuthenticated().user._id;
@@ -76,8 +86,8 @@ function UserStories({ story, index }) {
             publicId={picPath}
           >
             <Transformation
-              height="70"
-              width="70"
+              height="55"
+              width="55"
               gravity="face"
               crop="fill"
               radius="max"
@@ -85,7 +95,7 @@ function UserStories({ story, index }) {
             <Placeholder type="pixelate" />
           </Image>
         </div>
-        <div className="col-7 text-left mt-3 ml-2">
+        <div className="col-7 text-left mt-2 ml-2">
           <span>{userName}</span>
           <br />
           <span>{timeBefore}</span>
@@ -108,7 +118,7 @@ function UserStories({ story, index }) {
           }}
         >
           <div class="modal-content ">
-            <div class="modal-body ">
+            <div class="modal-body p-0 w-100">
               <div
                 class="d-none d-md-block"
                 data-dismiss="modal"

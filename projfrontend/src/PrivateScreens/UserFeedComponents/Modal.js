@@ -1,10 +1,39 @@
-import React, { Component } from "react";
-import post from "../../Images/mayankPost.jpg";
-import user from "../../Images/sarvesh.jpg";
-import ModalComments from "./ModalComments";
-import { Image, Transformation } from "cloudinary-react";
+import React, { useEffect, useState } from "react";
 
-function Modal() {
+import ModalComments from "./ModalComments";
+import { Image, Transformation, Placeholder } from "cloudinary-react";
+import { postComment } from "./APICalls";
+import { isAuthenticated } from "../../AuthScreens/APICalls/signCalls";
+
+const CloudName = process.env.REACT_APP_CLOUDNAME;
+
+function Modal({
+  toggleModal,
+  ImgURL,
+  profilePic,
+  picUsername,
+  comments,
+  getComments,
+  postId,
+}) {
+  const userId = isAuthenticated().user._id;
+  const token = isAuthenticated().token;
+
+  const [newComment, setNewComment] = useState("");
+
+  const sendComment = async () => {
+    await postComment(userId, postId, token, newComment)
+      .then((res) => {
+        setNewComment("");
+      })
+      .catch((err) => {
+        console.log("Not able to post comment");
+        console.log("ERR:", { ...err }.response);
+      });
+
+    await getComments();
+  };
+
   return (
     <div>
       <div className="row ">
@@ -14,22 +43,41 @@ function Modal() {
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center center",
-            backgroundImage: `url(http://res.cloudinary.com/gonfreak/image/upload/v1596714906/InstaClone/a4cd47d7-3a99-4993-8417-bff4cfb5de5f.jpg)`,
+            backgroundImage: `url(${ImgURL})`,
           }}
         ></div>
         <div className="col-md-5 col-lg-5 col-xl-5 col-sm-12 pr-0">
-          <div class="text-right">
-            <i class="fas fa-times fa-lg m-2 " data-dismiss="modal" />
+          <div class="text-right ">
+            <i
+              class="fas fa-times fa-lg m-2 "
+              data-dismiss="modal"
+              onClick={() => toggleModal}
+            />
           </div>
+          <div>
+            <Image
+              className="mr-2 mt-0"
+              cloudName={CloudName}
+              loading="lazy"
+              publicId={profilePic}
+            >
+              <Transformation
+                width="45"
+                height="45"
+                radius="max"
+                gravity="face"
+                crop="fill"
+              />
+              <Placeholder type="pixelate" />
+            </Image>
 
-          <img
-            src={user}
-            style={{ borderRadius: "50%" }}
-            height={50}
-            width={50}
-          />
-
-          <span style={{ fontWeight: "500" }}> Sasuke Uchiha</span>
+            <span
+              className="vertical-align-center"
+              style={{ fontWeight: "500" }}
+            >
+              {picUsername}
+            </span>
+          </div>
           <hr />
           <div
             className="Comments mt-2"
@@ -40,11 +88,18 @@ function Modal() {
               height: "30vh",
             }}
           >
-            <ModalComments />
-            <ModalComments />
-            <ModalComments />
+            {comments === undefined
+              ? null
+              : comments.map((comment) => (
+                  <ModalComments
+                    key={comment._id}
+                    comment={comment}
+                    getComments={getComments}
+                    postId={postId}
+                  />
+                ))}
           </div>
-          <hr />
+          <hr className="mb-0" />
 
           <div class="input-group mb-3">
             <input
@@ -52,6 +107,11 @@ function Modal() {
               class="form-control"
               placeholder="Add a Comment"
               style={{ border: "1px solid grey" }}
+              value={newComment}
+              onChange={(e) => {
+                e.preventDefault();
+                setNewComment(e.target.value);
+              }}
             />
             <div class="input-group-append" style={{ border: "none" }}>
               <span
@@ -61,7 +121,9 @@ function Modal() {
                   border: "none",
                   fontWeight: "500",
                   color: "blue",
+                  cursor: "pointer",
                 }}
+                onClick={() => (newComment.length == 0 ? null : sendComment())}
               >
                 Post
               </span>

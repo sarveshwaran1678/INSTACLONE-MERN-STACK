@@ -1,9 +1,5 @@
-const User = require("../models/user");
-const Post = require("../models/post");
 const Comment = require("../models/comment");
 const Reply = require("../models/reply");
-const { result } = require("lodash");
-const { check } = require("express-validator");
 
 exports.getCommentById = (req, res, next, id) => {
   Comment.findById(id).exec((err, comment) => {
@@ -132,6 +128,7 @@ exports.createReply = async (req, res) => {
   const reply = new Reply(req.body);
   reply.CommentId = req.comment._id;
   reply.UserId = req.profile._id;
+
   await reply.save((err, reply) => {
     if (err) {
       return res.status(500).send({
@@ -160,7 +157,7 @@ exports.getAllReplyByUser = async (req, res) => {
 exports.getAllReplyByCommentId = async (req, res) => {
   await Reply.find({ CommentId: req.comment })
     .then((replies) => {
-      return res.status(201).json({ replies });
+      return res.status(201).json(replies);
     })
     .catch((err) => {
       return res.status(500).json({ error: err });

@@ -47,7 +47,7 @@ function ProfileDetails() {
 
   return (
     <div
-      className="row ml-2 mb-3 "
+      className="row ml-2 mb-2 "
       style={{ overflowY: "visible", fontWeight: "500" }}
     >
       <div className="col-3 text-right" style={{ paddingRight: "0" }}>
@@ -57,8 +57,8 @@ function ProfileDetails() {
           publicId={userDetails.profilePicPath}
         >
           <Transformation
-            height="60"
-            width="60"
+            height="75"
+            width="75"
             gravity="face"
             crop="fill"
             radius="max"

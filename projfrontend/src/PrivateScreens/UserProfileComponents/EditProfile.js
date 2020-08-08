@@ -59,10 +59,8 @@ function EditProfile() {
         <div class='row text-center' style={{ minHeight: '66vh' }}>
             <ToastContainer />
             {Notify()}
-
-            <div class='col-md-1 d-none d-md-block' />
             <div
-                class='col-md-9 text-center col-sm-6 col-12'
+                class='col-md-9 text-center col-sm-6 col-12 mx-auto'
                 style={{
                     marginTop: '3.5vh',
                     minWidth: '300px',
@@ -77,28 +75,6 @@ function EditProfile() {
                     {({ errors, values, setFieldValue }) => (
                         <Form>
                             <div className='text-left my-4'>
-                                {/* <label htmlFor='file'>
-                                    <img
-                                        src={
-                                            content === undefined
-                                                ? post
-                                                : content
-                                        }
-                                        style={{ borderRadius: '50%' }}
-                                        height={60}
-                                        width={60}
-                                    />
-
-                                </label>
-                                <input
-                                    id='file'
-                                    name='file'
-                                    type='file'
-                                    onChange={(event) => {
-                                        handleChangeFile(event.target.files[0]);
-                                    }}
-                                    style={{ display: 'none' }}
-                                /> */}
                                 <img
                                     src={content === undefined ? post : content}
                                     style={{ borderRadius: '50%' }}

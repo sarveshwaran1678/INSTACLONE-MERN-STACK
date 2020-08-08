@@ -15,7 +15,9 @@ exports.getNotifications = async (req, res) => {
 
 exports.searchUsers = async (req, res) => {
   let search = req.body.searchTerm;
+
   let val = new RegExp(`^${search}|${search}$|${search}`, "gi");
+
   await User.find({ username: { $regex: val } })
     .select("username profilePicPath ")
     .then((result) => {

@@ -371,7 +371,7 @@ exports.getAllFollowingStory = async (req, res) => {
             cloudinary.uploader.destroy(deletedpicture.picturePath, function (
               result
             ) {
-              console.log("deleted from cloud");
+              //console.log("deleted from cloud");
             });
           });
         }

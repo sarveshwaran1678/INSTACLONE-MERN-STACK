@@ -5,86 +5,88 @@ import '../../userfeed.css';
 import Modal from '../UserFeedComponents/Modal';
 function UserPosts() {
     return (
-        <div className='row mt-4'>
-            <div
-                className='col-4 mb-3'
-                style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                <img
-                    src={post}
-                    width='100%'
-                    data-toggle='modal'
-                    data-target='#exampleModal'
-                />
-            </div>
-
-            <div
-                className='col-4 mb-3'
-                style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                <img
-                    src={post}
-                    width='100%'
-                    data-toggle='modal'
-                    data-target='#exampleModal'
-                />
-            </div>
-            <div
-                className='col-4 mb-3'
-                style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                <img
-                    src={post}
-                    width='100%'
-                    data-toggle='modal'
-                    data-target='#exampleModal'
-                />
-            </div>
-            <div
-                className='col-4 mb-3'
-                style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                <img
-                    src={post}
-                    width='100%'
-                    data-toggle='modal'
-                    data-target='#exampleModal'
-                />
-            </div>
-
-            <div
-                className='col-4 mb-3'
-                style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                <img
-                    src={post}
-                    width='100%'
-                    data-toggle='modal'
-                    data-target='#exampleModal'
-                />
-            </div>
-            <div
-                className='col-4 mb-3'
-                style={{ paddingLeft: '5px', paddingRight: '5px' }}>
-                <img
-                    src={post}
-                    width='100%'
-                    data-toggle='modal'
-                    data-target='#exampleModal'
-                />
-            </div>
-            <div
-                class='modal fade bd-example-modal-lg '
-                id='exampleModal'
-                tabindex='-1'
-                role='dialog'
-                aria-labelledby='exampleModalLabel'
-                aria-hidden='true'>
+        <div className='container'>
+            <div className='row mt-4'>
                 <div
-                    class='modal-dialog modal-lg'
-                    role='document'
-                    style={{
-                        width: '100%',
-                        maxWidth: '800px',
-                    }}>
-                    <div class='modal-content '>
-                        <div class='modal-body '>
-                            <Modal className='' />
+                    className='col-4 mb-3'
+                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                    <img
+                        src={post}
+                        width='100%'
+                        data-toggle='modal'
+                        data-target='#exampleModal'
+                    />
+                </div>
+
+                <div
+                    className='col-4 mb-3'
+                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                    <img
+                        src={post}
+                        width='100%'
+                        data-toggle='modal'
+                        data-target='#exampleModal'
+                    />
+                </div>
+                <div
+                    className='col-4 mb-3'
+                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                    <img
+                        src={post}
+                        width='100%'
+                        data-toggle='modal'
+                        data-target='#exampleModal'
+                    />
+                </div>
+                <div
+                    className='col-4 mb-3'
+                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                    <img
+                        src={post}
+                        width='100%'
+                        data-toggle='modal'
+                        data-target='#exampleModal'
+                    />
+                </div>
+
+                <div
+                    className='col-4 mb-3'
+                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                    <img
+                        src={post}
+                        width='100%'
+                        data-toggle='modal'
+                        data-target='#exampleModal'
+                    />
+                </div>
+                <div
+                    className='col-4 mb-3'
+                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                    <img
+                        src={post}
+                        width='100%'
+                        data-toggle='modal'
+                        data-target='#exampleModal'
+                    />
+                </div>
+                <div
+                    class='modal fade bd-example-modal-lg '
+                    id='exampleModal'
+                    tabindex='-1'
+                    role='dialog'
+                    aria-labelledby='exampleModalLabel'
+                    aria-hidden='true'>
+                    <div
+                        class='modal-dialog modal-lg'
+                        role='document'
+                        style={{
+                            width: '100%',
+                            maxWidth: '800px',
+                        }}>
+                        <div class='modal-content '>
+                            <div class='modal-body '>
+                                <Modal className='' />
+                            </div>
                         </div>
                     </div>
                 </div>

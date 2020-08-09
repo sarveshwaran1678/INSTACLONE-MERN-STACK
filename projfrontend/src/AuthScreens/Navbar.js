@@ -45,7 +45,7 @@ function Navbar() {
           </ul>
           <span>
             <i class="far fa-bell fa-lg ml-2 mr-3"></i>
-            <Link to="/signin">
+            <Link to="/">
               <i
                 class="far fas fa-sign-out-alt fa-lg d-md-none mr-1"
                 onClick={() =>
@@ -70,29 +70,30 @@ function Navbar() {
                 class="dropdown-menu  mt-3"
                 aria-labelledby="dropdownMenuButton"
               >
-                <Link to="/profile">
-                  <a
-                    class="dropdown-item text-dark"
-                    href="#"
-                    style={{
-                      fontWeight: "500",
-                      letterSpacing: "0.75px",
-                    }}
-                  >
-                    <i class="fas fa-user-circle mr-2 text-dark"></i>
-                    Profile
-                  </a>
-                </Link>
-                <a
-                  class="dropdown-item"
+                <Link
+                  to="/profile"
+                  class="dropdown-item text-dark"
                   href="#"
                   style={{
                     fontWeight: "500",
                     letterSpacing: "0.75px",
                   }}
                 >
+                  <i class="fas fa-user-circle mr-2 text-dark"></i>
+                  Profile
+                </Link>
+
+                <Link
+                  to="/settings"
+                  class="dropdown-item"
+                  href=""
+                  style={{
+                    fontWeight: "500",
+                    letterSpacing: "0.75px",
+                  }}
+                >
                   <i class="fas fa-cog mr-2"></i>Setting
-                </a>
+                </Link>
                 <hr style={{ margin: "0" }} />
                 <a
                   class="dropdown-item"

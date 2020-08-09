@@ -73,3 +73,26 @@ export const postComment = (userId, picId, token, commentBody) => {
     },
   });
 };
+
+export const getAllReplies = (userId, commentId, token) => {
+  return axios({
+    method: "get",
+    url: `${BackendUrl}/reply/getAllReplyByCommentId/${userId}/${commentId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const postReply = (userId, commentId, token, replyBody) => {
+  return axios({
+    method: "post",
+    url: `${BackendUrl}/reply/createReply/${userId}/${commentId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: {
+      replyBody,
+    },
+  });
+};

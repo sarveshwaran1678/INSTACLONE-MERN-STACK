@@ -81,7 +81,7 @@ function UserFeed() {
                 <div
                     className='col-lg-4 col-md-5 col-xl-4 d-lg-block d-md-block d-none'
                     style={{ maxWidth: '350px' }}>
-                    <Link to='/profile'>
+                    <Link to='/profile' style={{ textDecoration: 'none' }}>
                         <div
                             className='User text-dark'
                             style={{ marginTop: '5vh' }}>

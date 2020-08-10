@@ -11,13 +11,14 @@ function UploadPicModal({ src1, handleSubmit, handleNext, next }) {
                         <div class='text-right'>
                             <i
                                 class='fas fa-times fa-lg mr-2 d-md-inline text-dark'
-                                data-dismiss='modal'></i>
+                                data-dismiss='modal'
+                                style={{ cursor: 'pointer' }}></i>
                         </div>
                         <div style={{ fontWeight: 500 }}>New Post</div>
 
                         <div
                             className='text-primary'
-                            style={{ fontWeight: 500 }}
+                            style={{ fontWeight: 500, cursor: 'pointer' }}
                             onClick={handleNext}>
                             Next
                         </div>
@@ -104,6 +105,7 @@ function UploadPicModal({ src1, handleSubmit, handleNext, next }) {
                             <i
                                 class='fas fa-angle-left fa-lg m-2 d-md-inline text-left'
                                 onClick={handleNext}
+                                style={{ cursor: 'pointer' }}
                             />
                         </div>
 
@@ -111,7 +113,7 @@ function UploadPicModal({ src1, handleSubmit, handleNext, next }) {
 
                         <div
                             className='text-primary'
-                            style={{ fontWeight: 500 }}
+                            style={{ fontWeight: 500, cursor: 'pointer' }}
                             onClick={handleSubmit}
                             data-dismiss='modal'>
                             Post

@@ -6,8 +6,10 @@ import { signout } from './APICalls/signCalls';
 import UploadPicModal from './UploadPicModal';
 
 function Navbar() {
+    var show = false;
     const [content, setContent] = useState(undefined);
     const [next, setNext] = useState(false);
+
     const ShowUpload = () => (
         <div>
             <i className='fas fa-times fa-lg ml-3 mr-3 text-danger'></i>
@@ -37,6 +39,9 @@ function Navbar() {
     };
     const handleChangeFile = (file) => {
         let fileData = new FileReader();
+        fileData.onloadstart = () => {
+            return;
+        };
         fileData.onloadend = handleFile;
         fileData.readAsDataURL(file);
     };
@@ -139,7 +144,7 @@ function Navbar() {
                     <div>
                         <label htmlFor='file1'>
                             <i
-                                class='fas fa-plus-circle fa-lg'
+                                class='fas fa-plus fa-lg'
                                 style={{ color: '#262626' }}></i>
                         </label>
 
@@ -180,13 +185,24 @@ function Navbar() {
             {/* MobileNavbar Closed */}
 
             {/* Modal */}
+
             <div
                 class='modal fade bd-example-modal-lg '
                 id='upload'
                 tabindex='-1'
                 role='dialog'
                 aria-labelledby='exampleModalLabel'
-                aria-hidden='true'>
+                aria-hidden='true'
+                style={{ overflow: 'hidden' }}>
+                <div
+                    class='text-right m-2'
+                    style={{ position: 'absolute', right: '0' }}>
+                    <i
+                        class='fas fa-times fa-lg'
+                        data-dismiss='modal'
+                        style={{ color: 'white' }}
+                    />
+                </div>
                 <div
                     class='modal-dialog modal-lg modal-dialog-centered '
                     role='document'
@@ -197,19 +213,20 @@ function Navbar() {
                     <div
                         class='modal-content '
                         style={{ border: 'none', borderRadius: '0' }}>
-                        <div class='modal-body p-0'>
-                            {content != undefined ? (
+                        {content !== undefined ? (
+                            <div class='modal-body p-0'>
                                 <UploadPicModal
                                     src1={content}
                                     handleSubmit={handleSubmit}
                                     handleNext={handleNext}
                                     next={next}
                                 />
-                            ) : null}
-                        </div>
+                            </div>
+                        ) : null}
                     </div>
                 </div>
             </div>
+
             {/* ModalClosed */}
         </div>
     );

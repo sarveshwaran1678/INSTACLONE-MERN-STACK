@@ -127,7 +127,7 @@ function UserStories({ story, index }) {
                                 {showModal ? (
                                     <StoryModal picPath={picPath} />
                                 ) : null}
-                            </div>{' '}
+                            </div>
                         </div>
                     </div>
                 </div>

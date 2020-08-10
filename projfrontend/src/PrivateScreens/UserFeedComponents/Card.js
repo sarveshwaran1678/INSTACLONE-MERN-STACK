@@ -147,6 +147,7 @@ function Card({ feed }) {
             cloudName={CloudName}
             loading="lazy"
             publicId={otherUserDetails.profilePic}
+            style={{ filter: `${feed.filter}` }}
           >
             <Transformation
               width="40"
@@ -166,6 +167,7 @@ function Card({ feed }) {
           className="card-img-top"
           cloudName={CloudName}
           loading="lazy"
+          style={{ filter: `${feed.filter}` }}
           publicId={feedDetails.ImgPath}
           data-toggle="modal"
           data-target={`#exampleModal${feedDetails.id}`}
@@ -245,6 +247,7 @@ function Card({ feed }) {
                       comments={feedDetails.comments}
                       getComments={getComments}
                       postId={feedDetails.id}
+                      filter={feed.filter}
                     />
                   ) : null}
                 </div>

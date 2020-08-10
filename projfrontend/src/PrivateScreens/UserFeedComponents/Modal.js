@@ -15,6 +15,7 @@ function Modal({
   comments,
   getComments,
   postId,
+  filter,
 }) {
   const userId = isAuthenticated().user._id;
   const token = isAuthenticated().token;
@@ -53,6 +54,7 @@ function Modal({
                 className="mr-2 mt-0"
                 cloudName={CloudName}
                 loading="lazy"
+                style={{ filter: `${filter}` }}
                 publicId={profilePic}
               >
                 <Transformation

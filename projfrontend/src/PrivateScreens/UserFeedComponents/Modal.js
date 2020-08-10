@@ -98,6 +98,9 @@ function Modal({
                                   />
                               ))}
                     </div>
+                    {/* {comments.length === 0 ? (
+                        <div>Be the first one to comment !</div>
+                    ) : null} */}
                     <hr className='mb-0' />
 
                     <div class='input-group mb-3'>

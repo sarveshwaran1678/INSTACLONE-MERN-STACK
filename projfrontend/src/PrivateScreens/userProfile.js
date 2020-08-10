@@ -160,13 +160,13 @@ function UserProfile() {
                         />
                     </div>
                 </div>
-                <div className='container'>
-                    <div className='row'>
-                        <div className='col-12 col-md-10 mx-auto'>
-                            <UserPosts />
-                        </div>
-                    </div>
-                </div>
+
+                <hr
+                    className='mt-0'
+                    style={{ borderTop: '1.75px solid rgba(0,0,0,.1)' }}
+                />
+
+                <UserPosts />
             </div>
         </div>
     );

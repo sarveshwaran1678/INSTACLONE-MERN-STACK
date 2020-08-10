@@ -190,7 +190,8 @@ function Card({ feed }) {
                                 color: '#28a745',
                             }}
                             data-toggle='modal'
-                            data-target={`#exampleModal${feedDetails.id}`}></i>
+                            data-target={`#exampleModal${feedDetails.id}`}
+                            onClick={() => setShowModal(true)}></i>
                     </h5>
 
                     <p class='card-text'>{likeState.likeCount} likes</p>
@@ -202,7 +203,8 @@ function Card({ feed }) {
                                 href=''
                                 data-toggle='modal'
                                 data-target={`#exampleModal${feedDetails.id}`}
-                                style={{ textDecoration: 'none' }}>
+                                style={{ textDecoration: 'none' }}
+                                onClick={() => setShowModal(true)}>
                                 View all {feedDetails.commentCount} comments
                             </a>
                         </p>

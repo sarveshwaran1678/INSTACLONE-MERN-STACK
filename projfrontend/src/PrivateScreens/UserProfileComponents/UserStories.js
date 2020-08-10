@@ -30,7 +30,7 @@ export default function UserStories() {
         setStory(e.target.result);
     };
     const handleChangeFile = (file) => {
-        if (file.size > 5120) {
+        if (file.size > 5000000) {
             toast(<LargeFile />);
         } else {
             let fileData = new FileReader();

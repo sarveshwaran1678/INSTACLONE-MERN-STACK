@@ -7,12 +7,11 @@ import { postStory } from './APICalls';
 function UploadStoryModal({ src }) {
     const userId = isAuthenticated().user._id;
     const token = isAuthenticated().token;
+    const [phase, setPhase] = useState();
     const [filter, setFilter] = useState('original');
-    const [phase, setPhase] = useState('');
 
     const toastId = React.useRef(null);
     const dismiss = () => toast.dismiss(toastId.current);
-
     const Uploading = () => (
         <div>
             <span
@@ -21,67 +20,78 @@ function UploadStoryModal({ src }) {
                     fontWeight: '500',
                     color: '#a2acba',
                 }}>
-                {phase}
+                Uploading
             </span>
             <i className='fas fa-spinner fa-spin fa-lg  ml-3 text-success'></i>
         </div>
     );
+
     const Uploaded = () => (
         <div>
             <span
                 style={{
                     fontFamily: 'Montserrat',
                     fontWeight: '500',
-                    color: '#a2acba',
                 }}>
-                {phase}
+                Uploaded Successfully
             </span>
             <i className='fas fa-check  fa-lg  ml-3 text-success'></i>
         </div>
     );
+
+    const Failed = () => (
+        <div>
+            <span
+                style={{
+                    fontFamily: 'Montserrat',
+                    fontWeight: '500',
+                }}>
+                Upload Failed
+            </span>
+            <i className='fas fa-check  fa-lg  ml-3 text-success'></i>
+        </div>
+    );
+
     const Notify = () => {
-        if (phase === 'Uploading') {
+        if (phase === 0) {
             toast(<Uploading />, {
                 autoClose: false,
             });
-        }
-        if (phase === 'Uploaded Successfully') {
+        } else if (phase === 1) {
             dismiss();
             toast(<Uploaded />);
+        } else if (phase === 2) {
+            dismiss();
+            toast(<Failed />);
         }
     };
-    const handleSubmit = async (e) => {
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-
         let formData = new FormData();
-
         formData.append('picturePath', src);
         formData.append('filter', filter);
-        setPhase('Uploading');
-        await postStory(userId, token, formData)
+
+        setPhase(0);
+        postStory(userId, token, formData)
             .then((res) => {
-                console.log(res.data);
-                console.log('Succesfully uploaded story');
+                setPhase(1);
+                // console.log(res.data);
+                // console.log('Succesfully uploaded story');
             })
             .catch((err) => {
+                setPhase(2);
+
                 console.log('Not able to post story');
                 console.log('ERR:', { ...err }.response);
             });
-        setPhase('Uploaded Successfully');
     };
 
     return (
         <div>
-            <ToastContainer
-                limit={1}
-                autoClose={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-            />
+            <ToastContainer limit={1} />
             {Notify()}
+
             <div class='d-flex justify-content-between m-3 text-left'>
                 <div class='text-right'>
                     <i

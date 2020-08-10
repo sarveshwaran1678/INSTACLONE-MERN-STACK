@@ -10,8 +10,6 @@ import {
 import { isAuthenticated } from "../../AuthScreens/APICalls/signCalls";
 import Modal from "./Modal";
 
-const func = createContext();
-
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
 function Card({ feed }) {
@@ -78,8 +76,9 @@ function Card({ feed }) {
           profilePic: res.data.profilePicPath,
         });
       })
-      .catch(() => {
+      .catch((err) => {
         console.log("Not able to get Username for stories");
+        console.log("ERR:", { ...err }.response);
       });
   };
 

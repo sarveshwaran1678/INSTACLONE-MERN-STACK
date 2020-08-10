@@ -15,7 +15,8 @@ const {
   getAllYourPost,
   getAllAnotherPost,
 } = require("../controllers/post");
-const { getAllCommentsByPost } = require("../controllers/comment");
+
+//const { getAllCommentsByPost } = require("../controllers/comment");
 
 const { removeAllCommentWithReply } = require("../controllers/comment");
 

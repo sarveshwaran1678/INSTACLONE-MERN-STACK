@@ -10,7 +10,7 @@ import ResetPassword from "./AuthScreens/ResetPassword";
 import UserFeed from "./PrivateScreens/userFeed";
 import SignInBySignUp from "./AuthScreens/SignInBySignUp";
 import userProfile from "./PrivateScreens/userProfile";
-import UserSettings from "./PrivateScreens/UserProfileComponents/UserSettings";
+import UserSettings from "./PrivateScreens/UserSettingComponents/UserSettings";
 
 const Routes = () => {
   return (

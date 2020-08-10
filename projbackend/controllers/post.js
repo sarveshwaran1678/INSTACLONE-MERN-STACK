@@ -199,41 +199,41 @@ exports.uploadStory = async (req, res) => {
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
 
-  form.parse(req, function (error, fields, file) {
-    const path = file.picturePath.path;
+  form.parse(req, function (error, fields) {
+    const path = fields.picturePath;
     const uniqueFilename = uuidv4();
     const picture = new Post(fields);
 
-    if (path.match(/\.(jpg|jpeg|png)$/) && file.picturePath.size < 5000000) {
-      cloudinary.uploader.upload(
-        path,
-        {
-          public_id: `InstaClone/${uniqueFilename}`,
-          tags: `InstaClone`,
-        }, // directory and tags are optional
+    // if (file.picturePath.size < 5000000) {
+    cloudinary.uploader.upload(
+      path,
+      {
+        public_id: `InstaClone/${uniqueFilename}`,
+        tags: `InstaClone`,
+      }, // directory and tags are optional
 
-        async function (err, image) {
-          if (err) return res.send(err);
-          console.log("file uploaded to Cloudinary");
-          picture.isStory = true;
-          picture.UserId = req.profile._id;
-          picture.picturePath = image.public_id;
-          picture.pictureUrl = image.url;
-          await picture.save((err, picture) => {
-            if (err) {
-              res.status(400).json({
-                error: err,
-              });
-            }
-            return res.json(picture);
-          });
-        }
-      );
-    } else {
-      return res.json({
-        error: "Invalid File Type",
-      });
-    }
+      async function (err, image) {
+        if (err) return res.send(err);
+        console.log("file uploaded to Cloudinary");
+        picture.isStory = true;
+        picture.UserId = req.profile._id;
+        picture.picturePath = image.public_id;
+        picture.pictureUrl = image.url;
+        await picture.save((err, picture) => {
+          if (err) {
+            res.status(400).json({
+              error: err,
+            });
+          }
+          return res.json(picture);
+        });
+      }
+    );
+    // } else {
+    //   return res.json({
+    //     error: "Invalid File Type",
+    //   });
+    // }
   });
 };
 
@@ -387,6 +387,7 @@ exports.getAllFollowingStory = async (req, res) => {
       return res.status(200).send(posts);
     });
 };
+
 //get all of your post
 exports.getAllYourPost = async (req, res) => {
   await Post.find({ UserId: req.profile._id, isStory: false })

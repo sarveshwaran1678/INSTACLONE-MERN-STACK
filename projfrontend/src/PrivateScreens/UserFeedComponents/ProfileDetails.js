@@ -60,6 +60,7 @@ function ProfileDetails() {
                         gravity='face'
                         crop='fill'
                         radius='max'
+                        flags={['preserve_transparency']}
                     />
                     <Placeholder type='pixelate' />
                 </Image>

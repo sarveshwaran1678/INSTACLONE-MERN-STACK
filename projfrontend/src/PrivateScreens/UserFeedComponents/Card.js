@@ -193,6 +193,7 @@ function Card({ feed }) {
               }}
               data-toggle="modal"
               data-target={`#exampleModal${feedDetails.id}`}
+              onClick={() => setShowModal(true)}
             ></i>
           </h5>
 
@@ -206,6 +207,7 @@ function Card({ feed }) {
                 data-toggle="modal"
                 data-target={`#exampleModal${feedDetails.id}`}
                 style={{ textDecoration: "none" }}
+                onClick={() => setShowModal(true)}
               >
                 View all {feedDetails.commentCount} comments
               </a>

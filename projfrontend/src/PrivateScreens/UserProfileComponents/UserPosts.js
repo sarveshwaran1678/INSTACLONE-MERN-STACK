@@ -5,11 +5,14 @@ import '../../userfeed.css';
 import Modal from '../UserFeedComponents/Modal';
 function UserPosts() {
     return (
-        <div className='container'>
+        <div className='container mx-auto'>
+            <div className='text-center'>
+                <i class='fas fa-th fa-lg mr-2'></i>
+                <span style={{ fontWeight: '500' }}>POST'S</span>
+            </div>
+
             <div className='row mt-4'>
-                <div
-                    className='col-4 mb-3'
-                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                <div className='col-4 mb-3'>
                     <img
                         src={post}
                         width='100%'
@@ -18,9 +21,7 @@ function UserPosts() {
                     />
                 </div>
 
-                <div
-                    className='col-4 mb-3'
-                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                <div className='col-4 mb-3'>
                     <img
                         src={post}
                         width='100%'
@@ -28,9 +29,7 @@ function UserPosts() {
                         data-target='#exampleModal'
                     />
                 </div>
-                <div
-                    className='col-4 mb-3'
-                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                <div className='col-4 mb-3'>
                     <img
                         src={post}
                         width='100%'
@@ -38,9 +37,7 @@ function UserPosts() {
                         data-target='#exampleModal'
                     />
                 </div>
-                <div
-                    className='col-4 mb-3'
-                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                <div className='col-4 mb-3'>
                     <img
                         src={post}
                         width='100%'
@@ -49,9 +46,7 @@ function UserPosts() {
                     />
                 </div>
 
-                <div
-                    className='col-4 mb-3'
-                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                <div className='col-4 mb-3'>
                     <img
                         src={post}
                         width='100%'
@@ -59,9 +54,7 @@ function UserPosts() {
                         data-target='#exampleModal'
                     />
                 </div>
-                <div
-                    className='col-4 mb-3'
-                    style={{ paddingLeft: '5px', paddingRight: '5px' }}>
+                <div className='col-4 mb-3'>
                     <img
                         src={post}
                         width='100%'

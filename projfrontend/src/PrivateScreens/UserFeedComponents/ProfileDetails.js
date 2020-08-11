@@ -71,9 +71,9 @@ function ProfileDetails() {
                 {/*  <img src={post} style={{ borderRadius: "50%" }} height={50} />*/}
             </div>
             <div className='col-7 text-left mt-2'>
-                <span>{userDetails.username}</span>
-                <br />
                 <span>{userDetails.name}</span>
+                <br />
+                <span style={{ color: '#a2acba' }}>{userDetails.username}</span>
             </div>
         </div>
     );

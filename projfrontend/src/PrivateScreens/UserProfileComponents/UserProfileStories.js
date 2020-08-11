@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Image, Transformation, Placeholder } from 'cloudinary-react';
+
 import post from '../../Images/mayank.jpg';
 import UploadStoryModal from './UploadStoryModal';
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
-export default function UserProfileStories({ myOwn }) {
+export default function UserProfileStories({ myOwn, isAllowedToShow }) {
     const [story, setStory] = useState(undefined);
     const [showModal, setShowModal] = useState(false);
     const LargeFile = () => (
@@ -43,14 +44,16 @@ export default function UserProfileStories({ myOwn }) {
     };
     const StoryModal = ({ picPath }) => {
         return (
-            <Image
-                className='m-1 d-block w-100'
-                cloudName={CloudName}
-                loading='lazy'
-                publicId={picPath}>
-                <Transformation gravity='auto' crop='fill' quality='auto' />
-                <Placeholder type='pixelate' />
-            </Image>
+            <div>
+                <Image
+                    className='m-1 d-block w-100 '
+                    cloudName={CloudName}
+                    loading='lazy'
+                    publicId={picPath}>
+                    <Transformation gravity='auto' crop='fill' quality='auto' />
+                    <Placeholder type='pixelate' />
+                </Image>
+            </div>
         );
     };
 
@@ -101,7 +104,7 @@ export default function UserProfileStories({ myOwn }) {
                 <div
                     className='justify-content-center align-items-center'
                     data-toggle='modal'
-                    data-target={`#testStory`}
+                    data-target={`#userStory`}
                     onClick={() => setShowModal(true)}>
                     <figure className='text-center'>
                         <img
@@ -196,7 +199,7 @@ export default function UserProfileStories({ myOwn }) {
             </div>
             <div
                 class='modal fade bd-example-modal-lg'
-                id={`testStory`}
+                id={`userStory`}
                 tabindex='-1'
                 role='dialog'
                 aria-labelledby='exampleModalLabel'
@@ -217,14 +220,11 @@ export default function UserProfileStories({ myOwn }) {
                         }}>
                         <div class='modal-body p-0 w-100'>
                             <div
+                                class=''
                                 data-dismiss='modal'
                                 onClick={() => setShowModal(false)}>
                                 {showModal ? (
-                                    <StoryModal
-                                        picPath={
-                                            'InstaClone/c75d9bf8-2129-4ae9-828f-3e559cce63d6'
-                                        }
-                                    />
+                                    <StoryModal picPath='InstaClone/177512b4-7e80-43ba-84cf-fa0fddb523f7' />
                                 ) : null}
                             </div>
                         </div>

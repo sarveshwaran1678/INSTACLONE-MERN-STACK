@@ -12,3 +12,23 @@ export const postStory = (userId, token, formData) => {
     data: formData,
   });
 };
+
+export const getAllYourPost = (userId, token) => {
+  return axios({
+    method: "get",
+    url: `${BackendUrl}/picture/getYourAllPost/${userId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getAllAnotherPost = (anotherUserId, userId, token) => {
+  return axios({
+    method: "get",
+    url: `${BackendUrl}/picture/getAnotherAllPost/${userId}/${anotherUserId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

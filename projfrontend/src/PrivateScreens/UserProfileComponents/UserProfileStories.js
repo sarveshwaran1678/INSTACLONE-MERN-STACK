@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import post from "../../Images/mayank.jpg";
 import UploadStoryModal from "./UploadStoryModal";
 
-export default function UserProfileStories({ myOwn }) {
+export default function UserProfileStories({ myOwn, isAllowedToShow }) {
   const [story, setStory] = useState(undefined);
   const LargeFile = () => (
     <div>

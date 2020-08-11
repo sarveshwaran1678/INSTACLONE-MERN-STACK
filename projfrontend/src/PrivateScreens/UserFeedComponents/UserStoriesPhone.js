@@ -50,7 +50,7 @@ function UserStoriesPhone({ story, index }) {
                         : {}
                 }
                 publicId={picPath}>
-                <Transformation gravity='face' crop='fill' />
+                <Transformation gravity='auto' crop='fill' quality='auto' />
                 <Placeholder type='pixelate' />
             </Image>
         );
@@ -58,7 +58,7 @@ function UserStoriesPhone({ story, index }) {
 
     return (
         <React.Fragment>
-            <div className='d-md-none d-lg-none justify-content-center align-items-center'>
+            <div className='d-md-none d-lg-none justify-content-center align-items-center '>
                 <div
                     data-toggle='modal'
                     data-target={`#exampleModalPhone${index}`}
@@ -90,8 +90,9 @@ function UserStoriesPhone({ story, index }) {
                             <Transformation
                                 height='65'
                                 width='65'
-                                gravity='face'
+                                gravity='auto'
                                 crop='fill'
+                                quality='auto'
                                 radius='max'
                                 flags={['preserve_transparency']}
                             />
@@ -130,7 +131,7 @@ function UserStoriesPhone({ story, index }) {
                                 {showModal ? (
                                     <StoryModal picPath={picPath} />
                                 ) : null}
-                            </div>{' '}
+                            </div>
                         </div>
                     </div>
                 </div>

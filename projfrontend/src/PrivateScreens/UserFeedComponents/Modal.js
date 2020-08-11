@@ -47,7 +47,7 @@ function Modal({
                         backgroundImage: `url(${ImgURL})`,
                     }}></div>
                 <div className='col-md-5 col-lg-5 col-xl-5 col-sm-12 pr-0'>
-                    <div class='d-flex justify-content-between m-2'>
+                    <div class='d-flex justify-content-between my-2 mr-2'>
                         <div>
                             <Image
                                 className='mr-2 mt-0'

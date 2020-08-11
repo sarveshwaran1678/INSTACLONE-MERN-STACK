@@ -77,7 +77,7 @@ function UserStories({ story, index }) {
                         : {}
                 }
                 publicId={picPath}>
-                <Transformation gravity='face' crop='fill' />
+                <Transformation gravity='auto' crop='fill' quality='auto' />
                 <Placeholder type='pixelate' />
             </Image>
         );
@@ -116,8 +116,9 @@ function UserStories({ story, index }) {
                             radius='max'
                             height='55'
                             width='55'
-                            gravity='face'
+                            gravity='auto'
                             crop='fill'
+                            quality='auto'
                             background='white'
                             flags={['preserve_transparency']}
                         />

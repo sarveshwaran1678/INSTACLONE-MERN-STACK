@@ -166,8 +166,9 @@ function Card({ feed }) {
                             width='40'
                             height='40'
                             radius='max'
-                            gravity='face'
+                            gravity='auto'
                             crop='fill'
+                            quality='auto'
                             flags={['preserve_transparency']}
                         />
                         <Placeholder type='pixelate' />
@@ -201,8 +202,9 @@ function Card({ feed }) {
                     data-target={`#exampleModal${feedDetails.id}`}
                     onClick={() => setShowModal(true)}>
                     <Transformation
-                        gravity='face'
+                        gravity='auto'
                         crop='fill'
+                        quality='auto'
                         flags={['preserve_transparency']}
                     />
                     <Placeholder type='pixelate' />

@@ -68,7 +68,7 @@ exports.uploadPost = async (req, res) => {
             async function (err, image) {
                 if (err) return res.send(err);
                 console.log('file uploaded to Cloudinary');
-                picture.isStory = true;
+                picture.isStory = false;
                 picture.UserId = req.profile._id;
                 picture.picturePath = image.public_id;
                 picture.pictureUrl = image.url;

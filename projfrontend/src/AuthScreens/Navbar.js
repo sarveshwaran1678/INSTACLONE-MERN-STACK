@@ -47,10 +47,16 @@ function Navbar() {
     };
 
     return (
-        <div style={{ borderBottom: '1px solid black', borderRadius: '5px' }}>
+        <div
+            className='fixed-top'
+            style={{
+                borderBottom: '1px solid black',
+                borderRadius: '5px',
+                background: 'white',
+            }}>
             <ToastContainer />
             <div class='container ' style={{ paddingRight: '0' }}>
-                <nav class='navbar navbar-expand-lg mx-auto'>
+                <nav class='navbar navbar-expand-lg mx-auto '>
                     <span class='navbar-brand'>
                         <Link
                             to='/userfeed'

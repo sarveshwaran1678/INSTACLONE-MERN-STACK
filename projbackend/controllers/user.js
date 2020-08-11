@@ -50,12 +50,11 @@ exports.getAnotherUser = (req, res) => {
   req.anotherProfile.encry_password = undefined;
   req.anotherProfile.createdAt = undefined;
   req.anotherProfile.updatedAt = undefined;
-  req.anotherProfile.followRequestPending = undefined;
+
   req.anotherProfile.followRequestSent = undefined;
   req.anotherProfile.updateNotification = undefined;
   req.anotherProfile.otpTimeout = undefined;
   req.anotherProfile.otpMatched = undefined;
-  //includes logic
 
   return res.json(req.anotherProfile);
 };

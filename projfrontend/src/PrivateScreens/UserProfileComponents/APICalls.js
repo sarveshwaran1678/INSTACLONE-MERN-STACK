@@ -32,3 +32,23 @@ export const getAllAnotherPost = (anotherUserId, userId, token) => {
     },
   });
 };
+
+export const getAllYourStories = (userId, token) => {
+  return axios({
+    method: "get",
+    url: `${BackendUrl}/picture/getYourStories/${userId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const getAllAnotherStories = (userId, anotherUserId, token) => {
+  return axios({
+    method: "get",
+    url: `${BackendUrl}/picture/getYourStories/${userId}/${anotherUserId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

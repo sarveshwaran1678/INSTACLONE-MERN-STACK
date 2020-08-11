@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import post from '../Images/mayank.jpg';
 function UploadPicModal({ src1, handleSubmit, handleNext, next }) {
     const [filter, setFilter] = useState('');
-
+    const [caption, setCaption] = useState('');
     return (
         <div>
             {next === false ? (
@@ -120,17 +120,6 @@ function UploadPicModal({ src1, handleSubmit, handleNext, next }) {
                         </div>
                     </div>
                     <hr className='m-0' />
-                    <div className='mx-3 my-1'>
-                        <img
-                            src={post}
-                            style={{
-                                borderRadius: '50%',
-                                height: '50px',
-                                width: '50px',
-                            }}
-                        />
-                        <span className='ml-2'>Write a Caption</span>
-                    </div>
 
                     <img
                         src={src1}
@@ -153,6 +142,19 @@ function UploadPicModal({ src1, handleSubmit, handleNext, next }) {
                                 : {}
                         }
                     />
+                    <div className='container'>
+                        <input
+                            type='text'
+                            class='form-control my-2'
+                            placeholder='Add Caption.......'
+                            value={caption}
+                            style={{ border: '1px solid grey' }}
+                            onChange={(e) => {
+                                e.preventDefault();
+                                setCaption(e.target.value);
+                            }}
+                        />
+                    </div>
                 </div>
             )}
         </div>

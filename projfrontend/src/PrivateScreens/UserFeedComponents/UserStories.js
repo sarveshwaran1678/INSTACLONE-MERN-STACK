@@ -57,36 +57,45 @@ function UserStories({ story, index }) {
 
     const StoryModal = ({ picPath }) => {
         return (
-            <Image
-                className='m-1 d-block w-100 '
-                cloudName={CloudName}
-                loading='lazy'
-                style={
-                    `${story.filter}` === 'sepia'
-                        ? { filter: 'sepia(1)' }
-                        : `${story.filter}` === 'grayscale'
-                        ? { filter: 'grayscale(1)' }
-                        : `${story.filter}` === 'saturate'
-                        ? { filter: 'saturate(2)' }
-                        : `${story.filter}` === 'blue'
-                        ? { filter: 'contrast(0.7) saturate(1.5)' }
-                        : `${story.filter}` === 'x'
-                        ? { filter: 'saturate(1.6) hue-rotate(15deg)' }
-                        : `${story.filter}` === 'y'
-                        ? { filter: 'hue-rotate(-20deg)' }
-                        : {}
-                }
-                publicId={picPath}>
-                <Transformation gravity='auto' crop='fill' quality='auto' />
-                <Placeholder type='pixelate' />
-            </Image>
+            <div>
+                <div class='text-right m-2' style={{}}>
+                    <i
+                        class='fas fa-times fa-lg'
+                        data-dismiss='modal'
+                        style={{ color: 'white' }}
+                    />
+                </div>
+                <Image
+                    className='m-1 d-block w-100 '
+                    cloudName={CloudName}
+                    loading='lazy'
+                    style={
+                        `${story.filter}` === 'sepia'
+                            ? { filter: 'sepia(1)' }
+                            : `${story.filter}` === 'grayscale'
+                            ? { filter: 'grayscale(1)' }
+                            : `${story.filter}` === 'saturate'
+                            ? { filter: 'saturate(2)' }
+                            : `${story.filter}` === 'blue'
+                            ? { filter: 'contrast(0.7) saturate(1.5)' }
+                            : `${story.filter}` === 'x'
+                            ? { filter: 'saturate(1.6) hue-rotate(15deg)' }
+                            : `${story.filter}` === 'y'
+                            ? { filter: 'hue-rotate(-20deg)' }
+                            : {}
+                    }
+                    publicId={picPath}>
+                    <Transformation gravity='auto' crop='fill' quality='auto' />
+                    <Placeholder type='pixelate' />
+                </Image>
+            </div>
         );
     };
 
     return (
         <React.Fragment>
             <div
-                className='row ml-0 mt-2 '
+                className='row ml-0 mt-1 '
                 data-toggle='modal'
                 data-target={`#exampleModal${index}`}
                 style={{ overflowY: 'visible', fontWeight: '500' }}

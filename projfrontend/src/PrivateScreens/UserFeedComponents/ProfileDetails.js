@@ -47,18 +47,22 @@ function ProfileDetails() {
 
     return (
         <div
-            className='row ml-2 mb-2 '
-            style={{ overflowY: 'visible', fontWeight: '500' }}>
+            className='row mb-3 '
+            style={{
+                overflowY: 'visible',
+                fontWeight: '500',
+            }}>
             <div className='col-3 text-right' style={{ paddingRight: '0' }}>
                 <Image
                     cloudName={CloudName}
                     loading='lazy'
                     publicId={userDetails.profilePicPath}>
                     <Transformation
-                        height='75'
-                        width='75'
-                        gravity='face'
+                        height='60'
+                        width='60'
+                        gravity='auto'
                         crop='fill'
+                        quality='auto'
                         radius='max'
                         flags={['preserve_transparency']}
                     />

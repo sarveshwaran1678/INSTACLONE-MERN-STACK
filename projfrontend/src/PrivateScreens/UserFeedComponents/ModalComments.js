@@ -108,8 +108,9 @@ function ModalComments({ comment, postId }) {
                         width='45'
                         height='45'
                         radius='max'
-                        gravity='face'
+                        gravity='auto'
                         crop='fill'
+                        quality='auto'
                         flags={['preserve_transparency']}
                     />
                     <Placeholder type='pixelate' />

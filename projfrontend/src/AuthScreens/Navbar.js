@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 
-import { signout } from './APICalls/signCalls';
+import { signout, isAuthenticated } from './APICalls/signCalls';
 import UploadPicModal from './UploadPicModal';
 
 function Navbar() {
+    const id = isAuthenticated().user._id;
+
     var show = false;
     const [content, setContent] = useState(undefined);
     const [next, setNext] = useState(false);
@@ -47,87 +49,95 @@ function Navbar() {
     };
 
     return (
-        <div
-            className='fixed-top'
-            style={{
-                borderBottom: '1px solid black',
-                borderRadius: '5px',
-                background: 'white',
-            }}>
+        <div>
             <ToastContainer />
-            <div class='container ' style={{ paddingRight: '0' }}>
-                <nav class='navbar navbar-expand-lg mx-auto '>
-                    <span class='navbar-brand'>
-                        <Link
-                            to='/userfeed'
-                            style={{ color: 'black', textDecoration: 'none' }}>
-                            <i class='fab fa-instagram fa-lg mr-2 d-md-inline text-dark'></i>
-                        </Link>
+            <div
+                style={{
+                    borderBottom: '1px solid black',
+                    borderRadius: '5px',
+                    background: 'white',
+                }}
+                className='fixed-top '>
+                <div class='container ' style={{ paddingRight: '0' }}>
+                    <nav class='navbar navbar-expand-lg mx-auto '>
+                        <span class='navbar-brand'>
+                            <Link
+                                to='/userfeed'
+                                style={{
+                                    color: 'black',
+                                    textDecoration: 'none',
+                                }}>
+                                <i class='fab fa-instagram fa-lg mr-2 d-md-inline text-dark'></i>
+                            </Link>
 
-                        <Link to='/userfeed'>
-                            <span
-                                style={{ fontWeight: '500' }}
-                                class='d-md-inline-block d-lg-inline-block text-dark'>
-                                InstaClone
-                            </span>
-                        </Link>
-                    </span>
-                    <ul class='navbar-nav mx-auto'>
-                        <li class='nav-item active '>
-                            <form class='form-inline  my-lg-0 d-none d-md-inline-block'>
-                                <input
-                                    class='form-control mr-sm-2'
-                                    type='search'
-                                    placeholder='Search'
-                                    aria-label='Search'
-                                    style={{
-                                        border: '1px solid black',
-                                        borderRadius: '5px',
-                                        width: '200px',
-                                    }}
-                                />
-                            </form>
-                        </li>
-                    </ul>
-                    <span>
-                        <i class='far fa-compass fa-lg ml-2 mr-3 d-none d-md-inline-block'></i>
-                        <i class='far fa-heart fa-lg ml-2 mr-3 d-none d-md-inline-block'></i>
-                        <Link to='/profile' style={{ color: 'black' }}>
-                            <i class='far fa-user-circle fa-lg ml-2 mr-3 d-none d-md-inline-block'></i>
-                        </Link>
-                        <label htmlFor='file1'>
-                            <i class='fas fa-camera-retro fa-lg ml-2 mr-3 d-none d-md-inline-block'></i>
-                        </label>
-                        <input
-                            id='file1'
-                            name='file'
-                            type='file'
-                            data-toggle='modal'
-                            data-target='#upload'
-                            accept='image/*'
-                            onClick={(event) => {
-                                reset();
-                                event.target.value = '';
-                            }}
-                            onChange={(event) => {
-                                handleChangeFile(event.target.files[0]);
-                            }}
-                            style={{ display: 'none' }}
-                        />
+                            <Link to='/userfeed'>
+                                <span
+                                    style={{ fontWeight: '500' }}
+                                    class='d-md-inline-block d-lg-inline-block text-dark'>
+                                    InstaClone
+                                </span>
+                            </Link>
+                        </span>
+                        <ul class='navbar-nav mx-auto'>
+                            <li class='nav-item active '>
+                                <form class='form-inline  my-lg-0 d-none d-md-inline-block'>
+                                    <input
+                                        class='form-control mr-sm-2'
+                                        type='search'
+                                        placeholder='Search'
+                                        aria-label='Search'
+                                        style={{
+                                            border: '1px solid black',
+                                            borderRadius: '5px',
+                                            width: '200px',
+                                        }}
+                                    />
+                                </form>
+                            </li>
+                        </ul>
+                        <span>
+                            <i class='far fa-compass fa-lg ml-2 mr-3 d-none d-md-inline-block'></i>
+                            <i class='far fa-heart fa-lg ml-2 mr-3 d-none d-md-inline-block'></i>
+                            <Link
+                                to={`/profile/${id}`}
+                                style={{ color: 'black' }}>
+                                <i class='far fa-user-circle fa-lg ml-2 mr-3 d-none d-md-inline-block'></i>
+                            </Link>
+                            <label htmlFor='file1'>
+                                <i class='fas fa-camera-retro fa-lg ml-2 mr-3 d-none d-md-inline-block'></i>
+                            </label>
+                            <input
+                                id='file1'
+                                name='file'
+                                type='file'
+                                data-toggle='modal'
+                                data-target='#upload'
+                                accept='image/*'
+                                onClick={(event) => {
+                                    reset();
+                                    event.target.value = '';
+                                }}
+                                onChange={(event) => {
+                                    handleChangeFile(event.target.files[0]);
+                                }}
+                                style={{ display: 'none' }}
+                            />
 
-                        <Link to='/' style={{ color: 'black' }}>
-                            <i
-                                class='far fas fa-door-open fa-lg d-md-none mr-1'
-                                onClick={() =>
-                                    signout(() => {
-                                        console.log('Signed out Successfully');
-                                    })
-                                }></i>
-                        </Link>
-                    </span>
-                </nav>
+                            <Link to='/' style={{ color: 'black' }}>
+                                <i
+                                    class='far fas fa-door-open fa-lg d-md-none mr-1'
+                                    onClick={() =>
+                                        signout(() => {
+                                            console.log(
+                                                'Signed out Successfully'
+                                            );
+                                        })
+                                    }></i>
+                            </Link>
+                        </span>
+                    </nav>
+                </div>
             </div>
-
             {/* MobileNavbar */}
             <div class='fixed-bottom d-md-none '>
                 <div
@@ -180,7 +190,7 @@ function Navbar() {
                     </div>
 
                     <div>
-                        <Link to='/profile' style={{ color: 'black' }}>
+                        <Link to={`/profile/${id}`} style={{ color: 'black' }}>
                             <i
                                 class='far fa-user-circle fa-lg'
                                 style={{ color: '#262626' }}></i>

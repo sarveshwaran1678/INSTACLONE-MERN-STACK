@@ -11,6 +11,7 @@ import {
 import { isAuthenticated } from '../AuthScreens/APICalls/signCalls';
 import MobileNavbar from '../AuthScreens/MobileNavbar';
 import { Link } from 'react-router-dom';
+import UserSuggestions from './UserFeedComponents/UserSuggestions';
 
 function UserFeed() {
     const [stories, setStories] = useState([]);
@@ -50,9 +51,9 @@ function UserFeed() {
     return (
         <div>
             <Navbar />
-
+            <div className='row mt-5'></div>
             <div
-                className='container d-md-none d-lg-none mt-5 pt-2 '
+                className='container d-md-none d-lg-none'
                 style={{
                     display: 'flex',
                     scrollBehavior: 'smooth',
@@ -67,7 +68,6 @@ function UserFeed() {
                     />
                 ))}
             </div>
-            <div className='mt-5 d-none d-md-block'></div>
             <div className='row' style={{ margin: '0 0' }}>
                 <div className='col-md-1 col-lg-2 col-xl-2' />
                 <div
@@ -79,34 +79,74 @@ function UserFeed() {
                 </div>
                 <div
                     className='col-lg-4 col-md-5 col-xl-4 d-lg-block d-md-block d-none '
-                    style={{ maxWidth: '350px', right: '0' }}>
-                    <Link to='/profile' style={{ textDecoration: 'none' }}>
-                        <div
-                            className='User text-dark '
-                            style={{ marginTop: '5vh' }}>
-                            <ProfileDetails />
-                        </div>
-                    </Link>
-
-                    <div className='mt-5 ml-3' style={{ fontWeight: '500' }}>
-                        Stories
-                    </div>
+                    style={{ maxWidth: '350px', minWidth: '317.5px' }}>
                     <div
-                        className='Stories mt-1 ml-3 '
-                        style={{
-                            height: '50vh',
-                            border: '1px solid black',
-                            overflowY: 'scroll',
-                            overflowX: 'hidden',
-                            borderRadius: '10px',
-                        }}>
-                        {stories.map((story, index) => (
-                            <UserStories
-                                story={story}
-                                key={story._id}
-                                index={index}
-                            />
-                        ))}
+                        className='position-fixed ml-3'
+                        style={{ minWidth: '317.5px' }}>
+                        <Link
+                            to={`/profile/${id}`}
+                            style={{ textDecoration: 'none' }}>
+                            <div
+                                className='User text-dark '
+                                style={{ marginTop: '5vh' }}>
+                                <ProfileDetails />
+                            </div>
+                        </Link>
+
+                        <div
+                            style={{
+                                border: '1px solid #a2acba',
+                                borderRadius: '7.5px',
+                            }}>
+                            <div
+                                className='ml-4 my-1'
+                                style={{ fontWeight: '600', color: '#a2acba' }}>
+                                Stories
+                            </div>
+                            <div
+                                className='Stories ml-1'
+                                style={{
+                                    height: '35vh',
+                                    overflowY: 'scroll',
+                                    overflowX: 'hidden',
+                                }}>
+                                {stories.map((story, index) => (
+                                    <UserStories
+                                        story={story}
+                                        key={story._id}
+                                        index={index}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        <div
+                            className='mt-2'
+                            style={{
+                                border: '1px solid #a2acba',
+                                borderRadius: '7.5px',
+                            }}>
+                            <div
+                                className='ml-4 my-1'
+                                style={{ fontWeight: '600', color: '#a2acba' }}>
+                                Suggestions For You
+                            </div>
+                            <div
+                                className='Stories ml-1'
+                                style={{
+                                    height: '30vh',
+                                    overflowY: 'scroll',
+                                    overflowX: 'hidden',
+                                }}>
+                                {stories.map((story, index) => (
+                                    <UserSuggestions
+                                        story={story}
+                                        key={story._id}
+                                        index={index}
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className='col-lg-2' />

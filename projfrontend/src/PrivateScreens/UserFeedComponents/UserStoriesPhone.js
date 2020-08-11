@@ -58,12 +58,12 @@ function UserStoriesPhone({ story, index }) {
 
     return (
         <React.Fragment>
-            <div className='d-md-none d-lg-none justify-content-center align-items-center '>
+            <div className='d-md-none d-lg-none justify-content-center align-items-center pt-2'>
                 <div
                     data-toggle='modal'
                     data-target={`#exampleModalPhone${index}`}
                     onClick={() => setShowModal(true)}>
-                    <figure className='text-center'>
+                    <figure className='text-center m-0'>
                         <Image
                             className='m-2'
                             cloudName={CloudName}
@@ -131,7 +131,7 @@ function UserStoriesPhone({ story, index }) {
                                 {showModal ? (
                                     <StoryModal picPath={picPath} />
                                 ) : null}
-                            </div>
+                            </div>{' '}
                         </div>
                     </div>
                 </div>

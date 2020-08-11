@@ -26,7 +26,7 @@ const Routes = () => {
         <Route path="/resetpassword" exact component={ResetPassword} />
 
         <PrivateRoutes path="/userfeed" exact component={UserFeed} />
-        <PrivateRoutes path="/profile" exact component={userProfile} />
+        <PrivateRoutes path="/profile/:userId" exact component={userProfile} />
         <PrivateRoutes path="/settings" exact component={UserSettings} />
       </Switch>
     </BrowserRouter>

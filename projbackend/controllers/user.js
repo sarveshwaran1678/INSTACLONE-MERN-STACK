@@ -38,6 +38,8 @@ exports.getUser = (req, res) => {
   req.profile.encry_password = undefined;
   req.profile.createdAt = undefined;
   req.profile.updatedAt = undefined;
+  req.profile.otpTimeout = undefined;
+  req.profile.otpMatched = undefined;
 
   return res.json(req.profile);
 };

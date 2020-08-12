@@ -48,7 +48,7 @@ exports.getUserFeed = async (req, res) => {
 
 exports.discoverFeed = async (req, res) => {
   await Post.find({ isStory: false })
-    .select("filter picturePath pictureUrl")
+    //.select("filter picturePath pictureUrl")
     .sort({ createdAt: -1 })
     .limit(15)
     .exec((err, posts) => {

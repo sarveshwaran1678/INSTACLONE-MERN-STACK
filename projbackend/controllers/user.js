@@ -91,41 +91,37 @@ exports.updatePassword = async (req, res) => {
 };
 
 exports.updateProfilePhoto = async (req, res) => {
-  let user = req.profile;
   let form = new formidable.IncomingForm();
   form.keepExtensions = true;
-  form.parse(req).on("file", function (name, file) {
-    const path = file.path;
-    const uniqueFilename = user._id;
-    if (file.path.match(/\.(jpg|jpeg|png)$/) && file.size < 5000000) {
-      cloudinary.uploader.upload(
-        path,
-        {
-          public_id: `InstaClone/${uniqueFilename}`,
-          tags: `InstaClone`,
-        }, // directory and tags are optional
-        async function (err, image) {
-          if (err) return res.send(err);
-          console.log("file uploaded to Cloudinary");
 
-          user.profilePicPath = image.public_id;
-          user.pictureUrl = image.url;
-          // console.log(user);
-          await user.save((err, user) => {
-            if (err) {
-              res.status(400).json({
-                error: err,
-              });
-            }
-            return res.json(user);
-          });
-        }
-      );
-    } else {
-      return res.json({
-        error: "Invalid File Type",
-      });
-    }
+  form.parse(req, function (error, fields) {
+    const path = fields.profilePicPath;
+    const uniqueFilename = uuidv4();
+    const user = req.profile;
+
+    cloudinary.uploader.upload(
+      path,
+      {
+        public_id: `InstaClone/${uniqueFilename}`,
+        tags: `InstaClone`,
+      }, // directory and tags are optional
+      async function (err, image) {
+        if (err) return res.send(err);
+        console.log("file uploaded to Cloudinary");
+
+        user.profilePicPath = image.public_id;
+        user.profilePicUrl = image.url;
+        // console.log(user);
+        await user.save((err, user) => {
+          if (err) {
+            return res.status(400).json({
+              error: err,
+            });
+          }
+          return res.status(201).json(user);
+        });
+      }
+    );
   });
 };
 

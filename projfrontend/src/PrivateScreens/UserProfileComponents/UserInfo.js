@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Image, Transformation, Placeholder } from "cloudinary-react";
 import { isAuthenticated } from "../../AuthScreens/APICalls/signCalls";
 import { follow } from "./APICalls";
+import { Link } from "react-router-dom";
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
@@ -34,8 +35,17 @@ function UserInfo({ myOwn, userDetails, postCount, message, handleFollow }) {
           <div class=" bd-highlight mr-5" style={{ fontWeight: "700" }}>
             {userDetails.username}
           </div>
-
-          {myOwn ? null : (
+          {myOwn ? (
+            <Link to="/settings">
+              <button
+                type="button"
+                class="btn px-2"
+                style={{ border: "1px solid black" }}
+              >
+                Edit Profile
+              </button>
+            </Link>
+          ) : (
             <button
               type="button"
               class="btn btn-primary pl-4 pr-2"

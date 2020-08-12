@@ -5,7 +5,7 @@ const Post = require("../models/post");
 const formidable = require("formidable");
 const _ = require("lodash");
 
-var fs = require("fs");
+//var fs = require("fs");
 const { v4: uuidv4 } = require("uuid");
 var cloudinary = require("cloudinary").v2;
 

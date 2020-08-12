@@ -44,7 +44,7 @@ function UserProfile({ match }) {
 
   useEffect(() => {
     if (userId === anotherUserId) {
-      console.log("hiiii");
+      //console.log("hiiii");
       setMyOwnPage(true);
       getUserDetails();
       getOwnPost();
@@ -52,8 +52,6 @@ function UserProfile({ match }) {
       setIsAllowedToShow(true);
     } else {
       getAnotherUser();
-      getAnothersPost();
-      getAnotherStories();
     }
   }, [isAllowedToShow]);
 
@@ -143,16 +141,22 @@ function UserProfile({ match }) {
       setIsAllowedToShow(true);
     if (userDetails.isPrivate) {
       if (userDetails.followers.includes(userId)) {
+        getAnotherStories();
+        //console.log("HII");
+        getAnothersPost();
         setMessage("Unfollow");
       } else if (userDetails.followRequestPending.includes(userId)) {
         setMessage("Cancel Follow Request");
       } else {
         setMessage("Send Follow Request");
       }
-    }
-    if (!userDetails.isPrivate) {
+    } else if (!userDetails.isPrivate) {
+      //console.log("HII");
+      //console.log(userDetails);
+      getAnothersPost();
       if (userDetails.followers.includes(userId)) {
         setMessage("Unfollow");
+        getAnotherStories();
       } else {
         setMessage("Follow");
       }
@@ -182,7 +186,7 @@ function UserProfile({ match }) {
   };
 
   const updateAssets = () => {
-    console.log("abc");
+    //console.log("abc");
     if (match.params.userId.toString() == userId.toString()) {
       getOwnPost();
       getOwnStories();
@@ -245,6 +249,7 @@ function UserProfile({ match }) {
             profilePicPath: userDetails.profilePicPath,
             username: userDetails.username,
           }}
+          updateAssets={updateAssets}
         />
       ) : null}
     </div>

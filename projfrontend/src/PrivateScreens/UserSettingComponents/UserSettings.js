@@ -1,15 +1,51 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import ChangePassword from "./ChangePassword";
 import Navbar from "../../AuthScreens/Navbar";
 import EditProfile from "./EditProfile";
 import MakePrivate from "./MakePrivate";
+import { getOwnUser } from "../UserFeedComponents/APICalls";
+import { isAuthenticated } from "../../AuthScreens/APICalls/signCalls";
 
 function UserSettings() {
+  const userId = isAuthenticated().user._id;
+  const token = isAuthenticated().token;
+
+  const [userDetails, setUserDetails] = useState({
+    username: "",
+    name: "",
+    profilePicUrl: "",
+    bio: "",
+    isPrivate: false,
+  });
+
+  useEffect(() => {
+    getUserDetails();
+  }, []);
+
+  const getUserDetails = async () => {
+    await getOwnUser(userId, token)
+      .then((res) => {
+        const data = res.data;
+
+        setUserDetails({
+          username: data.username,
+          name: data.name,
+          profilePicUrl: data.profilePicUrl,
+          bio: data.bio,
+          isPrivate: data.isPrivate,
+        });
+      })
+      .catch((err) => {
+        console.log("Not able to own user details for profile screen");
+        console.log("ERR:", { ...err }.response);
+      });
+  };
   return (
     <div>
       <Navbar />
-
+      <div className="row mt-5"></div>
+      <div className="row mt-2"></div>
       <div class="row align-items-center mx-0 mt-5">
         <div class="col-2"></div>
         <div
@@ -136,7 +172,12 @@ function UserSettings() {
               role="tabpanel"
               aria-labelledby="v-pills-home-tab"
             >
-              <EditProfile />
+              <EditProfile
+                username={userDetails.username}
+                name={userDetails.name}
+                bio={userDetails.bio}
+                profilePicUrl={userDetails.profilePicUrl}
+              />
             </div>
             <div
               class="tab-pane fade"
@@ -152,7 +193,7 @@ function UserSettings() {
               role="tabpanel"
               aria-labelledby="v-pills-messages-tab"
             >
-              <MakePrivate />
+              <MakePrivate isPrivate={userDetails.isPrivate} />
             </div>
 
             <h6

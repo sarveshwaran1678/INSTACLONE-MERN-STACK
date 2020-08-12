@@ -82,8 +82,13 @@ h1 {
     font-weight: 600;
     padding: 7px 50px;
 }
-button:focus {
+.btn,
+.btn:focus,
+.btn:hover {
     outline: none;
+    box-shadow: none;
+    border: none;
+    font-weight: 500;
 }
 
 .dropdown-menu {

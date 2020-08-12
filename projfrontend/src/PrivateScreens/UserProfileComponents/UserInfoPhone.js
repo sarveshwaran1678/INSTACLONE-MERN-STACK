@@ -4,7 +4,7 @@ import { Image, Transformation, Placeholder } from 'cloudinary-react';
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
-function UserInfoPhone({ myOwn, userDetails }) {
+function UserInfoPhone({ myOwn, userDetails, message, handleFollow }) {
     return (
         <div class='row d-md-none '>
             <div className='col-8'>
@@ -57,8 +57,19 @@ function UserInfoPhone({ myOwn, userDetails }) {
                 <div
                     className='d-md-none text-left'
                     style={{ paddingLeft: '15px' }}>
-                    <button type='button' class='btn btn-primary px-5'>
-                        Follow
+                    <button
+                        type='button'
+                        class='btn btn-primary pl-4 pr-2'
+                        onClick={handleFollow}>
+                        {message}
+                        <i
+                            class={
+                                message === 'Follow' ||
+                                message === 'Send Follow Request'
+                                    ? 'fas fa-user-plus  ml-3'
+                                    : 'fas fa-user-times  ml-3'
+                            }
+                        />
                     </button>
                 </div>
             )}

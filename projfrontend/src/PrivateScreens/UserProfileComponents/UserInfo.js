@@ -1,11 +1,10 @@
-import React from 'react';
-//import post from "../../Images/mayank.jpg";
+import React, { useEffect } from 'react';
 
 import { Image, Transformation, Placeholder } from 'cloudinary-react';
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
-function UserInfo({ myOwn, userDetails, postCount }) {
+function UserInfo({ myOwn, userDetails, postCount, message, handleFollow }) {
     return (
         <div className='row mb-3'>
             <div class='col-md-1'></div>
@@ -34,9 +33,21 @@ function UserInfo({ myOwn, userDetails, postCount }) {
                         style={{ fontWeight: '700' }}>
                         {userDetails.username}
                     </div>
+
                     {myOwn ? null : (
-                        <button type='button' class='btn btn-primary px-5'>
-                            Follow
+                        <button
+                            type='button'
+                            class='btn btn-primary pl-4 pr-2'
+                            onClick={handleFollow}>
+                            {message}
+                            <i
+                                class={
+                                    message === 'Follow' ||
+                                    message === 'Send Follow Request'
+                                        ? 'fas fa-user-plus  ml-3'
+                                        : 'fas fa-user-times  ml-3'
+                                }
+                            />
                         </button>
                     )}
                 </div>

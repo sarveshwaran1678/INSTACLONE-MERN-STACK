@@ -28,7 +28,6 @@ function DiscoverFeed() {
 
   return (
     <div>
-      {" "}
       <Navbar />
       <div className="row mt-5"></div>
       <div className="container mt-5">
@@ -36,11 +35,10 @@ function DiscoverFeed() {
           {posts.map((post) => (
             <React.Fragment>
               <div
-                className="col-6 col-md-4 mb-3 d-none d-sm-block"
-                style={{ height: "200px" }}
+                className="col-6 col-md-4 mb-5 d-none d-sm-block"
+                style={{ height: "300px" }}
               >
-                {" "}
-                <div className="col-12 w-100 h-100">
+                <div className="col-12 col-md-11 w-100 h-100">
                   <div
                     className="w-100 h-100"
                     style={

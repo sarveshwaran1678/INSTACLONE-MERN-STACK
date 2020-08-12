@@ -82,7 +82,9 @@ function Navbar() {
               </li>
             </ul>
             <span>
-              <i class="far fa-compass fa-lg ml-2 mr-3 d-none d-md-inline-block"></i>
+              <Link style={{ color: "black" }} to="/discoverFeed">
+                <i class="far fa-compass fa-lg ml-2 mr-3  d-md-inline-block"></i>
+              </Link>
               <i class="far fa-heart fa-lg ml-2 mr-3 d-none d-md-inline-block"></i>
               <Link to={`/profile/${id}`} style={{ color: "black" }}>
                 <i class="far fa-user-circle fa-lg ml-2 mr-3 d-none d-md-inline-block"></i>

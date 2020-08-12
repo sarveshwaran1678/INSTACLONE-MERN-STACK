@@ -46,7 +46,17 @@ export const getAllYourStories = (userId, token) => {
 export const getAllAnotherStories = (userId, anotherUserId, token) => {
   return axios({
     method: "get",
-    url: `${BackendUrl}/picture/getYourStories/${userId}/${anotherUserId}`,
+    url: `${BackendUrl}/picture/getAllOthersStories/${userId}/${anotherUserId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
+
+export const follow = (userId, anotherUserId, token) => {
+  return axios({
+    method: "put",
+    url: `${BackendUrl}/user/follow/${userId}/${anotherUserId}`,
     headers: {
       Authorization: `Bearer ${token}`,
     },

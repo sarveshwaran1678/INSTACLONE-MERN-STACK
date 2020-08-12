@@ -25,11 +25,13 @@ function UserProfile({ match }) {
   const [myOwnPage, setMyOwnPage] = useState(false);
 
   const [userDetails, setUserDetails] = useState({
+    id: "",
     username: "",
     name: "",
     profilePicPath: "",
     followings: [],
     followers: [],
+    followRequestPending: [],
     isPrivate: false,
     bio: "",
   });
@@ -73,6 +75,8 @@ function UserProfile({ match }) {
         const data = res.data;
 
         setUserDetails({
+          ...userDetails,
+          id: data._id,
           username: data.username,
           name: data.name,
           profilePicPath: data.profilePicPath,
@@ -116,6 +120,8 @@ function UserProfile({ match }) {
         const data = res.data;
 
         setUserDetails({
+          ...userDetails,
+          id: data._id,
           username: data.username,
           name: data.name,
           profilePicPath: data.profilePicPath,
@@ -123,6 +129,7 @@ function UserProfile({ match }) {
           isPrivate: data.isPrivate,
           followings: data.followings,
           followers: data.followers,
+          followRequestPending: data.followRequestPending,
         });
       })
       .catch((err) => {
@@ -151,13 +158,13 @@ function UserProfile({ match }) {
         setStories(res.data);
       })
       .catch((err) => {
-        console.log("Not able to another stories for profile screen");
+        console.log("Not able to get another stories for profile screen");
         console.log("ERR:", { ...err }.response);
       });
   };
 
   const updateAssets = () => {
-    console.log("abc");
+    //console.log("abc");
     if (match.params.userId.toString() == userId.toString()) {
       getOwnPost();
       getOwnStories();
@@ -165,6 +172,7 @@ function UserProfile({ match }) {
       isAllowedToShow &&
       match.params.userId.toString() != userId.toString()
     ) {
+      //getAnotherUser();
       getAnothersPost();
       getAnotherStories();
     }
@@ -181,6 +189,7 @@ function UserProfile({ match }) {
             myOwn={myOwnPage}
             userDetails={userDetails}
             postCount={posts.length}
+            getAnotherUser={getAnotherUser}
           />
         </div>
 
@@ -190,6 +199,7 @@ function UserProfile({ match }) {
           myOwn={myOwnPage}
           userDetails={userDetails}
           postCount={posts.length}
+          getAnotherUser={getAnotherUser}
         />
 
         {/* Story */}

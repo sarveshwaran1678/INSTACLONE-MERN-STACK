@@ -322,7 +322,7 @@ exports.getAllAnotherStory = async (req, res) => {
       .sort("updatedAt")
       .then((posts) => {
         posts.map((pic) => {
-          if (Date.now() - pic.createdAt >= 600000) {
+          if (Date.now() - pic.createdAt >= 43200000) {
             pic.remove((err, deletedpicture) => {
               if (err) {
                 console.log("failed");

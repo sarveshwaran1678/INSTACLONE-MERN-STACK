@@ -6,36 +6,7 @@ import { follow } from "./APICalls";
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
-function UserInfoPhone({ myOwn, userDetails, getAnotherUser }) {
-  const userId = isAuthenticated().user._id;
-  const token = isAuthenticated().token;
-
-  const [followBtnText, setFollowBtnText] = useState("");
-
-  useEffect(() => {
-    myOwn
-      ? setFollowBtnText("")
-      : userDetails.followers.includes(userId)
-      ? setFollowBtnText("UnFollow")
-      : !userDetails.isPrivate
-      ? setFollowBtnText("Follow")
-      : userDetails.followRequestPending.includes(userId)
-      ? setFollowBtnText("Remove Follow Request")
-      : setFollowBtnText("Send Follow Request");
-  }, []);
-
-  const followToggle = async () => {
-    await follow(userId, userDetails.id, token)
-      .then((res) => {
-        console.log(res.data.message);
-        getAnotherUser();
-      })
-      .catch((err) => {
-        console.log("Not able to change follow request");
-        console.log("ERR:", { ...err }.response);
-      });
-  };
-
+function UserInfoPhone({ myOwn, userDetails, message, handleFollow }) {
   return (
     <div class="row d-md-none ">
       <div className="col-8">
@@ -81,17 +52,24 @@ function UserInfoPhone({ myOwn, userDetails, getAnotherUser }) {
         </div>
       </div>
 
-      <div className="d-md-none text-left" style={{ paddingLeft: "15px" }}>
-        {myOwn ? null : (
+      {myOwn ? null : (
+        <div className="d-md-none text-left" style={{ paddingLeft: "15px" }}>
           <button
             type="button"
-            class="btn btn-primary px-5"
-            onClick={() => followToggle()}
+            class="btn btn-primary pl-4 pr-2"
+            onClick={handleFollow}
           >
-            {followBtnText}
+            {message}
+            <i
+              class={
+                message === "Follow" || message === "Send Follow Request"
+                  ? "fas fa-user-plus  ml-3"
+                  : "fas fa-user-times  ml-3"
+              }
+            />
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

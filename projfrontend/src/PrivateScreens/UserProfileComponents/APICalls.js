@@ -53,7 +53,7 @@ export const getAllAnotherStories = (userId, anotherUserId, token) => {
   });
 };
 
-export const follow = (userId, anotherUserId, token) => {
+export const toggleFollow = (userId, anotherUserId, token) => {
   return axios({
     method: "put",
     url: `${BackendUrl}/user/follow/${userId}/${anotherUserId}`,

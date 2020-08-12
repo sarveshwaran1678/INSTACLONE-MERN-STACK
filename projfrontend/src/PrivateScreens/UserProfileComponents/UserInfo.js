@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-//import post from "../../Images/mayank.jpg";
+import React, { useEffect } from "react";
 
 import { Image, Transformation, Placeholder } from "cloudinary-react";
 import { isAuthenticated } from "../../AuthScreens/APICalls/signCalls";
@@ -7,47 +6,7 @@ import { follow } from "./APICalls";
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
-function UserInfo({ myOwn, userDetails, postCount, getAnotherUser }) {
-  const userId = isAuthenticated().user._id;
-  const token = isAuthenticated().token;
-
-  const [followBtnText, setFollowBtnText] = useState("");
-
-  useEffect(() => {
-    myOwn
-      ? setFollowBtnText("")
-      : userDetails.followers.includes(userId)
-      ? setFollowBtnText("UnFollow")
-      : !userDetails.isPrivate
-      ? setFollowBtnText("Follow")
-      : userDetails.followRequestPending.includes(userId)
-      ? setFollowBtnText("Remove Follow Request")
-      : setFollowBtnText("Send Follow Request");
-  }, []);
-
-  const followToggle = async () => {
-    await follow(userId, userDetails.id, token)
-      .then(async (res) => {
-        console.log(res.data.message);
-
-        await getAnotherUser();
-
-        myOwn
-          ? setFollowBtnText("")
-          : userDetails.followers.includes(userId)
-          ? setFollowBtnText("UnFollow")
-          : !userDetails.isPrivate
-          ? setFollowBtnText("Follow")
-          : userDetails.followRequestPending.includes(userId)
-          ? setFollowBtnText("Remove Follow Request")
-          : setFollowBtnText("Send Follow Request");
-      })
-      .catch((err) => {
-        console.log("Not able to change follow request");
-        console.log("ERR:", { ...err }.response);
-      });
-  };
-
+function UserInfo({ myOwn, userDetails, postCount, message, handleFollow }) {
   return (
     <div className="row mb-3">
       <div class="col-md-1"></div>
@@ -75,13 +34,21 @@ function UserInfo({ myOwn, userDetails, postCount, getAnotherUser }) {
           <div class=" bd-highlight mr-5" style={{ fontWeight: "700" }}>
             {userDetails.username}
           </div>
+
           {myOwn ? null : (
             <button
               type="button"
-              class="btn btn-primary px-5"
-              onClick={() => followToggle()}
+              class="btn btn-primary pl-4 pr-2"
+              onClick={handleFollow}
             >
-              {followBtnText}
+              {message}
+              <i
+                class={
+                  message === "Follow" || message === "Send Follow Request"
+                    ? "fas fa-user-plus  ml-3"
+                    : "fas fa-user-times  ml-3"
+                }
+              />
             </button>
           )}
         </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { useParams } from "react-router-dom";
 //import post from "../Images/mayank.jpg";
 import Navbar from "../AuthScreens/Navbar";
 import UserInfo from "./UserProfileComponents/UserInfo";
@@ -16,22 +16,22 @@ import {
   getAllAnotherPost,
   getAllYourStories,
   getAllAnotherStories,
+  toggleFollow,
 } from "./UserProfileComponents/APICalls";
 
 function UserProfile({ match }) {
   const userId = isAuthenticated().user._id;
   const token = isAuthenticated().token;
+  const anotherUserId = useParams().userId;
 
   const [myOwnPage, setMyOwnPage] = useState(false);
 
   const [userDetails, setUserDetails] = useState({
-    id: "",
     username: "",
     name: "",
     profilePicPath: "",
     followings: [],
     followers: [],
-    followRequestPending: [],
     isPrivate: false,
     bio: "",
   });
@@ -40,43 +40,47 @@ function UserProfile({ match }) {
   const [stories, setStories] = useState([]);
 
   const [isAllowedToShow, setIsAllowedToShow] = useState(false);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    if (match.params.userId.toString() == userId.toString()) {
+    if (userId === anotherUserId) {
+      console.log("hiiii");
       setMyOwnPage(true);
       getUserDetails();
       getOwnPost();
       getOwnStories();
       setIsAllowedToShow(true);
-      //getUser
-
-      //for post count get it here and loop (which will give us post count)
-      //or can get it there and count which wont give us post count
     } else {
-      //getAnotherUser
       getAnotherUser();
-      //getAnotherPost();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (
-      isAllowedToShow &&
-      match.params.userId.toString() != userId.toString()
-    ) {
       getAnothersPost();
       getAnotherStories();
     }
   }, [isAllowedToShow]);
 
+  const handleFollow = async () => {
+    await toggleFollow(userId, anotherUserId, token)
+      .then((res) => {
+        if (message === "Follow") {
+          setMessage("Unfollow");
+        } else if (message === "Unfollow") {
+          setMessage("Follow");
+        } else if (message === "Send Follow Request") {
+          setMessage("Cancel Follow Request");
+        } else if (message === "Cancel Follow Request") {
+          setMessage("Send Follow Request");
+        }
+      })
+      .catch((err) => {
+        console.log("Not able to toggle follow");
+        console.log("ERR:", { ...err }.response);
+      });
+  };
   const getUserDetails = async () => {
     await getOwnUser(userId, token)
       .then((res) => {
         const data = res.data;
 
         setUserDetails({
-          ...userDetails,
-          id: data._id,
           username: data.username,
           name: data.name,
           profilePicPath: data.profilePicPath,
@@ -115,13 +119,11 @@ function UserProfile({ match }) {
   };
 
   const getAnotherUser = async () => {
-    await getAnotherUserDetails(match.params.userId, userId, token)
+    await getAnotherUserDetails(anotherUserId, userId, token)
       .then((res) => {
         const data = res.data;
 
         setUserDetails({
-          ...userDetails,
-          id: data._id,
           username: data.username,
           name: data.name,
           profilePicPath: data.profilePicPath,
@@ -139,10 +141,26 @@ function UserProfile({ match }) {
 
     if (!userDetails.isPrivate || userDetails.followers.includes(userId))
       setIsAllowedToShow(true);
+    if (userDetails.isPrivate) {
+      if (userDetails.followers.includes(userId)) {
+        setMessage("Unfollow");
+      } else if (userDetails.followRequestPending.includes(userId)) {
+        setMessage("Cancel Follow Request");
+      } else {
+        setMessage("Send Follow Request");
+      }
+    }
+    if (!userDetails.isPrivate) {
+      if (userDetails.followers.includes(userId)) {
+        setMessage("Unfollow");
+      } else {
+        setMessage("Follow");
+      }
+    }
   };
 
   const getAnothersPost = async () => {
-    await getAllAnotherPost(match.params.userId, userId, token)
+    await getAllAnotherPost(anotherUserId, userId, token)
       .then((res) => {
         setPosts(res.data);
       })
@@ -153,18 +171,18 @@ function UserProfile({ match }) {
   };
 
   const getAnotherStories = async () => {
-    await getAllAnotherStories(userId, match.params.userId, token)
+    await getAllAnotherStories(userId, anotherUserId, token)
       .then((res) => {
         setStories(res.data);
       })
       .catch((err) => {
-        console.log("Not able to get another stories for profile screen");
+        console.log("Not able to get another user stories for profile screen");
         console.log("ERR:", { ...err }.response);
       });
   };
 
   const updateAssets = () => {
-    //console.log("abc");
+    console.log("abc");
     if (match.params.userId.toString() == userId.toString()) {
       getOwnPost();
       getOwnStories();
@@ -172,7 +190,6 @@ function UserProfile({ match }) {
       isAllowedToShow &&
       match.params.userId.toString() != userId.toString()
     ) {
-      //getAnotherUser();
       getAnothersPost();
       getAnotherStories();
     }
@@ -189,7 +206,8 @@ function UserProfile({ match }) {
             myOwn={myOwnPage}
             userDetails={userDetails}
             postCount={posts.length}
-            getAnotherUser={getAnotherUser}
+            message={message}
+            handleFollow={handleFollow}
           />
         </div>
 
@@ -199,7 +217,8 @@ function UserProfile({ match }) {
           myOwn={myOwnPage}
           userDetails={userDetails}
           postCount={posts.length}
-          getAnotherUser={getAnotherUser}
+          message={message}
+          handleFollow={handleFollow}
         />
 
         {/* Story */}

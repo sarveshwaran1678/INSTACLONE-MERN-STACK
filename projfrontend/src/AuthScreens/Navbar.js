@@ -187,7 +187,6 @@ function Navbar() {
         role="dialog"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
-        style={{ overflow: "hidden" }}
       >
         <div
           class="text-right m-2"

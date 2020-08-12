@@ -106,54 +106,54 @@ function ProfilePostModal({
             `${post.filter}` === "sepia"
               ? {
                   filter: "sepia(1)",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+
                   backgroundPosition: "center center",
                   backgroundImage: `url(${post.pictureUrl})`,
                 }
               : `${post.filter}` === "grayscale"
               ? {
                   filter: "grayscale(1)",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+
                   backgroundPosition: "center center",
                   backgroundImage: `url(${post.pictureUrl})`,
                 }
               : `${post.filter}` === "saturate"
               ? {
                   filter: "saturate(2)",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+
                   backgroundPosition: "center center",
                   backgroundImage: `url(${post.pictureUrl})`,
                 }
               : `${post.filter}` === "blue"
               ? {
                   filter: "contrast(0.7) saturate(1.5)",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+
                   backgroundPosition: "center center",
                   backgroundImage: `url(${post.pictureUrl})`,
                 }
               : `${post.filter}` === "x"
               ? {
                   filter: "saturate(1.6) hue-rotate(15deg)",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+
                   backgroundPosition: "center center",
                   backgroundImage: `url(${post.pictureUrl})`,
                 }
               : `${post.filter}` === "y"
               ? {
                   filter: "hue-rotate(-20deg)",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+
                   backgroundPosition: "center center",
                   backgroundImage: `url(${post.pictureUrl})`,
                 }
               : {
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
+                  backgroundSize: "contain",
+
                   backgroundPosition: "center center",
                   backgroundImage: `url(${post.pictureUrl})`,
                 }

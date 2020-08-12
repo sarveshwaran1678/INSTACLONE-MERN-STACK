@@ -14,6 +14,12 @@ import { Link } from "react-router-dom";
 import UserSuggestions from "./UserFeedComponents/UserSuggestions";
 
 function UserFeed() {
+  const ids = [
+    "5f1fc1b566dd4525a70dc23e",
+    "5f2a3c0c6a9edc1b72fa4cb3",
+    "5f2d6abf4be8504491083298",
+  ];
+
   const [stories, setStories] = useState([]);
   const [feeds, setFeeds] = useState([]);
   // const [userName, setUserName] = useState("");
@@ -133,12 +139,8 @@ function UserFeed() {
                   overflowX: "hidden",
                 }}
               >
-                {stories.map((story, index) => (
-                  <UserSuggestions
-                    story={story}
-                    key={story._id}
-                    index={index}
-                  />
+                {ids.map((id, index) => (
+                  <UserSuggestions id={id} key={index} />
                 ))}
               </div>
             </div>

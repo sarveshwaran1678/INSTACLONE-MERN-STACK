@@ -1,7 +1,4 @@
 import React, { useState } from "react";
-
-import { Image, Transformation, Placeholder } from "cloudinary-react";
-
 import "../../userfeed.css";
 
 import UploadPicModal from "../../AuthScreens/UploadPicModal";
@@ -46,42 +43,144 @@ function UserPosts({ posts, myOwnPage, profile, updateAssets }) {
         <div className="row mt-4">
           {posts.map((post) => (
             <React.Fragment>
-              <div className="col-6 col-md-4 mb-3">
-                <Image
-                  className="m-2  w-100"
-                  cloudName={CloudName}
-                  loading="lazy"
-                  publicId={post.picturePath}
-                  onClick={() => setShowModal(true)}
+              <div
+                className="col-6 col-md-4 mb-3 d-none d-sm-block"
+                style={{ height: "200px" }}
+              >
+                <div
+                  className="w-100 h-100"
+                  onClick={() => {
+                    setShowModal(true);
+                  }}
+                  data-toggle="modal"
+                  data-target={`#exampleModal${post._id}`}
                   style={
                     `${post.filter}` === "sepia"
-                      ? { filter: "sepia(1)" }
+                      ? {
+                          filter: "sepia(1)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
                       : `${post.filter}` === "grayscale"
-                      ? { filter: "grayscale(1)" }
+                      ? {
+                          filter: "grayscale(1)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
                       : `${post.filter}` === "saturate"
-                      ? { filter: "saturate(2)" }
+                      ? {
+                          filter: "saturate(2)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
                       : `${post.filter}` === "blue"
                       ? {
                           filter: "contrast(0.7) saturate(1.5)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
                         }
                       : `${post.filter}` === "x"
                       ? {
                           filter: "saturate(1.6) hue-rotate(15deg)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
                         }
                       : `${post.filter}` === "y"
-                      ? { filter: "hue-rotate(-20deg)" }
-                      : {}
+                      ? {
+                          filter: "hue-rotate(-20deg)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
+                      : {
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
                   }
-                  data-toggle="modal"
-                  data-target={`#exampleModal${post._id}`}
-                >
-                  <Transformation
-                    gravity="auto"
-                    crop="fill"
-                    flags={["preserve_transparency"]}
-                  />
-                  <Placeholder type="pixelate" />
-                </Image>
+                ></div>
+              </div>
+
+              <div
+                className="col-6 col-md-4 mb-3 d-sm-none"
+                style={{ height: "100px" }}
+                onClick={() => {
+                  setShowModal(true);
+                }}
+                data-toggle="modal"
+                data-target={`#exampleModal${post._id}`}
+              >
+                <div
+                  className="w-100 h-100"
+                  style={
+                    `${post.filter}` === "sepia"
+                      ? {
+                          filter: "sepia(1)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
+                      : `${post.filter}` === "grayscale"
+                      ? {
+                          filter: "grayscale(1)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
+                      : `${post.filter}` === "saturate"
+                      ? {
+                          filter: "saturate(2)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
+                      : `${post.filter}` === "blue"
+                      ? {
+                          filter: "contrast(0.7) saturate(1.5)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
+                      : `${post.filter}` === "x"
+                      ? {
+                          filter: "saturate(1.6) hue-rotate(15deg)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
+                      : `${post.filter}` === "y"
+                      ? {
+                          filter: "hue-rotate(-20deg)",
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
+                      : {
+                          backgroundSize: "contain",
+
+                          backgroundPosition: "center center",
+                          backgroundImage: `url(${post.pictureUrl})`,
+                        }
+                  }
+                ></div>
               </div>
 
               <div
@@ -163,7 +262,6 @@ function UserPosts({ posts, myOwnPage, profile, updateAssets }) {
         role="dialog"
         aria-labelledby="exampleModalLabel"
         aria-hidden="true"
-        style={{ overflow: "hidden" }}
       >
         <div
           class="text-right m-2"

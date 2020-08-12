@@ -349,7 +349,7 @@ const ResetPassword = () => {
           )}
         </Formik>
       </div>
-      <div class="fixed-bottom text-center mb-1">
+      <div class="d-none d-md-block fixed-bottom text-center mb-1">
         <h6 style={{ color: "#2C3335" }}>
           <i class="far fa-copyright"></i> 2020 InstaClone Inspired By :
           <span

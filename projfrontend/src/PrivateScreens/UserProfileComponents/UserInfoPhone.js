@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { Image, Transformation, Placeholder } from "cloudinary-react";
 import { isAuthenticated } from "../../AuthScreens/APICalls/signCalls";
 import { follow } from "./APICalls";
+import { Link } from "react-router-dom";
 
 const CloudName = process.env.REACT_APP_CLOUDNAME;
 
@@ -52,7 +53,17 @@ function UserInfoPhone({ myOwn, userDetails, message, handleFollow }) {
         </div>
       </div>
 
-      {myOwn ? null : (
+      {myOwn ? (
+        <Link to="/settings">
+          <button
+            type="button"
+            class="btn btn-primary px-2 ml-3"
+            style={{ border: "1px solid black" }}
+          >
+            Edit Profile
+          </button>
+        </Link>
+      ) : (
         <div className="d-md-none text-left" style={{ paddingLeft: "15px" }}>
           <button
             type="button"

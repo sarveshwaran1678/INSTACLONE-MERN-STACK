@@ -448,9 +448,7 @@ exports.toggleIsPrivate = async (req, res) => {
       });
     }
 
-    return res.status(201).json({
-      message: "isPrivate changed",
-    });
+    return res.status(201).json(user.isPrivate);
   });
 };
 

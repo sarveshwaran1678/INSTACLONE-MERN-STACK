@@ -96,3 +96,13 @@ export const postReply = (userId, commentId, token, replyBody) => {
     },
   });
 };
+
+export const getDiscoverFeed = (userId, token) => {
+  return axios({
+    method: "get",
+    url: `${BackendUrl}/discoverFeed/${userId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

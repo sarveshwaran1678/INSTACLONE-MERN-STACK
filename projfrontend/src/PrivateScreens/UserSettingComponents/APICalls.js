@@ -38,3 +38,12 @@ export const putPassword = (userId, token, oldPassword, newPassword) => {
     },
   });
 };
+export const toggleIsPrivate = (userId, token) => {
+  return axios({
+    method: "put",
+    url: `${BackendUrl}/user/toggleIsPrivate/${userId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};

@@ -94,17 +94,6 @@ function UserSettings() {
             >
               Privacy & Security
             </a>
-            <a
-              class="nav-link mb-3"
-              id="v-pills-settings-tab"
-              data-toggle="pill"
-              href="#v-pills-settings"
-              role="tab"
-              aria-controls="v-pills-settings"
-              aria-selected="false"
-            >
-              Settings
-            </a>
           </div>
         </div>
 
@@ -193,7 +182,7 @@ function UserSettings() {
               role="tabpanel"
               aria-labelledby="v-pills-messages-tab"
             >
-              <MakePrivate isPrivate={userDetails.isPrivate} />
+              <MakePrivate isPrivateAccount={userDetails.isPrivate} />
             </div>
 
             <h6

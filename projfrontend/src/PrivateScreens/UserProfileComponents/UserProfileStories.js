@@ -115,7 +115,6 @@ export default function UserProfileStories({ myOwn, stories, updateAssets }) {
               role="dialog"
               aria-labelledby="exampleModalLabel"
               aria-hidden="true"
-              style={{ overflow: "hidden" }}
             >
               <div
                 style={{

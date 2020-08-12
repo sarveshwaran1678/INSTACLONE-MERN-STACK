@@ -33,6 +33,7 @@ function Card({ feed }) {
   });
 
   const [otherUserDetails, setOtherUserDetails] = useState({
+    id: "",
     userName: "",
     profilePic: "",
   });
@@ -73,6 +74,7 @@ function Card({ feed }) {
     await getAnotherUserDetails(anotherUserId, userId, token)
       .then((res) => {
         setOtherUserDetails({
+          id: res.data._id,
           userName: res.data.username,
           profilePic: res.data.profilePicPath,
         });
@@ -276,6 +278,7 @@ function Card({ feed }) {
                 <div class="modal-body py-0">
                   {showModal ? (
                     <Modal
+                      id={otherUserDetails.id}
                       toggleModal={toggleModal}
                       ImgURL={feedDetails.ImgURL}
                       profilePic={otherUserDetails.profilePic}

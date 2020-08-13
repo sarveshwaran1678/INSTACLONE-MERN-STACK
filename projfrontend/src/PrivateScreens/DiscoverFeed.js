@@ -110,85 +110,11 @@ function DiscoverFeed() {
                                         }></div>
                                 </div>
                             </div>
-
-                            <div
-                                className='col-6 col-md-4 mb-3 d-sm-none'
-                                style={{ height: '100px' }}>
-                                <div
-                                    className='w-100 h-100'
-                                    style={
-                                        `${post.filter}` === 'sepia'
-                                            ? {
-                                                  filter: 'sepia(1)',
-                                                  backgroundSize: 'contain',
-
-                                                  backgroundPosition:
-                                                      'center center',
-                                                  backgroundImage: `url(${post.pictureUrl})`,
-                                              }
-                                            : `${post.filter}` === 'grayscale'
-                                            ? {
-                                                  filter: 'grayscale(1)',
-                                                  backgroundSize: 'contain',
-
-                                                  backgroundPosition:
-                                                      'center center',
-                                                  backgroundImage: `url(${post.pictureUrl})`,
-                                              }
-                                            : `${post.filter}` === 'saturate'
-                                            ? {
-                                                  filter: 'saturate(2)',
-                                                  backgroundSize: 'contain',
-
-                                                  backgroundPosition:
-                                                      'center center',
-                                                  backgroundImage: `url(${post.pictureUrl})`,
-                                              }
-                                            : `${post.filter}` === 'blue'
-                                            ? {
-                                                  filter:
-                                                      'contrast(0.7) saturate(1.5)',
-                                                  backgroundSize: 'contain',
-
-                                                  backgroundPosition:
-                                                      'center center',
-                                                  backgroundImage: `url(${post.pictureUrl})`,
-                                              }
-                                            : `${post.filter}` === 'x'
-                                            ? {
-                                                  filter:
-                                                      'saturate(1.6) hue-rotate(15deg)',
-                                                  backgroundSize: 'contain',
-
-                                                  backgroundPosition:
-                                                      'center center',
-                                                  backgroundImage: `url(${post.pictureUrl})`,
-                                              }
-                                            : `${post.filter}` === 'y'
-                                            ? {
-                                                  filter: 'hue-rotate(-20deg)',
-                                                  backgroundSize: 'contain',
-
-                                                  backgroundPosition:
-                                                      'center center',
-                                                  backgroundImage: `url(${post.pictureUrl})`,
-                                              }
-                                            : {
-                                                  backgroundSize: 'contain',
-
-                                                  backgroundPosition:
-                                                      'center center',
-                                                  backgroundImage: `url(${post.pictureUrl})`,
-                                              }
-                                    }></div>
-                            </div>
                         </React.Fragment>
                     ))}
                 </div>
-                ;
             </div>
         </div>
     );
 }
-
 export default DiscoverFeed;

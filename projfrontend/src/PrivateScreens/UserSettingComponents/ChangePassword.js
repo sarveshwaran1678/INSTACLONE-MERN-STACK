@@ -140,7 +140,7 @@ const ResetPassword = () => {
   };
 
   return (
-    <div class="row text-center" style={{ minHeight: "66vh" }}>
+    <div className="row text-center" style={{ minHeight: "66vh" }}>
       <ToastContainer />
       {Notify()}
       <div
@@ -161,15 +161,15 @@ const ResetPassword = () => {
         >
           {({ errors, values }) => (
             <Form>
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 {errors.currentPassword || !values.currentPassword ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="fas fa-lock text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text  ">
                       <i class="fas fa-lock-open text-success"></i>
                     </span>
@@ -184,24 +184,24 @@ const ResetPassword = () => {
                 />
 
                 {values.currentPassword.length === 0 ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text"></span>
                   </div>
                 ) : values.currentPassword.length > 0 &&
                   errors.currentPassword ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-danger">
                       <i class="fas fa-times  "></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-success ">
                       <i class="fas fa-check"></i>
                     </span>
                   </div>
                 )}
-                <div class="input-group-append">
+                <div className="input-group-append">
                   <span class="input-group-text border-left-0">
                     <i
                       class="far fa-question-circle"
@@ -213,15 +213,15 @@ const ResetPassword = () => {
                 </div>
               </div>
 
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 {errors.newPassword || !values.newPassword ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="fas fa-lock text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text  ">
                       <i class="fas fa-lock-open text-success"></i>
                     </span>
@@ -236,23 +236,23 @@ const ResetPassword = () => {
                 />
 
                 {values.newPassword.length === 0 ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text"></span>
                   </div>
                 ) : values.newPassword.length > 0 && errors.newPassword ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-danger">
                       <i class="fas fa-times  "></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-success ">
                       <i class="fas fa-check"></i>
                     </span>
                   </div>
                 )}
-                <div class="input-group-append">
+                <div className="input-group-append">
                   <span class="input-group-text border-left-0">
                     <i
                       class="far fa-question-circle"
@@ -264,15 +264,15 @@ const ResetPassword = () => {
                 </div>
               </div>
 
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 {errors.confirmNewPassword || !values.confirmNewPassword ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="fas fa-lock text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text  ">
                       <i class="fas fa-lock-open text-success"></i>
                     </span>
@@ -287,7 +287,7 @@ const ResetPassword = () => {
                 />
 
                 {
-                  <div class="input-group-append">
+                  <div className="input-group-append">
                     <span class="input-group-text border-left-0">
                       {mode === "text" ? (
                         <i
@@ -307,7 +307,7 @@ const ResetPassword = () => {
                     </span>
                   </div>
                 }
-                <div class="input-group-append">
+                <div className="input-group-append">
                   <span class="input-group-text border-left-0">
                     <i
                       class="far fa-question-circle"
@@ -349,7 +349,7 @@ const ResetPassword = () => {
           )}
         </Formik>
       </div>
-      <div class="d-none d-md-block fixed-bottom text-center mb-1">
+      <div className="d-none d-md-block fixed-bottom text-center mb-1">
         <h6 style={{ color: "#2C3335" }}>
           <i class="far fa-copyright"></i> 2020 InstaClone Inspired By :
           <span

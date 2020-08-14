@@ -46,8 +46,8 @@ function UserSettings() {
       <Navbar />
       <div className="row mt-5"></div>
       <div className="row mt-2"></div>
-      <div class="row align-items-center mx-0 mt-5">
-        <div class="col-2"></div>
+      <div className="row align-items-center mx-0 mt-5">
+        <div className="col-2"></div>
         <div
           class="col-md-3 col-12 d-none d-md-block "
           style={{
@@ -154,7 +154,7 @@ function UserSettings() {
               "linear-gradient( 135deg,#0099ff 0%, transparent 10%, transparent 75%, #0099ff 95% )",
           }}
         >
-          <div class="tab-content" id="v-pills-tabContent">
+          <div className="tab-content" id="v-pills-tabContent">
             <div
               class="tab-pane fade show active"
               id="v-pills-home"

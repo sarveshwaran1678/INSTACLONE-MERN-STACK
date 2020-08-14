@@ -100,7 +100,7 @@ function Modal({
           }
         ></div>
         <div className="col-md-5 col-lg-5 col-xl-5 col-sm-12 pr-0">
-          <div class="d-flex justify-content-between m-2">
+          <div className="d-flex justify-content-between m-2">
             <div>
               <Link className="text-dark" to={`/profile/${id}`}>
                 <Image
@@ -130,7 +130,7 @@ function Modal({
                 </span>
               </Link>
             </div>
-            <div class="text-right ">
+            <div className="text-right ">
               <i
                 class="fas fa-times fa-lg m-2 "
                 data-dismiss="modal"
@@ -163,7 +163,7 @@ function Modal({
 
           <hr className="mb-0" />
 
-          <div class="input-group mb-3">
+          <div className="input-group mb-3">
             <input
               type="text"
               class="form-control"
@@ -175,7 +175,7 @@ function Modal({
                 setNewComment(e.target.value);
               }}
             />
-            <div class="input-group-append" style={{ border: "none" }}>
+            <div className="input-group-append" style={{ border: "none" }}>
               <span
                 class="input-group-text"
                 id="basic-addon2"

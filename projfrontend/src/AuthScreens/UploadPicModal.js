@@ -100,8 +100,8 @@ function UploadPicModal({ src1, handleNext, next }) {
       {Notify()}
       {next === false ? (
         <div>
-          <div class="d-flex justify-content-between m-3 text-left">
-            <div class="text-right">
+          <div className="d-flex justify-content-between m-3 text-left">
+            <div className="text-right">
               <i
                 class="fas fa-times fa-lg mr-2 d-md-inline text-dark"
                 data-dismiss="modal"
@@ -138,7 +138,7 @@ function UploadPicModal({ src1, handleNext, next }) {
                 : {}
             }
           />
-          <div class="d-flex justify-content-around my-3 ">
+          <div className="d-flex justify-content-around my-3 ">
             <div className="ml-2 mr-2">
               <img
                 src={src1}
@@ -195,7 +195,7 @@ function UploadPicModal({ src1, handleNext, next }) {
         </div>
       ) : (
         <div>
-          <div class="d-flex justify-content-between m-3 text-left">
+          <div className="d-flex justify-content-between m-3 text-left">
             <div>
               <i
                 class="fas fa-angle-left fa-lg m-2 d-md-inline text-left"

@@ -105,7 +105,7 @@ const SignUp = () => {
   };
 
   return (
-    <div class="row" style={{ maxHeight: "100vh" }}>
+    <div className="row" style={{ maxHeight: "100vh" }}>
       <ToastContainer />
       {Notify()}
       <div
@@ -117,7 +117,7 @@ const SignUp = () => {
       >
         <img src={insta} height={600} />
       </div>
-      <div class="col-1 col-md-2 col-lg-1 col-sm-3" />
+      <div className="col-1 col-md-2 col-lg-1 col-sm-3" />
       <div
         class="col-md-4 col-sm-7 col-lg-4 text-center col-10 pl-4"
         style={{
@@ -163,15 +163,15 @@ const SignUp = () => {
           {({ errors, touched, values }) => (
             <Form>
               {/*Username*/}
-              <div class="input-group mb-3 ">
+              <div className="input-group mb-3 ">
                 {errors.username || !values.username ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="fas fa-user-tag text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text text-success ">
                       <i class="fas fa-user-tag text-success"></i>
                     </span>
@@ -189,17 +189,17 @@ const SignUp = () => {
                 />
 
                 {values.username.length === 0 ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text"></span>
                   </div>
                 ) : values.username.length > 0 && errors.username ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-danger">
                       <i class="fas fa-times  "></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-success ">
                       <i class="fas fa-check"></i>
                     </span>
@@ -207,15 +207,15 @@ const SignUp = () => {
                 )}
               </div>
               {/*FullName*/}
-              <div class="input-group mb-3 ">
+              <div className="input-group mb-3 ">
                 {errors.fullname || !values.fullname ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="far fa-user text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text text-success ">
                       <i class="far fa-user text-success"></i>
                     </span>
@@ -233,17 +233,17 @@ const SignUp = () => {
                 />
 
                 {values.fullname.length === 0 ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text "></span>
                   </div>
                 ) : values.fullname.length > 0 && errors.fullname ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-danger">
                       <i class="fas fa-times  "></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-success ">
                       <i class="fas fa-check"></i>
                     </span>
@@ -252,15 +252,15 @@ const SignUp = () => {
               </div>
               {/*Email*/}
 
-              <div class="input-group mb-3 ">
+              <div className="input-group mb-3 ">
                 {errors.email || !values.email ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="far fa-envelope text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text text-success ">
                       <i class="far fa-envelope-open text-success"></i>
                     </span>
@@ -278,17 +278,17 @@ const SignUp = () => {
                 />
 
                 {values.email.length === 0 ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text"></span>
                   </div>
                 ) : values.email.length > 0 && errors.email ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-danger">
                       <i class="fas fa-times  "></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-success ">
                       <i class="fas fa-check"></i>
                     </span>
@@ -298,15 +298,15 @@ const SignUp = () => {
 
               {/* Password */}
 
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 {errors.password || !values.password ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="fas fa-lock text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text  ">
                       <i class="fas fa-lock-open text-success"></i>
                     </span>
@@ -321,7 +321,7 @@ const SignUp = () => {
                 />
 
                 {
-                  <div class="input-group-append">
+                  <div className="input-group-append">
                     <span class="input-group-text border-left-0">
                       {mode === "text" ? (
                         <i
@@ -341,7 +341,7 @@ const SignUp = () => {
                     </span>
                   </div>
                 }
-                <div class="input-group-append">
+                <div className="input-group-append">
                   <span class="input-group-text border-left-0">
                     <i
                       class="far fa-question-circle"
@@ -415,8 +415,8 @@ const SignUp = () => {
         </Formik>
       </div>
       {performRedirect()}
-      <div class=" col-lg-1 col-sm-2 col-1 "></div>
-      <div class="fixed-bottom" style={{ zIndex: "-1" }}>
+      <div className=" col-lg-1 col-sm-2 col-1 "></div>
+      <div className="fixed-bottom" style={{ zIndex: "-1" }}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
           <path
             fill="#0099ff"
@@ -425,7 +425,7 @@ const SignUp = () => {
           ></path>
         </svg>
       </div>
-      <div class="fixed-bottom text-center mb-1">
+      <div className="fixed-bottom text-center mb-1">
         {" "}
         <h6 style={{ color: "#2C3335" }}>
           <i class="far fa-copyright"></i> 2020 InstaClone Inspired By :

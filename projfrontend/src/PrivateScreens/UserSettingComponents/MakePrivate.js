@@ -136,7 +136,7 @@ function MakePrivate() {
           affected.
         </p>
       </div>
-      <div class="d-none d-md-block fixed-bottom text-center mb-1">
+      <div className="d-none d-md-block fixed-bottom text-center mb-1">
         <h6 style={{ color: "#2C3335" }}>
           <i class="far fa-copyright"></i> 2020 InstaClone Inspired By :
           <span

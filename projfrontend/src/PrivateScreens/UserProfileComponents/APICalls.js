@@ -84,3 +84,16 @@ export const removePost = (userId, token, picId) => {
     },
   });
 };
+
+export const toggleFollowRequest = (userId, anotherUserId, token, accept) => {
+  return axios({
+    method: "put",
+    url: `${BackendUrl}/user/followRequest/${userId}/${anotherUserId}`,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    data: {
+      accept,
+    },
+  });
+};

@@ -153,7 +153,7 @@ function EditProfile({ username, name, bio, profilePicUrl }) {
     }
   };
   return (
-    <div class="row text-center" style={{ minHeight: "66vh" }}>
+    <div className="row text-center" style={{ minHeight: "66vh" }}>
       <ToastContainer />
       {Notify()}
       <div
@@ -185,7 +185,7 @@ function EditProfile({ username, name, bio, profilePicUrl }) {
                 </span>
               </div>
 
-              <div class="custom-file mb-3">
+              <div className="custom-file mb-3">
                 <label for="customFile"></label>
                 <input
                   id="file"
@@ -202,15 +202,15 @@ function EditProfile({ username, name, bio, profilePicUrl }) {
                 </label>
               </div>
 
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 {errors.username || !values.username ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="fas fa-user text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text  ">
                       <i class="fas fa-lock-user text-success"></i>
                     </span>
@@ -225,17 +225,17 @@ function EditProfile({ username, name, bio, profilePicUrl }) {
                 />
 
                 {values.username.length === 0 ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text"></span>
                   </div>
                 ) : values.username.length > 0 && errors.username ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-danger">
                       <i class="fas fa-times  "></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-success ">
                       <i class="fas fa-check"></i>
                     </span>
@@ -243,15 +243,15 @@ function EditProfile({ username, name, bio, profilePicUrl }) {
                 )}
               </div>
 
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 {errors.fullName || !values.fullName ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="fas fa-lock text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text  ">
                       <i class="fas fa-lock-open text-success"></i>
                     </span>
@@ -266,17 +266,17 @@ function EditProfile({ username, name, bio, profilePicUrl }) {
                 />
 
                 {values.fullName.length === 0 ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text"></span>
                   </div>
                 ) : values.fullName.length > 0 && errors.fullName ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-danger">
                       <i class="fas fa-times  "></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-success ">
                       <i class="fas fa-check"></i>
                     </span>
@@ -284,15 +284,15 @@ function EditProfile({ username, name, bio, profilePicUrl }) {
                 )}
               </div>
 
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 {errors.bio || !values.bio ? (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text">
                       <i class="fas fa-lock text-primary"></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-prepend">
+                  <div className="input-group-prepend">
                     <span class="input-group-text  ">
                       <i class="fas fa-lock-open text-success"></i>
                     </span>
@@ -306,17 +306,17 @@ function EditProfile({ username, name, bio, profilePicUrl }) {
                   placeholder="Update Your Bio"
                 />
                 {values.bio.length === 0 ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text"></span>
                   </div>
                 ) : values.bio.length > 0 && errors.bio ? (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-danger">
                       <i class="fas fa-times  "></i>
                     </span>
                   </div>
                 ) : (
-                  <div class="input-group-append ">
+                  <div className="input-group-append ">
                     <span class="input-group-text text-success ">
                       <i class="fas fa-check"></i>
                     </span>
@@ -343,7 +343,7 @@ function EditProfile({ username, name, bio, profilePicUrl }) {
           )}
         </Formik>
       </div>
-      <div class="d-none d-md-block fixed-bottom text-center mb-1">
+      <div className="d-none d-md-block fixed-bottom text-center mb-1">
         <h6 style={{ color: "#2C3335" }}>
           <i class="far fa-copyright"></i> 2020 InstaClone Inspired By :
           <span

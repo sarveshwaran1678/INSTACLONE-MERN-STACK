@@ -68,7 +68,7 @@ function UserSuggestions({ id }) {
             <span>{userDetails.username}</span>
           </Link>
           <br />
-          {/*<div class='d-flex justify-content-between'>
+          {/*<div className='d-flex justify-content-between'>
                         <div> 21 followers</div>
                         <div className='text-primary'>Follow</div>
     </div>*/}

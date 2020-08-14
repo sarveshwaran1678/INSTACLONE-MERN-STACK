@@ -143,7 +143,7 @@ function Card({ feed }) {
   return (
     <div className=" mb-5" style={{ fontWeight: "500" }}>
       <div className="mt-5 d-none d-md-block"></div>
-      <div class="card">
+      <div className="card">
         <Link to={`/profile/${feed.UserId}`} className="text-dark">
           <Image
             className="m-2"
@@ -215,7 +215,7 @@ function Card({ feed }) {
           <Placeholder type="pixelate" />
         </Image>
 
-        <div class="card-body">
+        <div className="card-body">
           <h5 class="card-title">
             <i
               class={
@@ -275,7 +275,7 @@ function Card({ feed }) {
                 class="modal-content "
                 style={{ border: "none", borderRadius: "0" }}
               >
-                <div class="modal-body py-0">
+                <div className="modal-body py-0">
                   {showModal ? (
                     <Modal
                       id={otherUserDetails.id}
@@ -293,7 +293,7 @@ function Card({ feed }) {
               </div>
             </div>
           </div>
-          <div class="input-group mb-3">
+          <div className="input-group mb-3">
             <input
               type="text"
               class="form-control"
@@ -305,7 +305,7 @@ function Card({ feed }) {
                 setNewComment(e.target.value);
               }}
             />
-            <div class="input-group-append" style={{ border: "none" }}>
+            <div className="input-group-append" style={{ border: "none" }}>
               <span
                 class="input-group-text"
                 id="basic-addon2"

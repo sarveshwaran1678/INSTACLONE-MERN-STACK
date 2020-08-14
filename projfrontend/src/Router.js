@@ -28,6 +28,7 @@ const Routes = () => {
 
         <PrivateRoutes path="/userfeed" exact component={UserFeed} />
         <PrivateRoutes path="/profile/:userId" exact component={userProfile} />
+
         <PrivateRoutes path="/settings" exact component={UserSettings} />
         <PrivateRoutes path="/discoverFeed" exact component={DiscoverFeed} />
       </Switch>

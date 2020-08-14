@@ -136,7 +136,7 @@ function ModalComments({ comment, postId }) {
           </small>
         </div>
         <span style={{ color: "#28a745" }}>
-          <div class="d-flex justify-content-between text-left">
+          <div className="d-flex justify-content-between text-left">
             <small
               style={{
                 fontWeight: "500",
@@ -159,7 +159,7 @@ function ModalComments({ comment, postId }) {
                 <ModalReply key={reply._id} reply={reply} />
               ))}
 
-              <div class="input-group mb-3">
+              <div className="input-group mb-3">
                 <input
                   type="text"
                   class="form-control"
@@ -171,7 +171,7 @@ function ModalComments({ comment, postId }) {
                     setNewReply(e.target.value);
                   }}
                 />
-                <div class="input-group-append " style={{ border: "none" }}>
+                <div className="input-group-append " style={{ border: "none" }}>
                   <span
                     class="input-group-text"
                     id="basic-addon2"

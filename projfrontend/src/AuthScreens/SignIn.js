@@ -62,7 +62,7 @@ const SignIn = () => {
   };
 
   return (
-    <div class="row text-center">
+    <div className="row text-center">
       <ToastContainer />
       {Notify()}
       <div
@@ -74,7 +74,7 @@ const SignIn = () => {
       >
         <img src={insta} height={600} />
       </div>
-      <div class="col-1 col-md-2 col-lg-1 col-sm-3" />
+      <div className="col-1 col-md-2 col-lg-1 col-sm-3" />
       <div
         class="col-md-4 col-sm-7 col-lg-4 text-center col-10 "
         style={{
@@ -113,8 +113,8 @@ const SignIn = () => {
         <Formik initialValues={initialValues} onSubmit={onSubmit}>
           {() => (
             <Form>
-              <div class="input-group mb-4 ">
-                <div class="input-group-prepend">
+              <div className="input-group mb-4 ">
+                <div className="input-group-prepend">
                   <span class="input-group-text">
                     <i class="far fa-envelope text-primary"></i>
                   </span>
@@ -130,15 +130,15 @@ const SignIn = () => {
                   }}
                 />
 
-                <div class="input-group-append ">
+                <div className="input-group-append ">
                   <span class="input-group-text post-text"></span>
                 </div>
               </div>
 
               {/* Password */}
 
-              <div class="input-group mb-3">
-                <div class="input-group-prepend">
+              <div className="input-group mb-3">
+                <div className="input-group-prepend">
                   <span class="input-group-text">
                     <i class="fas fa-lock text-primary"></i>
                   </span>
@@ -151,7 +151,7 @@ const SignIn = () => {
                   placeholder="Enter Your Password"
                 />
                 {
-                  <div class="input-group-append">
+                  <div className="input-group-append">
                     <span class="input-group-text">
                       {mode === "text" ? (
                         <i
@@ -223,9 +223,9 @@ const SignIn = () => {
         </Formik>
       </div>
       {performRedirect()}
-      <div class=" col-lg-1 col-sm-2 col-1 "></div>
+      <div className=" col-lg-1 col-sm-2 col-1 "></div>
 
-      <div class="fixed-bottom" style={{ zIndex: "-1" }}>
+      <div className="fixed-bottom" style={{ zIndex: "-1" }}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
           <path
             fill="#0099ff"
@@ -234,7 +234,7 @@ const SignIn = () => {
           ></path>
         </svg>
       </div>
-      <div class="fixed-bottom text-center mb-1">
+      <div className="fixed-bottom text-center mb-1">
         <h6 style={{ color: "#2C3335" }}>
           <i class="far fa-copyright"></i> 2020 InstaClone Inspired By :
           <span

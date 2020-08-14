@@ -22,27 +22,14 @@ import {
 function UserProfile({ match }) {
   const userId = isAuthenticated().user._id;
   const token = isAuthenticated().token;
-  const anotherUserId = useParams().userId;
-
-  const [myOwnPage, setMyOwnPage] = useState(false);
-
-  const [userDetails, setUserDetails] = useState({
-    username: "",
-    name: "",
-    profilePicPath: "",
-    followings: [],
-    followers: [],
-    isPrivate: false,
-    bio: "",
-  });
-
-  const [posts, setPosts] = useState([]);
-  const [stories, setStories] = useState([]);
-
-  const [isAllowedToShow, setIsAllowedToShow] = useState(false);
-  const [message, setMessage] = useState("");
+  let anotherUserId = match.params.userId;
 
   useEffect(() => {
+    //anotherUserId = match.params.userId;
+    render();
+  }, [match.params.userId]);
+
+  const render = () => {
     if (userId === anotherUserId) {
       //console.log("hiiii");
       setMyOwnPage(true);
@@ -53,6 +40,30 @@ function UserProfile({ match }) {
     } else {
       getAnotherUser();
     }
+  };
+
+  const [myOwnPage, setMyOwnPage] = useState(false);
+
+  const [userDetails, setUserDetails] = useState({
+    id: "",
+    username: "",
+    name: "",
+    profilePicPath: "",
+    followings: [],
+    followers: [],
+    isPrivate: false,
+    followRequestPending: "",
+    bio: "",
+  });
+
+  const [posts, setPosts] = useState([]);
+  const [stories, setStories] = useState([]);
+
+  const [isAllowedToShow, setIsAllowedToShow] = useState(false);
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    render();
   }, [isAllowedToShow]);
 
   const handleFollow = async () => {
@@ -79,12 +90,14 @@ function UserProfile({ match }) {
         const data = res.data;
 
         setUserDetails({
+          id: data._id,
           username: data.username,
           name: data.name,
           profilePicPath: data.profilePicPath,
           bio: data.bio,
           isPrivate: data.isPrivate,
           followings: data.followings,
+          followRequestPending: data.followRequestPending,
           followers: data.followers,
         });
       })
@@ -122,6 +135,7 @@ function UserProfile({ match }) {
         const data = res.data;
 
         setUserDetails({
+          id: data._id,
           username: data.username,
           name: data.name,
           profilePicPath: data.profilePicPath,
@@ -199,61 +213,65 @@ function UserProfile({ match }) {
     }
   };
 
-  //make follow toggle for button there
-  return (
-    <div>
-      <Navbar />
-      <div className="row mt-5"></div>
-      <div class="container mt-5">
-        <div className="d-none d-md-block">
-          <UserInfo
+  if (userDetails.id.length === 0) {
+    return <div>Loading</div>;
+  } else {
+    //make follow toggle for button there
+    return (
+      <div>
+        <Navbar />
+        <div className="row mt-5"></div>
+        <div className="container mt-5">
+          <div className="d-none d-md-block">
+            <UserInfo
+              myOwn={myOwnPage}
+              userDetails={userDetails}
+              postCount={posts.length}
+              message={message}
+              handleFollow={handleFollow}
+            />
+          </div>
+
+          {/* Phone */}
+
+          <UserInfoPhone
             myOwn={myOwnPage}
             userDetails={userDetails}
             postCount={posts.length}
             message={message}
             handleFollow={handleFollow}
           />
+
+          {/* Story */}
+          {isAllowedToShow ? (
+            <UserProfileStories
+              myOwn={myOwnPage}
+              stories={stories}
+              updateAssets={updateAssets}
+            />
+          ) : null}
+          <hr
+            className="mt-0"
+            style={{ borderTop: "1px solid rgba(0,0,0,.1)" }}
+          />
+          {
+            //show only when myown ,isNotPrivate,otheruserFollowers contain my Id
+          }
         </div>
-
-        {/* Phone */}
-
-        <UserInfoPhone
-          myOwn={myOwnPage}
-          userDetails={userDetails}
-          postCount={posts.length}
-          message={message}
-          handleFollow={handleFollow}
-        />
-
-        {/* Story */}
         {isAllowedToShow ? (
-          <UserProfileStories
-            myOwn={myOwnPage}
-            stories={stories}
+          <UserPosts
+            posts={posts}
+            myOwnPage={myOwnPage}
+            profile={{
+              profilePicPath: userDetails.profilePicPath,
+              username: userDetails.username,
+            }}
             updateAssets={updateAssets}
           />
         ) : null}
-        <hr
-          className="mt-0"
-          style={{ borderTop: "1px solid rgba(0,0,0,.1)" }}
-        />
-        {
-          //show only when myown ,isNotPrivate,otheruserFollowers contain my Id
-        }
       </div>
-      {isAllowedToShow ? (
-        <UserPosts
-          posts={posts}
-          myOwnPage={myOwnPage}
-          profile={{
-            profilePicPath: userDetails.profilePicPath,
-            username: userDetails.username,
-          }}
-          updateAssets={updateAssets}
-        />
-      ) : null}
-    </div>
-  );
+    );
+  }
 }
 
 export default UserProfile;

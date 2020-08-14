@@ -206,7 +206,7 @@ function UserPosts({ posts, myOwnPage, profile, updateAssets }) {
                       borderRadius: "0",
                     }}
                   >
-                    <div class="modal-body py-0">
+                    <div className="modal-body py-0">
                       <ProfilePostModal
                         className=""
                         myOwnPage={myOwnPage}
@@ -286,7 +286,7 @@ function UserPosts({ posts, myOwnPage, profile, updateAssets }) {
             style={{ border: "none", borderRadius: "0" }}
           >
             {content !== undefined ? (
-              <div class="modal-body p-0">
+              <div className="modal-body p-0">
                 <UploadPicModal
                   src1={content}
                   handleNext={handleNext}

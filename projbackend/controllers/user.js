@@ -342,9 +342,9 @@ exports.followRequestHandler = async (req, res) => {
   let anotherUser = req.anotherProfile;
   let userName = user.username;
   let anotherUserName = anotherUser.username;
-  if (user.followRequestPending.includes(anotherUser._id) === false) {
-    return res.json({ msg: "No request received" });
-  }
+  // if (user.followRequestPending.includes(anotherUser._id) === false) {
+  //   return res.json({ msg: "No request received" });
+  // }
   if (accept === "yes") {
     await User.bulkWrite(
       [

@@ -137,18 +137,17 @@ function UserFeed() {
                                 style={{ fontWeight: '600', color: '#a2acba' }}>
                                 Suggestions For You
                             </div>
-                            {/* <div
-                className="Stories ml-1"
-                style={{
-                  height: "30vh",
-                  overflowY: "scroll",
-                  overflowX: "hidden",
-                }}
-              >
-                {ids.map((id, index) => (
-                  <UserSuggestions id={id} key={index} />
-                ))}
-              </div> */}
+                            <div
+                                className='Stories ml-1'
+                                style={{
+                                    height: '30vh',
+                                    overflowY: 'scroll',
+                                    overflowX: 'hidden',
+                                }}>
+                                {ids.map((id, index) => (
+                                    <UserSuggestions id={id} key={index} />
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>

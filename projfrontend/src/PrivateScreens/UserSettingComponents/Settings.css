@@ -1,0 +1,12 @@
+.nav-pills .nav-link.active,
+.nav-pills .show > .nav-link {
+    color: blue;
+    background: white;
+    font-weight: 700;
+}
+
+.nav-pills .nav-link {
+    color: black;
+    background: white;
+    font-weight: 700;
+}

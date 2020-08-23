@@ -15,9 +15,9 @@ import UserSuggestions from './UserFeedComponents/UserSuggestions';
 
 function UserFeed() {
     const ids = [
-        '5f1fc1b566dd4525a70dc23e',
-        '5f2a3c0c6a9edc1b72fa4cb3',
-        '5f2d6abf4be8504491083298',
+        '5f3cbe931a53e64440cd5239',
+        '5f3cbeb01a53e64440cd523a',
+        '5f3cbf6d1a53e64440cd523b',
     ];
 
     const [stories, setStories] = useState([]);

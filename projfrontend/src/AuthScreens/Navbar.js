@@ -184,7 +184,17 @@ function Navbar() {
                                 }}
                                 style={{ display: 'none' }}
                             />
-
+                            <Link to='/' style={{ color: 'black' }}>
+                                <i
+                                    class='far fas fa-door-open fa-lg d-none d-md-inline ml-5'
+                                    onClick={() =>
+                                        signout(() => {
+                                            console.log(
+                                                'Signed out Successfully'
+                                            );
+                                        })
+                                    }></i>
+                            </Link>
                             <Link to='/' style={{ color: 'black' }}>
                                 <i
                                     class='far fas fa-door-open fa-lg d-md-none mr-1'

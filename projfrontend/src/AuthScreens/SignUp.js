@@ -416,7 +416,7 @@ const SignUp = () => {
       </div>
       {performRedirect()}
       <div className=" col-lg-1 col-sm-2 col-1 "></div>
-      <div className="fixed-bottom" style={{ zIndex: "-1" }}>
+      <div className="d-none d-md-block  fixed-bottom" style={{ zIndex: "-1" }}>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">
           <path
             fill="#0099ff"
@@ -425,7 +425,7 @@ const SignUp = () => {
           ></path>
         </svg>
       </div>
-      <div className="fixed-bottom text-center mb-1">
+      <div className="d-none d-md-block  fixed-bottom text-center mb-1">
         {" "}
         <h6 style={{ color: "#2C3335" }}>
           <i class="far fa-copyright"></i> 2020 InstaClone Inspired By :

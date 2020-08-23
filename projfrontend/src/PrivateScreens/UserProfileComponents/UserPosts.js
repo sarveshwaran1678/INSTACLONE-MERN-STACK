@@ -299,6 +299,7 @@ function UserPosts({ posts, myOwnPage, profile, updateAssets }) {
       </div>
 
       {/* ModalClosed */}
+      <div className="row mt-5"></div>
     </div>
   );
 }

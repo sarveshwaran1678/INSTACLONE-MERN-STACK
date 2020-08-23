@@ -214,7 +214,14 @@ function UserProfile({ match }) {
   };
 
   if (userDetails.id.length === 0) {
-    return <div>Loading</div>;
+    return (
+      <div className="text-center" style={{ marginTop: "50vh" }}>
+        <h4>
+          Loading...
+          <i className="fas fa-spinner fa-spin fa-lg  ml-3 text-success"></i>
+        </h4>
+      </div>
+    );
   } else {
     //make follow toggle for button there
     return (
